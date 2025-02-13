@@ -1,0 +1,38 @@
+# 🚀 Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+
+# 🚀 Ignorar archivos de configuración personal
+.env
+*.bak
+*.swp
+
+# 🚀 Ignorar dependencias de Composer
+vendor/
+composer.lock
+
+# 🚀 Ignorar configuraciones de Docker
+docker-compose.override.yml
+db_data/
+logs/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# 🚀 Ignorar caché y logs de CodeIgniter
+application/cache/*
+application/logs/*
+writable/
+
+# 🚀 Ignorar subidas de usuarios
+uploads/*
+!uploads/.gitkeep  # Permitir la carpeta vacía
+
+# 🚀 Ignorar archivos de IDEs y editores
+.vscode/
+.idea/
+*.code-workspace
+
+# 🚀 Ignorar archivos de permisos y configuración
+config.php
+database.php
