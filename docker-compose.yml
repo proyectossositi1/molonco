@@ -1,6 +1,8 @@
 services:
   app:
-    image: php:8.2-apache
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: ci4_app
     ports:
       - "8000:80"

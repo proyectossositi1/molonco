@@ -1,175 +1,143 @@
-# Proyecto CodeIgniter 3 con Docker
+Proyecto CodeIgniter 4 con Docker
 
-Este repositorio contiene una aplicación base construida con [CodeIgniter 3](https://codeigniter.com/) y un entorno de desarrollo configurado con Docker y Docker Compose. Este documento proporciona todas las instrucciones necesarias para instalar, configurar y ejecutar el proyecto en tu entorno local.
+Este README proporciona una guía completa para que cualquier miembro del equipo pueda instalar, configurar y ejecutar este proyecto de CodeIgniter 4 usando Docker (PHP 8.x y MariaDB).
 
----
+🟡 Requisitos Previos
 
-## Requisitos
+📌 1️⃣ Instalar Docker y Docker Compose
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) instalado y en ejecución.
-- Docker Compose (generalmente incluido con Docker Desktop).
-- Git (para clonar el repositorio).
+Docker: Descargar Docker Desktop
 
----
+Verificar la instalación:
 
-## Estructura del Proyecto
+docker --version
+docker-compose --version
 
-- **src/**: Contiene el código fuente de CodeIgniter 3.
-- **Dockerfile**: Define la imagen del contenedor para la aplicación (PHP con Apache).
-- **docker-compose.yml**: Configura los servicios de la aplicación y la base de datos.
-- **README.md**: Este archivo de instrucciones.
+📌 2️⃣ Instalar Composer (Para gestionar dependencias de PHP)
 
----
+Composer: Descargar Composer
 
-## Instalación y Configuración
+Verificar la instalación:
 
-### 1. Clonar el Repositorio
+composer --version
 
-Abre la terminal y ejecuta:
+🚀 Clonar el Proyecto
 
-```bash
-git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
-cd TU_REPOSITORIO
-```
+git clone https://github.com/usuario/repo-codeigniter4.git
+cd repo-codeigniter4
 
-### 2. Descargar CodeIgniter 3 (si la carpeta `src/` está vacía)
+🟡 Configuración Inicial
 
-Si la carpeta `src/` no existe o está vacía, descarga CodeIgniter 3 ejecutando:
+📌 1️⃣ Copiar el archivo .env
 
-```bash
-curl -L https://github.com/bcit-ci/CodeIgniter/archive/refs/heads/develop.zip -o codeigniter.zip
-unzip codeigniter.zip
-mv CodeIgniter-develop src
-rm codeigniter.zip
-```
+cd src
+cp env .env
 
----
+📌 2️⃣ Configurar el archivo .env (Opcional)
 
-## Configuración de CodeIgniter
+En .env, ajusta la configuración de la base de datos:
 
-### 3.1. Configurar la URL Base
+CI_ENVIRONMENT = development
+app.baseURL = 'http://localhost:8000'
 
-Edita el archivo `src/application/config/config.php` y establece la URL base de la aplicación. Por ejemplo:
+database.default.hostname = localhost
+database.default.database = db_molonco
+database.default.username = molonco_user
+database.default.password = molonco_pass
+database.default.DBDriver = MySQLi
+database.default.port = 3306
 
-````php
-$config['base_url'] = 'http://localhost:8000/';
+🟡 Instalar Dependencias
 
+cd src
+composer install
 
-## Configuración de Docker
+Esto generará la carpeta vendor/ que fue ignorada por .gitignore.
 
-### 4. Dockerfile
+🚀 Iniciar el Proyecto con Docker
 
-El archivo `Dockerfile` construye la imagen del contenedor para la aplicación, utilizando PHP 7.4 con Apache.
-
-```dockerfile
-FROM php:7.4-apache
-
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-RUN a2enmod rewrite
-
-WORKDIR /var/www/html
-
-COPY src/ /var/www/html/
-
-EXPOSE 80
-````
-
-### 5. docker-compose.yml
-
-```yaml
-services:
-  app:
-    image: php:8.2-apache
-    container_name: ci4_app
-    ports:
-      - "8000:80"
-    volumes:
-      - ./src:/var/www/html
-    networks:
-      - net_molonco
-    depends_on:
-      - db
-
-  db:
-    image: mariadb:10.5
-    container_name: ci4_db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_molonco
-      MYSQL_USER: molonco_user
-      MYSQL_PASSWORD: molonco_pass
-    ports:
-      - "3306:3306"
-    networks:
-      - net_molonco
-
-networks:
-  net_molonco:
-    driver: bridge
-```
-
----
-
-## Ejecución
-
-### 6. Levantar el Entorno Docker
-
-```bash
 docker-compose up -d --build
-```
 
-### 7. Acceso a la Aplicación y Base de Datos
+Verifica que los contenedores estén corriendo:
 
-- **Aplicación:** [http://localhost:8080](http://localhost:8000)
-- **Base de Datos:**
-  - Usuario: `user`
-  - Contraseña: `password`
-  - Base de datos: `codeigniter_db`
-  - Puerto: `3306`
-
----
-
-## Comandos ## Comandos \u00dátiles
-
-```bash
 docker ps
-docker exec -it codeigniter3-app bash
-docker-compose logs -f
+
+🟡 Solución a Error 403 Forbidden (Permisos de Apache)
+
+Si aparece 403 Forbidden, ejecuta dentro del contenedor:
+
+docker exec -it ci4_app bash
+chown -R www-data:www-data /var/www/html
+chmod -R 775 /var/www/html
+
+Ir a la siguiente ruta y copiar y pegar el fragmento en el archivo: "quitar \ del \*:80"
+
+nano /etc/apache2/sites-available/000-default.conf
+<VirtualHost \*:80>
+DocumentRoot /var/www/html/public
+
+    <Directory /var/www/html/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
+exit
+
+Reinicia Docker:
+
+docker-compose restart
+
+🟡 Habilitar la Extensión intl de PHP (Si aparece Class Locale not found)
+
+Si ves el error Class "Locale" not found, edita el Dockerfile:
+
+FROM php:8.2-apache
+RUN apt-get update && apt-get install -y libicu-dev && docker-php-ext-install intl
+
+Luego, reconstruye Docker:
+
 docker-compose down
-```
+docker-compose build --no-cache
+docker-compose up -d
 
----
+✅ Probar el Proyecto
 
-## Solución de Problemas
+1️⃣ Abrir el Navegador: http://localhost:8000
+2️⃣ Verificar php spark (opcional):
 
-### Errores de Sesiones / Headers Already Sent
+docker exec -it ci4_app bash
+php spark --version
+exit
 
-```php
-<?php
-ob_start();
-```
+🟡 Comandos Útiles
 
-### Problemas de Conexión a la Base de Datos
+# Ingresar al contenedor
 
-- Verificar que `db` esté corriendo (`docker ps`).
-- Revisar credenciales en `src/application/config/database.php`.
+docker exec -it ci4_app bash
 
-### Permisos de Carpetas
+# Ver logs
 
-- Verifica que `src/` tenga permisos adecuados.
+docker logs ci4_app
 
----
+# Detener contenedores
 
-## Contribución
+docker-compose down
 
-1. Fork del repositorio.
-2. Crea una rama:
+# Reiniciar contenedores
 
-   ```bash
-   git checkout -b nueva-funcionalidad
-   ```
+docker-compose restart
 
-3. Realiza cambios y haz commits.
-4. Abre un Pull Request.
+✅ Conclusión
+🟢 Docker ejecutando PHP 8 y MariaDB.
+🟢 composer install con dependencias.
+🟢 .env correctamente configurado.
+🟢 Solución a errores comunes (403 Forbidden, Class Locale not found).
+🟢 Proyecto accesible desde http://localhost:8000.
 
----
+Si surgen problemas, ¡avísame para solucionarlos! 🚀😊
