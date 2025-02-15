@@ -1,29 +1,29 @@
-version: "3.8"
-
 services:
   app:
-    build: .
-    container_name: codeigniter3-app
+    image: php:8.2-apache
+    container_name: ci4_app
     ports:
-      - "8080:80"
+      - "8000:80"
     volumes:
       - ./src:/var/www/html
+    networks:
+      - net_molonco
     depends_on:
       - db
 
   db:
     image: mariadb:10.5
-    container_name: codeigniter3-db
-    restart: always
+    container_name: ci4_db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: db_molonco
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_USER: molonco_user
+      MYSQL_PASSWORD: molonco_pass
     ports:
       - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
+    networks:
+      - net_molonco
 
-volumes:
-  db_data:
+networks:
+  net_molonco:
+    driver: bridge
