@@ -10,21 +10,9 @@ services:
       - ./src:/var/www/html
     networks:
       - net_molonco
-    depends_on:
-      - db
-
-  db:
-    image: mariadb:10.5
-    container_name: ci4_db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_molonco
-      MYSQL_USER: molonco_user
-      MYSQL_PASSWORD: molonco_pass
-    ports:
-      - "3306:3306"
-    networks:
-      - net_molonco
+      - PHP_EXTENSION=mysqli
+      - TZ=UTC
 
 networks:
   net_molonco:
