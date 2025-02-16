@@ -1,56 +1,69 @@
-<div class="login-container">
-    <div class="login-box">
-        <div class="login-logo">
-            <a href="#"><b>Admin</b>ERP</a>
-        </div>
-
-        <div class="login-card-body">
-            <p class="login-box-msg">Iniciar sesión</p>
-
-            <!-- 🚨 ALERTAS (Errores o Éxitos) -->
-            <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?= session()->getFlashdata('error') ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <?php endif; ?>
-
-            <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?= session()->getFlashdata('success') ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <?php endif; ?>
-
-            <!-- 🚀 FORMULARIO DE LOGIN -->
-            <form method="post" action="<?= site_url('login') ?>">
-                <div class="input-group mb-3">
-                    <input type="text" name="usr" class="form-control" placeholder="Usuario" required autofocus>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-user"></i></span>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <input type="password" name="pwd" class="form-control" placeholder="Contraseña" required>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    </div>
-                </div>
-
-                <!-- 🚀 Botón de Iniciar Sesión -->
-                <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-sign-in-alt"></i> Entrar
-                </button>
-            </form>
-
-            <!-- 🚀 Botón para Registrarse -->
-            <div class="mt-3 text-center">
-                <p>¿No tienes cuenta?</p>
-                <a href="<?= site_url('register') ?>" class="btn btn-secondary btn-block">
-                    <i class="fas fa-user-plus"></i> Crear cuenta
-                </a>
-            </div>
-        </div>
+<div class="login-box">
+    <div class="login-logo">
+        <a href="<?= site_url('login') ?>"><b>Admin</b> MOLONCO</a>
     </div>
+    <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">Sign in to start your session</p>
+            <form action="<?= site_url('login') ?>" method="post">
+                <?= csrf_field() ?>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Email" name="usr" />
+                    <div class="input-group-text"><span class="bi bi-envelope"></span></div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="Password" name="pwd" />
+                    <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
+                </div>
+                <!--begin::Row-->
+                <div class="row">
+                    <div class="col-8">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="rememberme" id="flexCheckDefault" />
+                            <label class="form-check-label" for="flexCheckDefault"> Remember Me </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-4">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Sign In</button>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!--end::Row-->
+            </form>
+            <!-- <div class="social-auth-links text-center mb-3 d-grid gap-2">
+                <p>- OR -</p>
+                <a href="#" class="btn btn-primary">
+                    <i class="bi bi-facebook me-2"></i> Sign in using Facebook
+                </a>
+                <a href="#" class="btn btn-danger">
+                    <i class="bi bi-google me-2"></i> Sign in using Google+
+                </a>
+            </div> -->
+            <!-- /.social-auth-links -->
+            <p class="mt-5 mb-1"><a href="#">I forgot my password</a></p>
+            <p class="mb-0">
+                <a href="<?= site_url('register') ?>" class="text-center"> Register a new membership </a>
+            </p>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+
+    <?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+        <?= session()->getFlashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+        <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php endif; ?>
 </div>
+<!-- /.login-box -->

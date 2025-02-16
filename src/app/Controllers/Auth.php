@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\UserModel;
+use App\Models\UserRoleModel;
 
 class Auth extends BaseController{
     
@@ -66,7 +67,7 @@ class Auth extends BaseController{
     public function process_register(){
         $rules = [
             'nombre' => 'required|min_length[3]',
-            'email' => 'required|valid_email|is_unique[admon_usuarios.email]',
+            'email' => 'required|valid_email|is_unique[usuarios.email]',
             'pwd' => 'required|min_length[6]',
             'confirm_pwd' => 'required|matches[pwd]',
         ];
@@ -75,12 +76,19 @@ class Auth extends BaseController{
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
     
-        $model = new UserModel();
-        $model->insert([
+        $userModel = new UserModel();
+        $userId = $userModel->insert([
             'nombre' => $this->request->getPost('nombre'),
             'usr'    => $this->request->getPost('email'), 
             'email'  => $this->request->getPost('email'),
             'pwd'    => password_hash($this->request->getPost('pwd'), PASSWORD_DEFAULT)
+        ]);
+
+        // Asignar rol por defecto (user)
+        $userRoleModel = new UserRoleModel();
+        $userRoleModel->insert([
+            'user_id' => $userId,
+            'role_id' => 3 // user
         ]);
     
         return redirect()->to('/login')->with('success', 'Usuario creado correctamente. Ahora puedes iniciar sesión.');
