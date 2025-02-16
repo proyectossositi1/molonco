@@ -67,7 +67,7 @@ class Auth extends BaseController{
     public function process_register(){
         $rules = [
             'nombre' => 'required|min_length[3]',
-            'email' => 'required|valid_email|is_unique[usuarios.email]',
+            'email' => 'required|valid_email|is_unique[xx_usuarios.email]',
             'pwd' => 'required|min_length[6]',
             'confirm_pwd' => 'required|matches[pwd]',
         ];
