@@ -15,7 +15,6 @@
 
 <body>
     <div class="wrapper">
-        <?= view('layouts/header') ?>
 
         <div class="content">
             <?= $body ?? '' ?>
