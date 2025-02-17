@@ -94,7 +94,9 @@ class Filters extends BaseFilters
      *
      * @var array<string, list<string>>
      */
-    public array $methods = [];
+    public array $methods = [
+        'post' => ['csrf'],  // ✅ Aplica solo a POST
+    ];
 
     /**
      * List of filter aliases that should run on any

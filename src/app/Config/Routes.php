@@ -13,6 +13,13 @@ $routes->group('', ['filter' => 'noauth'], function($routes) {
     $routes->post('/login', 'Auth::process_login');
     $routes->get('/register', 'Auth::register');
     $routes->post('/register', 'Auth::process_register');
+    // Olvidé contraseña
+    $routes->get('/forgot-password', 'Auth::forgot_password');
+    $routes->post('/forgot-password', 'Auth::proccess_forgot_password');
+
+    // Restablecer contraseña
+    $routes->get('/reset-password', 'Auth::show_reset_form');
+    $routes->post('/reset-password', 'Auth::reset_password');
 });
 
 // ✅ Rutas Protegidas (con middleware 'auth')
