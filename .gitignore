@@ -3,7 +3,7 @@
 Thumbs.db
 
 # 🚀 Ignorar archivos de configuración personal
-# .env
+.env
 *.bak
 *.swp
 
@@ -34,5 +34,5 @@ uploads/*
 *.code-workspace
 
 # 🚀 Ignorar archivos de permisos y configuración
-# config.php
-# database.php
+config.php
+database.php
