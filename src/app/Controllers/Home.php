@@ -6,6 +6,6 @@ class Home extends BaseController
 {
     public function index(): string
     {
-        dd('ola k ace')
+        dd('ola k ace');
     }
 }

@@ -9,10 +9,12 @@ use App\Models\UserRoleModel;
 use App\Models\PasswordResetModel;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Email\Email;
+use App\Libraries\EmailService;
 
 class Auth extends BaseController{
     
     public function login(){
+        die();
         $data = [
             'title' => 'Iniciar Sesión',
             'body' => view('auth/login')
@@ -111,8 +113,30 @@ class Auth extends BaseController{
     
         return redirect()->to('/login')->with('success', 'Usuario creado correctamente. Ahora puedes iniciar sesión.');
     }
+<<<<<<< Updated upstream
     
     public function forgot_password(){
+=======
+    public function enviar_correo(){
+        $emailService = new EmailService();
+
+        $to      = ['janto_sega5@hotmail.com','jorge.arg091@gmail.com'];
+        // $to = ['correo1@dominio.com', 'correo2@dominio.com', 'correo3@dominio.com'];
+        $subject = 'Asunto del correo';
+        $message = '<h2>Hola!</h2><p>Este es un mensaje de prueba.</p>';
+        // $attachments = [
+        //     WRITEPATH . 'uploads/documento.pdf',  // Ruta a un archivo en el servidor
+        //     WRITEPATH . 'uploads/imagen.jpg'
+        // ];
+
+        $enviado = $emailService->sendEmail($to, $subject, $message);
+        if ($enviado) {
+            return 'Correo enviado con éxito.';
+        } else {
+            return 'Error al enviar el correo.';
+        }
+    }
+>>>>>>> Stashed changes
 
         $data = [
             'title' => 'Iniciar Sesión',
