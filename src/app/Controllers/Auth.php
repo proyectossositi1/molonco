@@ -14,7 +14,6 @@ use App\Libraries\EmailService;
 class Auth extends BaseController{
     
     public function login(){
-        die();
         $data = [
             'title' => 'Iniciar Sesión',
             'body' => view('auth/login')
@@ -113,31 +112,8 @@ class Auth extends BaseController{
     
         return redirect()->to('/login')->with('success', 'Usuario creado correctamente. Ahora puedes iniciar sesión.');
     }
-<<<<<<< Updated upstream
     
     public function forgot_password(){
-=======
-    public function enviar_correo(){
-        $emailService = new EmailService();
-
-        $to      = ['janto_sega5@hotmail.com','jorge.arg091@gmail.com'];
-        // $to = ['correo1@dominio.com', 'correo2@dominio.com', 'correo3@dominio.com'];
-        $subject = 'Asunto del correo';
-        $message = '<h2>Hola!</h2><p>Este es un mensaje de prueba.</p>';
-        // $attachments = [
-        //     WRITEPATH . 'uploads/documento.pdf',  // Ruta a un archivo en el servidor
-        //     WRITEPATH . 'uploads/imagen.jpg'
-        // ];
-
-        $enviado = $emailService->sendEmail($to, $subject, $message);
-        if ($enviado) {
-            return 'Correo enviado con éxito.';
-        } else {
-            return 'Error al enviar el correo.';
-        }
-    }
->>>>>>> Stashed changes
-
         $data = [
             'title' => 'Iniciar Sesión',
             'body' => view('auth/forgot_password')
@@ -175,12 +151,14 @@ class Auth extends BaseController{
             <p>Este enlace expirará en 30 minutos.</p>
         ";
 
-        $emailService = \Config\Services::email();
-        $emailService->setTo($email);
-        $emailService->setSubject('Restablecer Contraseña');
-        $emailService->setMessage($message);
+        $emailService = new EmailService();
+        $data = [
+            'to'         => $email,
+            'subject'    => 'Restablece Contraseña',
+            'body'       => $message
+        ];
 
-        if ($emailService->send()) {
+        if ($emailService->sendEmail($data)) {
             return redirect()->back()->with('success', 'Se envió un enlace a tu correo.');
         } else {
             return redirect()->back()->with('error', 'Error al enviar el correo.');
@@ -212,5 +190,25 @@ class Auth extends BaseController{
         $resetModel->where('email', $reset['email'])->delete();
 
         return redirect()->to('/login')->with('success', 'Contraseña restablecida. Inicia sesión.');
+    }
+
+    public function enviar_correo(){
+        $emailService = new EmailService();
+
+        $data = [
+            'to'         => 'janto_sega5@hotmail.com',
+            'subject'    => 'Bienvenido a nuestro sistema',
+            'body'       => '<h1>Gracias por registrarte</h1><p>Estamos felices de tenerte.</p>',
+            'attachments'=> [WRITEPATH . 'uploads/manual.pdf'],
+            'cc'         => 'admin@example.com',
+            'bcc'        => 'auditoria@example.com',
+            'reply_to'   => 'soporte@example.com',
+        ];
+
+        if ($emailService->sendEmail($data)) {
+            echo "✅ Correo enviado correctamente.";
+        } else {
+            echo "❌ Error al enviar el correo.";
+        }
     }
 }

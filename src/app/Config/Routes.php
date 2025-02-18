@@ -21,6 +21,9 @@ $routes->group('', ['filter' => 'noauth'], function($routes) {
     $routes->get('/reset-password', 'Auth::show_reset_form');
     $routes->post('/reset-password', 'Auth::reset_password');
     $routes->post('/sendmail', 'Auth::enviar_correo');
+
+
+    $routes->get('/email', 'Auth::enviar_correo');
 });
 
 // ✅ Rutas Protegidas (con middleware 'auth')

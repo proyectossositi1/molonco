@@ -9,38 +9,67 @@ class EmailService
 {
     protected $email;
 
-    public function __construct()
-    {
+    public function __construct(){
         $config = new Email(); // Cargar configuración
         $this->email = new CI_Email($config);
     }
 
-    public function sendEmail($to, $subject, $message, $attachments = []){
-        if (is_array($to)) {
-            $this->email->setTo(implode(',', $to)); // Convierte array a lista separada por comas
-        } else {
-            $this->email->setTo($to);
+    public function sendEmail(array $data): bool{
+        // EJEMPLO DE USO DE LA FUNCION
+        // $data = [
+        //     'to'         => 'janto_sega5@hotmail.com',
+        //     'subject'    => 'Bienvenido a nuestro sistema',
+        //     'body'       => '<h1>Gracias por registrarte</h1><p>Estamos felices de tenerte.</p>',
+        //     'attachments'=> [WRITEPATH . 'uploads/manual.pdf'],
+        //     'cc'         => 'admin@example.com',
+        //     'bcc'        => 'auditoria@example.com',
+        //     'reply_to'   => 'soporte@example.com',
+        // ];
+
+        // ✅ Permitir múltiples destinatarios
+        if (isset($data['to'])) {
+            if (is_array($data['to'])) {
+                $this->email->setTo(implode(',', $data['to']));
+            } else {
+                $this->email->setTo($data['to']);
+            }
         }
-
-        $this->email->setFrom($this->email->fromEmail, $this->email->fromName);
-        $this->email->setSubject($subject);
-        $this->email->setMessage($message);
-
-        // Adjuntar archivos si existen
-        if (!empty($attachments)) {
-            foreach ($attachments as $file) {
-                if (file_exists($file)) {
+    
+        // ✅ Asignar encabezados opcionales
+        if (!empty($data['cc'])) {
+            $this->email->setCC($data['cc']);
+        }
+        if (!empty($data['bcc'])) {
+            $this->email->setBCC($data['bcc']);
+        }
+        if (!empty($data['reply_to'])) {
+            $this->email->setReplyTo($data['reply_to']);
+        }
+    
+        // ✅ Configurar cuerpo y asunto
+        // $this->email->setFrom($this->email->fromEmail, $this->email->fromName);
+        $this->email->setFrom('no-reply@molonco.com', 'CORPORATIVO GAOLA');
+        $this->email->setSubject($data['subject'] ?? 'Sin Asunto');
+        $this->email->setMessage($data['body'] ?? '');
+    
+        // ✅ Adjuntar archivos
+        if (!empty($data['attachments'])) {
+            foreach ($data['attachments'] as $file) {
+                if (@is_readable($file)) {
                     $this->email->attach($file);
                 } else {
-                    log_message('error', "El archivo adjunto no existe: {$file}");
+                    log_message('error', "Archivo adjunto inválido o no accesible: {$file}");
                 }
             }
         }
+    
+        // ✅ Enviar correo y registrar logs
         if (!$this->email->send()) {
-            log_message('error', "Error al enviar correo: " . $this->email->printDebugger(['headers']));
+            // log_message('error', "[EMAIL ERROR] {$data['to']} | " . $this->email->printDebugger(['headers']));
             return false;
         }
-        
+    
+        // log_message('info', "[EMAIL SENT] {$data['to']} | {$data['subject']} | " . date('Y-m-d H:i:s'));
         return true;
     }
 
