@@ -34,7 +34,6 @@ class EmailService
                 $this->email->setTo($data['to']);
             }
         }
-    
         // ✅ Asignar encabezados opcionales
         if (!empty($data['cc'])) {
             $this->email->setCC($data['cc']);
@@ -47,8 +46,8 @@ class EmailService
         }
     
         // ✅ Configurar cuerpo y asunto
-        // $this->email->setFrom($this->email->fromEmail, $this->email->fromName);
-        $this->email->setFrom('no-reply@molonco.com', 'CORPORATIVO GAOLA');
+        $this->email->setFrom($this->email->fromEmail, $this->email->fromName);
+        // $this->email->setFrom('no-reply@molonco.com', 'CORPORATIVO GAOLA');
         $this->email->setSubject($data['subject'] ?? 'Sin Asunto');
         $this->email->setMessage($data['body'] ?? '');
     
@@ -64,12 +63,14 @@ class EmailService
         }
     
         // ✅ Enviar correo y registrar logs
+        // ✅ Usar concatenación en lugar de llaves
+        $toString = is_array($data['to']) ? implode(', ', $data['to']) : $data['to'];
         if (!$this->email->send()) {
-            // log_message('error', "[EMAIL ERROR] {$data['to']} | " . $this->email->printDebugger(['headers']));
+            log_message('error', "[EMAIL ERROR] {$toString} | " . $this->email->printDebugger(['headers']));
             return false;
         }
     
-        // log_message('info', "[EMAIL SENT] {$data['to']} | {$data['subject']} | " . date('Y-m-d H:i:s'));
+        log_message('info', "[EMAIL SENT] {$toString} | {$data['subject']} | " . date('Y-m-d H:i:s'));
         return true;
     }
 

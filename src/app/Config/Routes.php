@@ -9,28 +9,38 @@ use CodeIgniter\Router\RouteCollection;
 // ✅ Rutas Públicas (sin middleware)
 $routes->group('', ['filter' => 'noauth'], function($routes) {
     $routes->get('/', 'Home::index');
-    $routes->get('/login', 'Auth::login');
-    $routes->post('/login', 'Auth::process_login');
-    $routes->get('/register', 'Auth::register');
-    $routes->post('/register', 'Auth::process_register');
+    $routes->get('/login', 'AuthController::login');
+    $routes->post('/login', 'AuthController::process_login');
+    $routes->get('/register', 'AuthController::register');
+    $routes->post('/register', 'AuthController::process_register');
     // Olvidé contraseña
-    $routes->get('/forgot-password', 'Auth::forgot_password');
-    $routes->post('/forgot-password', 'Auth::proccess_forgot_password');
+    $routes->get('/forgot-password', 'AuthController::forgot_password');
+    $routes->post('/forgot-password', 'AuthController::proccess_forgot_password');
 
     // Restablecer contraseña
-    $routes->get('/reset-password', 'Auth::show_reset_form');
-    $routes->post('/reset-password', 'Auth::reset_password');
-    $routes->post('/sendmail', 'Auth::enviar_correo');
+    $routes->get('/reset-password', 'AuthController::show_reset_form');
+    $routes->post('/reset-password', 'AuthController::reset_password');
+    $routes->post('/sendmail', 'AuthController::enviar_correo');
 
 
-    $routes->get('/email', 'Auth::enviar_correo');
+    $routes->get('/email', 'AuthController::enviar_correo');
 });
 
 // ✅ Rutas Protegidas (con middleware 'auth')
 $routes->group('', ['filter' => 'auth'], function($routes) {
-    $routes->get('/dashboard', 'Dashboard::index');
-    $routes->get('/logout', 'Auth::logout');
+    $routes->get('/dashboard', 'DashboardController::index');
+    $routes->get('/logout', 'AuthController::logout');
 });
+
+$routes->group('routes', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'RouteController::index');
+    $routes->post('store', 'RouteController::store');
+    $routes->post('edit', 'RouteController::edit');
+    $routes->post('destroy', 'RouteController::destroy');    
+    $routes->get('asignar', 'RouteController::assignRoles');
+    $routes->post('asignar/store', 'RouteController::storeRoleAssignment');
+});
+
 
 // Rutas protegidas para Administradores
 // $routes->group('admin', ['filter' => 'role:admin'], function($routes) {
