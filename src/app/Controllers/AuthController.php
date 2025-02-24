@@ -34,7 +34,10 @@ class AuthController extends BaseController{
         }
 
         // Buscar usuario en la base de datos
-        $user = $model->where('usr', $username)->first();
+        $user = $model->select('xx_usuarios.*, sys_user_roles.role_id')
+            ->join('sys_user_roles', 'xx_usuarios.id = sys_user_roles.user_id')
+            ->where('xx_usuarios.usr', $username)
+            ->first();
 
         if (!$user) {
             return redirect()->back()->with('error', 'El usuario no existe.');
@@ -50,6 +53,7 @@ class AuthController extends BaseController{
             'user_id' => $user['id'],
             'username' => $user['usr'],
             'email' => $user['email'],
+            'role_id' => $user['role_id'],
             'isLoggedIn' => true,
         ]);
 
@@ -57,7 +61,10 @@ class AuthController extends BaseController{
         if ($rememberMe) {
             set_cookie([
                 'name'   => 'remember_token',
-                'value'  => base64_encode($user['id']),
+                'value'  => base64_encode(json_encode([
+                    'id' => $user['id'],
+                    'role_id' => $user['role_id']
+                ])),
                 'expire' => 86400 * 30, // 30 días
                 'secure' => true,
                 'httponly' => true,

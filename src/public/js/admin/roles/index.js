@@ -8,11 +8,11 @@ $(document).ready(function () {
 
 const store = () => {
     process_store({
-        form: '#form-route',
+        form: '#form',
         fields: [
-            'name', 'route', 'controller', 'method'
+            'name', 'description'
         ],
-        route: 'admin/routes/store',
+        route: 'admin/roles/store',
         datatable: {
             id: '#datatable'
         }
@@ -21,8 +21,8 @@ const store = () => {
 
 const edit = (_id) => {
     process_edit({
-        form: '#form-route',
-        route: 'admin/routes/edit',
+        form: '#form',
+        route: 'admin/roles/edit',
         data: {
             id: _id
         }
@@ -31,8 +31,11 @@ const edit = (_id) => {
 
 const update = () => {
     process_update({
-        form: '#form-route',
-        route: 'admin/routes/store',
+        form: '#form',
+        fields: [
+            'name', 'description'
+        ],
+        route: 'admin/roles/store',
         datatable: {
             id: '#datatable'
         }
@@ -41,8 +44,8 @@ const update = () => {
 
 function destroy(_id) {
     procees_destroy({
-        form: '#form-route',
-        route: 'admin/routes/destroy',
+        form: '#form',
+        route: 'admin/roles/destroy',
         datatable: {
             id: '#datatable'
         },

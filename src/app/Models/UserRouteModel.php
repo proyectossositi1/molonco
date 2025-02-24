@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RoleRouteModel extends Model
+class UserRouteModel extends Model
 {
-    protected $table            = 'sys_role_routes';
+    protected $table            = 'sys_user_routes';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['role_id', 'route_id', 'status_alta'];
+    protected $allowedFields    = ['user_id', 'route_id', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

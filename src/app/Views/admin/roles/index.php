@@ -1,4 +1,4 @@
-<script src="<?= base_url('js/admin/routes/asignar/index.js?v='.time()); ?>"></script>
+<script src="<?= base_url('js/admin/roles/index.js?v='.time()); ?>"></script>
 
 <div class="row">
     <div class="col-md-4">
@@ -6,7 +6,7 @@
         <div class="card card-primary card-outline mb-4">
             <!--begin::Header-->
             <div class="card-header">
-                <div class="card-title">ASIGNACION DE PERMISOS</div>
+                <div class="card-title">FORMULARIO PARA NUEVOS ROLES</div>
             </div>
             <!--end::Header-->
             <!--begin::Form-->
@@ -15,19 +15,19 @@
                 <!--begin::Body-->
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="role_id" class="form-label">ROLES</label>
-                        <select id="role_id" name="role_id" class="form-control selectpicker">
-                            <option value="">ES NECESARIO SELECCIONAR UNA OPCION.</option>
-                            <?php foreach ($roles as $rol): ?>
-                            <option value="<?= esc($rol['id']); ?>"><?= esc($rol['name']); ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <label for="name" class="form-label">NOMBRE</label>
+                        <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" />
+                        <!-- <div id="nameHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                        </div> -->
                     </div>
                     <div class="mb-3">
-                        <label for="route_id" class="form-label">RUTAS</label>
-                        <select id="route_id" name="route_id" class="form-control selectpicker" multiple>
-                            <?= $rutas; ?>
-                        </select>
+                        <label for="description" class="form-label">DESCRIPCION</label>
+                        <input type="text" class="form-control" id="description" name="description"
+                            aria-describedby="descriptionHelp" />
+                        <!-- <div id="routeHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                        </div> -->
                     </div>
                 </div>
                 <!--end::Body-->
@@ -45,7 +45,7 @@
     <div class="col-md-8">
         <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title">LISTADO DE RUTAS</h3>
+                <h3 class="card-title">LISTADO DE ROLES</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body" id="datatable_refresh">
@@ -53,9 +53,8 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>ROLE</th>
-                            <th>ROUTE</th>
-                            <th>MRTHOD</th>
+                            <th>NAME</th>
+                            <th>DESCRIPCION</th>
                             <th>ACTION</th>
                         </tr>
                     </thead>
@@ -75,12 +74,11 @@
                         ?>
                         <tr>
                             <td><?= esc($value['id']); ?></td>
-                            <td><?= esc($value['role']); ?></td>
-                            <td><?= esc($value['route']); ?></td>
-                            <td><?= esc($value['method']); ?></td>
+                            <td><?= esc($value['name']); ?></td>
+                            <td><?= esc($value['description']); ?></td>
                             <td class="text-center">
-                                <!-- <button class="btn btn-default btn-xs" onclick="edit(<? // $value['id'] ?>)"><i
-                                        class="fas fa-pencil-alt" aria-hidden="true"></i></button> -->
+                                <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>)"><i
+                                        class="fas fa-pencil-alt" aria-hidden="true"></i></button>
                                 <button class="btn btn-<?=$btn_class;?> btn-xs"
                                     onclick="destroy(<?= $value['id'] ?>)"><i class="fa fa-<?=$btn_icon;?>"
                                         aria-hidden="true"></i></button>

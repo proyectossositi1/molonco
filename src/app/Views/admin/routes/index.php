@@ -22,8 +22,24 @@
                         </div> -->
                     </div>
                     <div class="mb-3">
-                        <label for="route" class="form-label">URL</label>
+                        <label for="route" class="form-label">ROUTE</label>
                         <input type="text" class="form-control" id="route" name="route" aria-describedby="routeHelp" />
+                        <!-- <div id="routeHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                        </div> -->
+                    </div>
+                    <div class="mb-3">
+                        <label for="controller" class="form-label">CONTROLLER</label>
+                        <input type="text" class="form-control" id="controller" name="controller"
+                            aria-describedby="controllerHelp" />
+                        <!-- <div id="routeHelp" class="form-text">
+                            We'll never share your email with anyone else.
+                        </div> -->
+                    </div>
+                    <div class="mb-3">
+                        <label for="method" class="form-label">METHOD</label>
+                        <input type="text" class="form-control" id="method" name="method"
+                            aria-describedby="methodHelp" />
                         <!-- <div id="routeHelp" class="form-text">
                             We'll never share your email with anyone else.
                         </div> -->
@@ -60,6 +76,8 @@
                         <tr>
                             <th>NAME</th>
                             <th>ROUTE</th>
+                            <th>CONTROLLER</th>
+                            <th>METHOD</th>
                             <th>ICON</th>
                             <th>ACTION</th>
                         </tr>
@@ -81,6 +99,8 @@
                         <tr>
                             <td><?= esc($ruta['name']); ?></td>
                             <td><?= esc($ruta['route']); ?></td>
+                            <td><?= esc($ruta['controller']); ?></td>
+                            <td><?= esc($ruta['method']); ?></td>
                             <td class="text-center"><i class="<?= esc($ruta['icon']); ?>"></i></td>
                             <td class="text-center">
                                 <button class="btn btn-default btn-xs" onclick="edit(<?= $ruta['id'] ?>)"><i

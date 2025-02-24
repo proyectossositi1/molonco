@@ -4,12 +4,13 @@ $userRole = $session->get('role_id');
 $permisosModel = new \App\Models\PermissionModel();
 
 // Obtener los permisos del usuario y organizarlos por controlador (para submenús)
-$permisos = $permisosModel
-    ->select('sys_permissions.controller, sys_permissions.method, sys_permissions.description')
-    ->join('sys_roles_permissions', 'sys_permissions.id = sys_roles_permissions.permission_id')
-    ->where('sys_roles_permissions.role_id', $userRole)
-    ->orderBy('sys_permissions.controller', 'ASC')
-    ->findAll();
+$permisos = [];
+// $permisos = $permisosModel
+//     ->select('sys_permissions.controller, sys_permissions.method, sys_permissions.description')
+//     ->join('sys_roles_permissions', 'sys_permissions.id = sys_roles_permissions.permission_id')
+//     ->where('sys_roles_permissions.role_id', $userRole)
+//     ->orderBy('sys_permissions.controller', 'ASC')
+//     ->findAll();
 
 // Agrupar por controlador para los submenús
 $menu = [];

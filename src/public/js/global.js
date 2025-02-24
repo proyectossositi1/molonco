@@ -1,20 +1,408 @@
 $(document).ready(function () {
 
-    $(`#datatable`).DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-        "buttons": ["print", "excel", "colvis"]
-        // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#datatable_wrapper .col-md-6:eq(0)');
-
 });
 
-window.alert_toastr = function (_data = { type: 'info', message: '' }) {
+const init = (_data = { datatable: {} }) => {
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // ELIMINAMOS LOS LOCAL STORAGE
+    clearLocalStorageByPrefix('ls_');
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // OCULTAMOS SIEMPRE EL BOTON UPDATE
+    $('#btn_update').css('display', 'none');
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL DATATABLE
+    if (!_data.datatable || !_data.datatable.id) {
+        console.error("Se necesita especificar un selector para el datatable.");
+        return;
+    }
+
+    // Configuración base para DataTables
+    const baseConfig = {
+        paging: true,
+        lengthChange: false,
+        searching: true,
+        ordering: true,
+        info: true,
+        autoWidth: false,
+        responsive: true
+    };
+
+    // Definir configuración según el tipo
+    let config = {};
+    switch (_data.datatable.type) {
+        case 'simple':
+            config = { ...baseConfig };
+            break;
+
+        default:
+            config = {
+                ...baseConfig,
+                buttons: ["print", "excel", "colvis"]
+                // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            };
+            break;
+    }
+
+    // Inicialización de DataTable
+    const table = $(`${_data.datatable.id}`).DataTable(config);
+
+    // Adjuntar botones si existen
+    if (config.buttons) {
+        table.buttons().container().appendTo(`${_data.datatable.id}_wrapper .col-md-6:eq(0)`);
+    }
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL SELECT2
+    $('.selectpicker').select2({
+        theme: 'bootstrap4'
+    });
+}
+
+// ------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------
+const form_validate = (_data = { form: '', fields: [] }) => {
+    let isValid = true;
+    let formSelector = _data.form;
+    let fieldsToValidate = _data.fields || []; // Lista de campos a validar
+    let form = $(formSelector);
+
+    if (form.length === 0) {
+        console.error("EL FORMULARIO ESPECIFICADO NO EXISTE: " + formSelector);
+        return false;
+    }
+
+    // Eliminar clases de error previas
+    form.find(".form-control").removeClass("is-invalid");
+
+    // Recorrer todos los inputs del formulario
+    form.find("input, textarea, select ").each(function () {
+        let input = $(this);
+        let value;
+        // let value = input.val().trim();
+        let fieldName = input.attr("name") || "CAMPO SIN NOMBRE";
+
+        // Verificar si el campo está en la lista de validación (si se especificó)
+        if (fieldsToValidate.length > 0 && !fieldsToValidate.includes(fieldName)) {
+            return; // Ignorar validación para este campo
+        }
+
+        // Validar campo vacío
+        if (value === "") {
+            input.addClass("is-invalid");
+            alert_toastr({
+                message: `EL CAMPO <strong>${fieldName.toUpperCase()} </strong> ES OBLIGATORIO.`
+            });
+            isValid = false;
+            return false; // Detiene el `each` en el primer error
+        }
+
+        // Detectar si es un select multiple
+        if (input.is('select') && input.prop('multiple')) {
+            value = input.val(); // Devuelve un array
+            if (!value || value.length === 0) {
+                input.addClass("is-invalid");
+                alert_toastr({
+                    message: `DEBES SELECCIONAR AL MENOS UNA OPCIÓN EN <strong>${input.attr("name").toUpperCase()}</strong>.`
+                });
+                isValid = false;
+                return false;
+            }
+        } else {
+            // Para inputs normales y selects simples
+            value = input.val() ? input.val().trim() : "";
+
+            // Validar campo vacío
+            if (value === "") {
+                input.addClass("is-invalid");
+                alert_toastr({
+                    message: `EL CAMPO <strong>${input.attr("name").toUpperCase()}</strong> ES OBLIGATORIO.`
+                });
+                isValid = false;
+                return false;
+            }
+        }
+
+        // Validar URL si el campo tiene el atributo `name="url"`
+        switch (input.attr("name")) {
+            case "url":
+                let urlPattern = /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+[/#?]?.*)?$/;
+                if (!urlPattern.test(value)) {
+                    input.addClass("is-invalid");
+                    alert_toastr({
+                        message: `EL CAMPO <strong>URL</strong> NO ES VALIDO. EJEMPLO: https://ejemplo.com o www.ejemplo.com`
+                    });
+                    isValid = false;
+                    return false;
+                }
+                break;
+            case "email":
+                let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(value)) {
+                    input.addClass("is-invalid");
+                    alert_toastr({
+                        message: `EL CAMPO <strong>EMAIL</strong> NO ES VÁLIDO.`
+                    });
+                    isValid = false;
+                    return false;
+                }
+                break;
+        }
+    });
+
+    return isValid;
+}
+
+const btn_action_change = (_data = { action: '' }) => {
+    switch (_data.action) {
+        case 'store':
+            $('#btn_update').css('display', 'none');
+            $('#btn_store').css('display', 'inline');
+            break;
+
+        case 'update':
+            $('#btn_update').css('display', 'inline');
+            $('#btn_store').css('display', 'none');
+            break;
+    }
+}
+
+const process_store = (_data = { form: '', route: '', fields: [], data: {}, datatable: {}, onSuccess: null, onError: null }) => {
+    // VALIDAMOS QUE EXISTA EL FORM
+    if (!_data?.form) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON EL FORMULARIO PARA REGISTRAR.' });
+        return;
+    }
+    // VALIDAMOS QUE EXISTA EL ROUTE
+    if (!_data?.route) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON LA RUTA DONDE SE REALIZARA LA ACION.' });
+        return;
+    }
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    let _form = $(`${_data.form}`);
+
+    if (form_validate({
+        form: _form,
+        fields: _data.fields
+    })) {
+        ajax_function_object({
+            route: _data.route,
+            method: 'post',
+            data: {
+                form: _form,
+                data: {
+                    data: _data.data
+                }
+            },
+            function: (_response) => {
+                if (_response.next) {
+
+                    if (!_data?.datatable?.id) {
+                        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON UN DATATABLE PARA VISUALIZAR LA INFORAMCION ACTUALIZADA.' });
+                    } else {
+                        if (_data.datatable.id && _response.view) {
+                            $(`${_data.datatable.id}_refresh`).html(_response.view);
+                        }
+                    }
+
+                    form_clean(`${_data.form}`);
+
+                    // Ejecutar callback de éxito si está definido
+                    if (typeof _data.onSuccess === 'function') {
+                        _data.onSuccess(_response);
+                    }
+                }
+
+                // Ejecutar callback de error si está definido
+                if (typeof _data.onError === 'function') {
+                    _data.onError(_response);
+                } else {
+                    alert_toastr({ type: _response.response_message.type, message: _response.response_message.message });
+                }
+            }
+        });
+    }
+}
+
+const process_edit = (_data = { form: '', route: '', fields: [], data: {}, datatable: {}, onSuccess: null, onError: null }) => {
+    // VALIDAMOS QUE EXISTA EL FORM
+    if (!_data?.form) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON EL FORMULARIO PARA EDITAR.' });
+        return;
+    }
+    // VALIDAMOS QUE EXISTA EL ROUTE
+    if (!_data?.route) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON LA RUTA DONDE SE REALIZARA LA ACION.' });
+        return;
+    }
+    // VALIDAMOS QUE EXISTA EL ID
+    if (!_data?.data?.id) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON EL IDENTIFICADOR DEL REGISTRO PARA REALIZAR LA EDICION.' });
+        return;
+    }
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    let _form = $(`${_data.form}`);
+
+    ajax_function_object({
+        route: _data.route,
+        method: 'post',
+        data: {
+            form: _form,
+            data: {
+                id: _data.data.id
+            }
+        },
+        function: (_response) => {
+            if (_response.next) {
+                // CREAMOS EL LOCALSTORAGE
+                let _name_localstorage = `ls_${splitAfterSlash(_data.route)[0]}`;
+                localstorage_function('set', _name_localstorage, _response.data);
+
+                // Llenar automáticamente los campos del formulario
+                $.each(_response.data, function (key, value) {
+                    // Rellenar inputs que coincidan con los nombres
+                    _form.find(`[name="${key}"]`).val(value);
+                });
+
+                btn_action_change({ action: 'update' });
+
+                // Ejecutar callback de éxito si está definido
+                if (typeof _data.onSuccess === 'function') {
+                    _data.onSuccess(_response);
+                }
+            } else {
+                // Ejecutar callback de error si está definido
+                if (typeof _data.onError === 'function') {
+                    _data.onError(_response);
+                } else {
+                    alert_toastr({ type: _response.response_message.type, message: _response.response_message.message });
+                }
+            }
+        }
+    });
+}
+
+const process_update = (_data = { form: '', route: '', fields: [], data: {}, datatable: {}, onSuccess: null, onError: null }) => {
+    // VALIDAMOS QUE EXISTA EL FORM
+    if (!_data?.form) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON EL FORMULARIO PARA EDITAR.' });
+        return;
+    }
+    // VALIDAMOS QUE EXISTA EL ROUTE
+    if (!_data?.route) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON LA RUTA DONDE SE REALIZARA LA ACION.' });
+        return;
+    }
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    let _form = $(`${_data.form}`);
+    // OBTENEMO EL LOCALSTORAGE CREADO
+    let _name_localstorage = `ls_${splitAfterSlash(_data.route)[0]}`;
+    let _tmp = localstorage_function('get', _name_localstorage);
+
+    ajax_function_object({
+        route: _data.route,
+        method: 'post',
+        data: {
+            form: _form,
+            data: {
+                id: _tmp.id
+            }
+        },
+        function: (_response) => {
+            if (_response.next) {
+
+                if (!_data?.datatable?.id) {
+                    alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON UN DATATABLE PARA VISUALIZAR LA INFORAMCION ACTUALIZADA.' });
+                } else {
+                    if (_data.datatable.id && _response.view) {
+                        $(`${_data.datatable.id}_refresh`).html(_response.view);
+                    }
+                }
+
+                btn_action_change({ action: 'store' });
+                clearLocalStorageByPrefix(_name_localstorage);
+                form_clean(`${_data.form}`);
+
+                // Ejecutar callback de éxito si está definido
+                if (typeof _data.onSuccess === 'function') {
+                    _data.onSuccess(_response);
+                }
+            }
+            // Ejecutar callback de error si está definido
+            if (typeof _data.onError === 'function') {
+                _data.onError(_response);
+            } else {
+                alert_toastr({ type: _response.response_message.type, message: _response.response_message.message });
+            }
+        }
+    });
+}
+
+const procees_destroy = (_data = { form: '', route: '', fields: [], data: {}, datatable: {}, onSuccess: null, onError: null }) => {
+    // VALIDAMOS QUE EXISTA EL FORM
+    if (!_data?.form) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON EL FORMULARIO PARA EDITAR.' });
+        return;
+    }
+    // VALIDAMOS QUE EXISTA EL ROUTE
+    if (!_data?.route) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON LA RUTA DONDE SE REALIZARA LA ACION.' });
+        return;
+    }
+    // VALIDAMOS QUE EXISTA EL ID
+    if (!_data?.data?.id) {
+        alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON EL IDENTIFICADOR DEL REGISTRO PARA REALIZAR LA EDICION.' });
+        return;
+    }
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    let _form = $(`${_data.form}`);
+
+    ajax_function_object({
+        route: _data.route,
+        method: 'post',
+        data: {
+            form: _form,
+            data: {
+                id: _data.data.id
+            }
+        },
+        function: (_response) => {
+            if (_response.next) {
+                if (!_data?.datatable?.id) {
+                    alert_toastr({ type: 'error', message: 'ES NECESARIO CONTAR CON UN DATATABLE PARA VISUALIZAR LA INFORAMCION ACTUALIZADA.' });
+                } else {
+                    if (_data.datatable.id && _response.view) {
+                        $(`${_data.datatable.id}_refresh`).html(_response.view);
+                    }
+                }
+
+                // Ejecutar callback de éxito si está definido
+                if (typeof _data.onSuccess === 'function') {
+                    _data.onSuccess(_response);
+                }
+            }
+
+            // Ejecutar callback de error si está definido
+            if (typeof _data.onError === 'function') {
+                _data.onError(_response);
+            } else {
+                alert_toastr({ type: _response.response_message.type, message: _response.response_message.message });
+            }
+        }
+    });
+}
+// ------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------
+
+const alert_toastr = (_data = { type: 'info', message: '' }) => {
     switch (_data.type) {
         case 'success':
             toastr.success(_data.message);
@@ -32,55 +420,7 @@ window.alert_toastr = function (_data = { type: 'info', message: '' }) {
     }
 }
 
-window.form_validate = function (_data = { form: '' }) {
-    let isValid = true;
-    let formSelector = _data.form;
-    let form = $(formSelector);
-
-    if (form.length === 0) {
-        console.error("EL FORMULARIO ESPECIFICADO NO EXISTE: " + formSelector);
-        return false;
-    }
-
-    // Eliminar clases de error previas
-    form.find(".form-control").removeClass("is-invalid");
-
-    // Recorrer todos los inputs del formulario
-    form.find("input").each(function () {
-        let input = $(this);
-        let value = input.val().trim();
-        let fieldName = input.attr("name") || "CAMPO SIN NOMBRE";
-
-        // Validar campo vacío
-        if (value === "") {
-            input.addClass("is-invalid");
-            alert_toastr({
-                message: `EL CAMPO <strong>${fieldName.toUpperCase()} </strong> ES OBLIGATORIO.`
-            });
-            isValid = false;
-            return false; // Detiene el `each` en el primer error
-        }
-
-        // Validar URL si el campo tiene el atributo `name="url"`
-        switch (input.attr("name")) {
-            case "url":
-                let urlPattern = /^(https?:\/\/)?([\w\-]+(\.[\w\-]+)+[/#?]?.*)?$/;
-                if (!urlPattern.test(value)) {
-                    input.addClass("is-invalid");
-                    alert_toastr({
-                        message: `EL CAMPO <strong>URL</strong> NO ES VALIDO. EJEMPLO: https://ejemplo.com o www.ejemplo.com`
-                    });
-                    isValid = false;
-                    return false;
-                }
-                break;
-        }
-    });
-
-    return isValid;
-}
-
-window.ajax_function_object = function (data = { server: 'default', route: '', data: {}, method: '', async: true, function: function () { } }) {
+const ajax_function_object = (data = { server: 'default', route: '', data: {}, method: '', async: true, function: function () { } }) => {
 
     switch (data.server) {
         case 'nodejs':
@@ -161,7 +501,7 @@ window.ajax_function_object = function (data = { server: 'default', route: '', d
     }
 }
 
-window.numeric_format = function (value, decimals = 2, separators = [',', '.']) {
+const numeric_format = (value, decimals = 2, separators = [',', '.']) => {
     // Validar y preparar valores iniciales
     if (isNaN(value)) return '0';
     decimals = Math.max(0, parseInt(decimals));
@@ -191,7 +531,7 @@ window.numeric_format = function (value, decimals = 2, separators = [',', '.']) 
     return formattedNumber;
 };
 
-window.parseAndRound = function (value) {
+const parseAndRound = (value) => {
     const parsedValue = parseFloat(value);
     if (isNaN(parsedValue)) {
         return 0; // Devolver 0 si el valor no es un número
@@ -199,7 +539,7 @@ window.parseAndRound = function (value) {
     return parseFloat(parsedValue.toFixed(2)); // Redondear a 2 decimales y devolver como número
 }
 
-window.calcularDiferenciaDias = function (_data = { fecha_minima: null, fecha_maxima: null }) {
+const calcularDiferenciaDias = (_data = { fecha_minima: null, fecha_maxima: null }) => {
     // Validar que _data tenga las propiedades requeridas
     if (!_data.fecha_minima && !_data.fecha_maxima) {
         console.error("DEBE PROPORCIONAL AL MENOS UNA FECHA MINIMA O MAXIMA.");
@@ -233,7 +573,7 @@ window.calcularDiferenciaDias = function (_data = { fecha_minima: null, fecha_ma
     return diferenciaDias;
 };
 
-window.getFecha = function (fecha = "") {
+const getFecha = (fecha = "") => {
     if (fecha == "") {
         var today = new Date();
         return today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -244,12 +584,12 @@ window.getFecha = function (fecha = "") {
     //return new Date().toJSON().slice(0,10).replace(/-/g,'/');
 }
 
-window.validateEmail = function (email) {
+const validateEmail = (email) => {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
 
-window.localstorage_function = function (_tipo, _variable, _object = {}) {
+const localstorage_function = (_tipo, _variable, _object = {}) => {
     switch (_tipo.toLowerCase()) {
         case 'get':
             return $.parseJSON(localStorage.getItem(_variable));
@@ -263,7 +603,7 @@ window.localstorage_function = function (_tipo, _variable, _object = {}) {
     }
 }
 
-window.split_datetime = function (_date_time = '') {
+const split_datetime = (_date_time = '') => {
     if (_date_time != '') {
         // CONVERTIMOS LA CADENA A UN OBJETO DATE
         let fechaHora = new Date(_date_time);
@@ -280,8 +620,35 @@ window.split_datetime = function (_date_time = '') {
     return false;
 }
 
-window.form_clean = function (element) {
-    $('#' + element)[0].reset();
+const form_clean = (element) => {
+    $(element)[0].reset();
     // $('.selectpicker').val("").trigger("change");
-    $('#' + element + ' .selectpicker').val("").select2();
+    // $(`${element} .selectpicker`).val("").select2();
+}
+
+const clearLocalStorageByPrefix = (prefix) => {
+    // Recorremos todas las claves en el localStorage
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+
+        // Si la clave empieza con el prefijo, la eliminamos
+        if (key && key.startsWith(prefix)) {
+            localStorage.removeItem(key);
+            // Reducimos el contador porque se eliminó un elemento
+            i--;
+        }
+    }
+}
+
+const splitAfterSlash = (str, fromIndex = 0) => {
+    if (typeof str !== 'string') {
+        console.error('El argumento debe ser una cadena de texto.');
+        return [];
+    }
+
+    // ✅ Dividir la cadena por "/"
+    const parts = str.split('/');
+
+    // ✅ Retornar las partes después del índice especificado
+    return parts.slice(fromIndex);
 }

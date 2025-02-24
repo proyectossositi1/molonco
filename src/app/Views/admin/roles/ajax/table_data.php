@@ -3,18 +3,16 @@
 <table id="datatable" class="table table-bordered table-hover">
     <thead>
         <tr>
+            <th>ID</th>
             <th>NAME</th>
-            <th>ROUTE</th>
-            <th>CONTROLLER</th>
-            <th>METHOD</th>
-            <th>ICON</th>
+            <th>DESCRIPCION</th>
             <th>ACTION</th>
         </tr>
     </thead>
     <tbody>
         <?php 
-            foreach ($rutas as $ruta): 
-                switch ($ruta['status_alta']) {
+            foreach ($data as $key => $value): 
+                switch ($value['status_alta']) {
                     case 1:
                         $btn_class = 'danger';
                         $btn_icon = 'times';
@@ -26,15 +24,13 @@
                 }
         ?>
         <tr>
-            <td><?= esc($ruta['name']); ?></td>
-            <td><?= esc($ruta['route']); ?></td>
-            <td><?= esc($ruta['controller']); ?></td>
-            <td><?= esc($ruta['method']); ?></td>
-            <td class="text-center"><i class="<?= esc($ruta['icon']); ?>"></i></td>
+            <td><?= esc($value['id']); ?></td>
+            <td><?= esc($value['name']); ?></td>
+            <td><?= esc($value['description']); ?></td>
             <td class="text-center">
-                <button class="btn btn-default btn-xs" onclick="edit(<?= $ruta['id'] ?>)"><i class="fas fa-pencil-alt"
+                <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>)"><i class="fas fa-pencil-alt"
                         aria-hidden="true"></i></button>
-                <button class="btn btn-<?=$btn_class;?> btn-xs" onclick="destroy(<?= $ruta['id'] ?>)"><i
+                <button class="btn btn-<?=$btn_class;?> btn-xs" onclick="destroy(<?= $value['id'] ?>)"><i
                         class="fa fa-<?=$btn_icon;?>" aria-hidden="true"></i></button>
             </td>
         </tr>

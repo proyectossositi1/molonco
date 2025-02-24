@@ -38,13 +38,17 @@
         href="<?= base_url('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css'); ?>">
     <!-- Toastr -->
     <link rel="stylesheet" href="<?= base_url('adminlte/plugins/toastr/toastr.min.css'); ?>">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/select2/css/select2.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?= base_url('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
 
 
     <!--begin::Script-->
     <!-- jQuery -->
     <script src="<?= base_url('adminlte/plugins/jquery/jquery.min.js'); ?>"></script>
     <!-- jQuery UI 1.11.4 -->
-    <script src="<?= base_url('adminlte/plugins/jquery-ui/jquery-ui.min.js'); ?>"></script>
+    <!-- <script src="<? // base_url('adminlte/plugins/jquery-ui/jquery-ui.min.js'); ?>"></script> -->
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
     $.widget.bridge('uibutton', $.ui.button)
@@ -90,6 +94,11 @@
     <script src="<?= base_url('adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js'); ?>"></script>
     <!-- Toastr -->
     <script src="<?= base_url('adminlte/plugins/toastr/toastr.min.js'); ?>"></script>
+    <!-- Select2 -->
+    <script src="<?= base_url('adminlte/plugins/select2/js/select2.full.min.js'); ?>"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="<?= base_url('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'); ?>">
+    </script>
 
     <!-- JavaScript Customs -->
     <script>
