@@ -12,7 +12,7 @@ class RoleModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'description'];
+    protected $allowedFields    = ['name', 'description', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

@@ -5,150 +5,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="title" content="Molonco | Dashboard" />
-    <meta name="author" content="jantor,foca" />
-    <title><?= $title ?? 'ERP' ?></title>
-    <!--begin::Fonts-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
-    <!--end::Fonts-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
-    <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="<?= base_url('adminlte/dist/css/adminlte.css'); ?>" />
-    <!--end::Required Plugin(AdminLTE)-->
-    <!-- apexcharts -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
-        integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous" />
-    <!-- jsvectormap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
-        integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous" />
+    <meta name="author" content="jantor,foca,pedro" />
+    <meta name="X-CSRF-TOKEN" content="" />
+    <title><?= $title ?? 'MOLONCO' ?></title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/fontawesome-free/css/all.min.css'); ?>">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet"
+        href="<?= base_url('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css'); ?>">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css'); ?>">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/jqvmap/jqvmap.min.css'); ?>">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/dist/css/adminlte.min.css'); ?>">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css'); ?>">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/daterangepicker/daterangepicker.css'); ?>">
+    <!-- summernote -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/summernote/summernote-bs4.min.css'); ?>">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?= base_url('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?= base_url('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css'); ?>">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/toastr/toastr.min.css'); ?>">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?= base_url('adminlte/plugins/select2/css/select2.min.css'); ?>">
+    <link rel="stylesheet"
+        href="<?= base_url('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
 
 
     <!--begin::Script-->
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
-    </script>
-    <!--end::Required Plugin(popperjs for Bootstrap 5)-->
-    <!--begin::Required Plugin(Bootstrap 5)-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
-    </script>
-    <!--end::Required Plugin(Bootstrap 5)-->
-    <!--begin::Required Plugin(AdminLTE)-->
-    <script src="../../dist/js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)-->
-    <!--begin::OverlayScrollbars Configure-->
+    <!-- jQuery -->
+    <script src="<?= base_url('adminlte/plugins/jquery/jquery.min.js'); ?>"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <!-- <script src="<? // base_url('adminlte/plugins/jquery-ui/jquery-ui.min.js'); ?>"></script> -->
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
-        scrollbarClickScroll: true,
-    };
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-            OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                scrollbars: {
-                    theme: Default.scrollbarTheme,
-                    autoHide: Default.scrollbarAutoHide,
-                    clickScroll: Default.scrollbarClickScroll,
-                },
-            });
-        }
-    });
+    $.widget.bridge('uibutton', $.ui.button)
     </script>
-    <!--end::OverlayScrollbars Configure-->
-    <!-- OPTIONAL SCRIPTS -->
-    <!-- sortablejs -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
-        integrity="sha256-ipiJrswvAR4VAx/th+6zWsdeYmVae0iJuiR+6OqHJHQ=" crossorigin="anonymous"></script>
-    <!-- sortablejs -->
-    <script>
-    const connectedSortables = document.querySelectorAll('.connectedSortable');
-    connectedSortables.forEach((connectedSortable) => {
-        let sortable = new Sortable(connectedSortable, {
-            group: 'shared',
-            handle: '.card-header',
-        });
-    });
-
-    const cardHeaders = document.querySelectorAll('.connectedSortable .card-header');
-    cardHeaders.forEach((cardHeader) => {
-        cardHeader.style.cursor = 'move';
-    });
-    </script>
-    <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
-        integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script>
+    <!-- Bootstrap 4 -->
+    <script src="<?= base_url('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
     <!-- ChartJS -->
-    <!-- jsvectormap -->
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"
-        integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"
-        integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script>
-    <!-- jsvectormap -->
+    <script src="<?= base_url('adminlte/plugins/chart.js/Chart.min.js'); ?>"></script>
+    <!-- Sparkline -->
+    <script src="<?= base_url('adminlte/plugins/sparklines/sparkline.js'); ?>"></script>
+    <!-- JQVMap -->
+    <script src="<?= base_url('adminlte/plugins/jqvmap/jquery.vmap.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/jqvmap/maps/jquery.vmap.usa.js'); ?>"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="<?= base_url('adminlte/plugins/jquery-knob/jquery.knob.min.js'); ?>"></script>
+    <!-- daterangepicker -->
+    <script src="<?= base_url('adminlte/plugins/moment/moment.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/daterangepicker/daterangepicker.js'); ?>"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="<?= base_url('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'); ?>">
+    </script>
+    <!-- Summernote -->
+    <script src="<?= base_url('adminlte/plugins/summernote/summernote-bs4.min.js'); ?>"></script>
+    <!-- overlayScrollbars -->
+    <script src="<?= base_url('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js'); ?>"></script>
+    <!-- AdminLTE App -->
+    <script src="<?= base_url('adminlte/dist/js/adminlte.js'); ?>"></script>
+
+    <!-- DataTables  & Plugins -->
+    <script src="<?= base_url('adminlte/plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js'); ?>">
+    </script>
+    <script src="<?= base_url('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js'); ?>">
+    </script>
+    <script src="<?= base_url('adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/jszip/jszip.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/pdfmake/pdfmake.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/pdfmake/vfs_fonts.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/datatables-buttons/js/buttons.html5.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/datatables-buttons/js/buttons.print.min.js'); ?>"></script>
+    <script src="<?= base_url('adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js'); ?>"></script>
+    <!-- Toastr -->
+    <script src="<?= base_url('adminlte/plugins/toastr/toastr.min.js'); ?>"></script>
+    <!-- Select2 -->
+    <script src="<?= base_url('adminlte/plugins/select2/js/select2.full.min.js'); ?>"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="<?= base_url('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'); ?>">
+    </script>
+
+    <!-- JavaScript Customs -->
+    <script>
+    const BASE_URL = `<?= base_url(); ?>`;
+    </script>
+    <script src="<?= base_url('js/global.js?v='.time()); ?>"></script>
 </head>
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-    <!--begin::App Wrapper-->
-    <div class="app-wrapper">
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="<?= base_url('adminlte/dist/img/AdminLTELogo.png'); ?>"
+                alt="AdminLTELogo" height="60" width="60">
+        </div>
+
         <!--begin::Header-->
         <?= view('layouts/header') ?>
         <!--end::Header-->
+
         <!--begin::Sidebar-->
         <?= view('layouts/sidebar') ?>
         <!--end::Sidebar-->
-        <!--begin::App Main-->
-        <main class="app-main">
-            <!--begin::App Content Header-->
-            <div class="app-content-header">
-                <!--begin::Container-->
+
+        <!-- Content Wrapper. Contains page content -->
+        <?php 
+            $roleRouteModel = new \App\Models\RoleRouteModel();
+            $currentRoute = uri_string(); // Obtiene la ruta actual sin dominio 
+            
+            // Obtener los permisos del usuario y organizarlos por controlador (para submenús)
+            $menu = [];
+            $menu = $roleRouteModel
+                ->select('sys_routes.controller, sys_routes.method, sys_routes.name, sys_routes.route, sys_routes.icon, sys_menus.name AS menu, sys_menus.icon AS menu_icon')
+                ->join('sys_roles', 'sys_roles.id = sys_role_routes.role_id')
+                ->join('sys_routes', 'sys_routes.id = sys_role_routes.route_id')
+                ->join('sys_menus', 'sys_menus.id = sys_routes.id_menu')
+                ->where('sys_routes.route', $currentRoute)
+                ->like('sys_routes.method', 'index')
+                ->orderBy('sys_menus.order', 'ASC')
+                ->first();
+        ?>
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
                 <div class="container-fluid">
-                    <!--begin::Row-->
-                    <div class="row">
+                    <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Dashboard</h3>
-                        </div>
+                            <h1 class="m-0 text-capitalize"><?= $menu['menu']; ?></h1>
+                        </div><!-- /.col -->
                         <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-end">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item text-capitalize"><a href="#"><?= $menu['name']; ?></a></li>
+                                <li class="breadcrumb-item text-capitalize active">
+                                    <?= $menu['method']; ?>
+                                </li>
                             </ol>
-                        </div>
-                    </div>
-                    <!--end::Row-->
-                </div>
-                <!--end::Container-->
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
             </div>
-            <!--end::App Content Header-->
-            <!--begin::App Content-->
-            <div class="app-content">
-                <!--begin::Container-->
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
                 <div class="container-fluid">
                     <?= $body ?? '' ?>
-                </div>
-                <!--end::Container-->
-            </div>
-            <!--end::App Content-->
-        </main>
-        <!--end::App Main-->
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+
         <!--begin::Footer-->
         <?= view('layouts/footer') ?>
         <!--end::Footer-->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
     </div>
-    <!--end::App Wrapper-->
+    <!-- ./wrapper -->
 </body>
 
 </html>

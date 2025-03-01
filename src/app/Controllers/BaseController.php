@@ -35,7 +35,7 @@ abstract class BaseController extends Controller
      *
      * @var list<string>
      */
-    protected $helpers = [];
+    protected $helpers = ['view_helper', 'tools_helper'];
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -50,7 +50,22 @@ abstract class BaseController extends Controller
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
+        helper(['url', 'form', 'cookie']);
         $this->session = session();
+        if (!$this->session->get('isLoggedIn') && get_cookie('remember_token')) {
+            $userId = base64_decode(get_cookie('remember_token'));
+            $userModel = new \App\Models\UserModel();
+            $user = $userModel->find($userId);
+    
+            if ($user) {
+                $session->set([
+                    'user_id'   => $user['id'],
+                    'username'  => $user['usr'],
+                    'email'     => $user['email'],
+                    'isLoggedIn'=> true,
+                ]);
+            }
+        }
 
         // Preload any models, libraries, etc, here.
 

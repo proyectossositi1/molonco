@@ -20,8 +20,9 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="rememberme" id="flexCheckDefault" />
-                            <label class="form-check-label" for="flexCheckDefault"> Remember Me </label>
+                            <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me"
+                                value="1" />
+                            <label class="form-check-label" for="remember_me"> Remember Me </label>
                         </div>
                     </div>
                     <!-- /.col -->
@@ -44,7 +45,7 @@
                 </a>
             </div> -->
             <!-- /.social-auth-links -->
-            <p class="mt-5 mb-1"><a href="#">I forgot my password</a></p>
+            <p class="mt-5 mb-1"><a href="<?= site_url('forgot-password'); ?>">I forgot my password</a></p>
             <p class="mb-0">
                 <a href="<?= site_url('register') ?>" class="text-center"> Register a new membership </a>
             </p>

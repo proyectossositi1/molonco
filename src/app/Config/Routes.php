@@ -9,16 +9,60 @@ use CodeIgniter\Router\RouteCollection;
 // ✅ Rutas Públicas (sin middleware)
 $routes->group('', ['filter' => 'noauth'], function($routes) {
     $routes->get('/', 'Home::index');
-    $routes->get('/login', 'Auth::login');
-    $routes->post('/login', 'Auth::process_login');
-    $routes->get('/register', 'Auth::register');
-    $routes->post('/register', 'Auth::process_register');
+    $routes->get('/login', 'AuthController::login');
+    $routes->post('/login', 'AuthController::process_login');
+    $routes->get('/register', 'AuthController::register');
+    $routes->post('/register', 'AuthController::process_register');
+    // Olvidé contraseña
+    $routes->get('/forgot-password', 'AuthController::forgot_password');
+    $routes->post('/forgot-password', 'AuthController::proccess_forgot_password');
+
+    // Restablecer contraseña
+    $routes->get('/reset-password', 'AuthController::show_reset_form');
+    $routes->post('/reset-password', 'AuthController::reset_password');
+    $routes->post('/sendmail', 'AuthController::enviar_correo');
+
+
+    $routes->get('/email', 'AuthController::enviar_correo');
 });
 
-// ✅ Rutas Protegidas (con middleware 'auth')
+
+// Rutas Protegidas (con middleware 'auth')
 $routes->group('', ['filter' => 'auth'], function($routes) {
-    $routes->get('/dashboard', 'Dashboard::index');
-    $routes->get('/logout', 'Auth::logout');
+    $routes->get('/dashboard', 'DashboardController::index');
+    $routes->get('/logout', 'AuthController::logout');
+});
+
+
+$routes->group('admin', ['filter' => 'auth'], function ($routes) {
+    // ROLES
+    $routes->get('roles/', 'RoleController::index');
+    $routes->post('roles/store', 'RoleController::store');
+    $routes->post('roles/edit', 'RoleController::edit');
+    $routes->post('roles/destroy', 'RoleController::destroy'); 
+    // ASIGNACION DE ROLES A MENUS
+    $routes->get('roles/asignar', 'RoleController::index_assignRoles');
+    $routes->post('roles/asignar/store', 'RoleController::store_roleAssignment');
+    $routes->post('roles/asignar/destroy', 'RoleController::destroy_roleAssignment');  
+    // PERMISOS
+    $routes->get('permisos/', 'PermissionController::index');
+    $routes->post('permisos/store', 'PermissionController::store');
+    $routes->post('permisos/edit', 'PermissionController::edit');
+    $routes->post('permisos/destroy', 'PermissionController::destroy');  
+    // RUTAS
+    $routes->get('routes/', 'RouteController::index');
+    $routes->post('routes/store', 'RouteController::store');
+    $routes->post('routes/edit', 'RouteController::edit');
+    $routes->post('routes/destroy', 'RouteController::destroy');    
+    // ASIGNACION DE RUTAS A ROLES
+    $routes->get('routes/asignar', 'RouteController::index_assignRoles');
+    $routes->post('routes/asignar/store', 'RouteController::store_roleAssignment');
+    $routes->post('routes/asignar/destroy', 'RouteController::destroy_roleAssignment');
+    // MENUS
+    $routes->get('menus/', 'MenuController::index');
+    $routes->post('menus/store', 'MenuController::store');
+    $routes->post('menus/edit', 'MenuController::edit');
+    $routes->post('menus/destroy', 'MenuController::destroy'); 
 });
 
 // Rutas protegidas para Administradores

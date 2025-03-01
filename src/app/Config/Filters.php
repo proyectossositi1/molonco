@@ -34,8 +34,9 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
-        'auth'          => \App\Filters\Auth::class,
-        'noauth' => \App\Filters\NoAuth::class,
+        'auth'          => \App\Filters\AuthFilter::class,
+        'noauth'        => \App\Filters\NoAuth::class,
+        // 'permission'    => \App\Filters\PermissionFilter::class
     ];
 
     /**
@@ -74,6 +75,7 @@ class Filters extends BaseFilters
             // 'honeypot',
             'csrf',
             // 'invalidchars',
+            'auth' => ['except' => ['login', 'register', '/']]
         ],
         'after' => [
             // 'honeypot',
@@ -94,7 +96,9 @@ class Filters extends BaseFilters
      *
      * @var array<string, list<string>>
      */
-    public array $methods = [];
+    public array $methods = [
+        'post' => ['csrf'],  // ✅ Aplica solo a POST
+    ];
 
     /**
      * List of filter aliases that should run on any
@@ -105,5 +109,7 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'auth' => ['before' => ['dashboard/*', 'routes/*']],
+    ];
 }
