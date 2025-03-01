@@ -7,12 +7,18 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\RouteModel;
 use App\Models\RoleRouteModel;
 use App\Models\RoleModel;
+use App\Models\MenuModel;
 
 class RouteController extends BaseController
 {
     public function index(){
         $rutaModel = new RouteModel();
-        $data['rutas'] = $rutaModel->findAll();
+        $menuModel = new MenuModel();
+        $data['menus'] = $menuModel->where(['status_alta' => 1])->findAll();
+        $data['rutas'] = $rutaModel
+            ->join('sys_menus', 'sys_menus.id = sys_routes.id_menu', 'left')
+            ->select('sys_routes.*, sys_menus.name AS menu')
+            ->findAll();
         
         return renderPage([
             'view'  => 'admin/routes/index',
@@ -67,7 +73,10 @@ class RouteController extends BaseController
             }                
             
 
-            $data_view['rutas'] = $rutaModel->findAll();
+            $data_view['rutas'] =  $rutaModel
+                ->join('sys_menus', 'sys_menus.id = sys_routes.id_menu', 'left')
+                ->select('sys_routes.*, sys_menus.name AS menu')
+                ->findAll();
             $response['view'] =  view('admin/routes/ajax/table_data', $data_view);
         }
         
@@ -115,7 +124,10 @@ class RouteController extends BaseController
                         'type' => 'success',
                         'message' => 'SE '.$messageEstado.' EL REGISTO CON ID <strong>'.$id.'</strong> EXITOSAMENTE.'
                     ];
-                    $data_view['rutas'] = $rutaModel->findAll();
+                    $data_view['rutas'] =  $rutaModel
+                        ->join('sys_menus', 'sys_menus.id = sys_routes.id_menu', 'left')
+                        ->select('sys_routes.*, sys_menus.name AS menu')
+                        ->findAll();
                     $response['view'] =  view('admin/routes/ajax/table_data', $data_view);
                 }else{
                     $response['response_message'] = [
@@ -130,7 +142,8 @@ class RouteController extends BaseController
         return json_encode($response);
     }
 
-    // ------
+    // ------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------
     // INDEX: ASIGNACION DE RUTAS
     public function index_assignRoles(){
         $rutaModel = new RouteModel();

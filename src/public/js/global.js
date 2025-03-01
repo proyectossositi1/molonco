@@ -623,7 +623,7 @@ const split_datetime = (_date_time = '') => {
 const form_clean = (element) => {
     $(element)[0].reset();
     // $('.selectpicker').val("").trigger("change");
-    // $(`${element} .selectpicker`).val("").select2();
+    $(`${element} .selectpicker`).val("").select2();
 }
 
 const clearLocalStorageByPrefix = (prefix) => {

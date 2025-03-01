@@ -40,11 +40,15 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('roles/store', 'RoleController::store');
     $routes->post('roles/edit', 'RoleController::edit');
     $routes->post('roles/destroy', 'RoleController::destroy'); 
+    // ASIGNACION DE ROLES A MENUS
+    $routes->get('roles/asignar', 'RoleController::index_assignRoles');
+    $routes->post('roles/asignar/store', 'RoleController::store_roleAssignment');
+    $routes->post('roles/asignar/destroy', 'RoleController::destroy_roleAssignment');  
     // PERMISOS
     $routes->get('permisos/', 'PermissionController::index');
     $routes->post('permisos/store', 'PermissionController::store');
     $routes->post('permisos/edit', 'PermissionController::edit');
-    $routes->post('permisos/destroy', 'PermissionController::destroy');    
+    $routes->post('permisos/destroy', 'PermissionController::destroy');  
     // RUTAS
     $routes->get('routes/', 'RouteController::index');
     $routes->post('routes/store', 'RouteController::store');
@@ -54,6 +58,11 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('routes/asignar', 'RouteController::index_assignRoles');
     $routes->post('routes/asignar/store', 'RouteController::store_roleAssignment');
     $routes->post('routes/asignar/destroy', 'RouteController::destroy_roleAssignment');
+    // MENUS
+    $routes->get('menus/', 'MenuController::index');
+    $routes->post('menus/store', 'MenuController::store');
+    $routes->post('menus/edit', 'MenuController::edit');
+    $routes->post('menus/destroy', 'MenuController::destroy'); 
 });
 
 // Rutas protegidas para Administradores

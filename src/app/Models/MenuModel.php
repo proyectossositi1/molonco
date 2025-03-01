@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RolePermissionModel extends Model
+class MenuModel extends Model
 {
-    protected $table            = 'sys_roles_permissions';
+    protected $table            = 'sys_menus';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['role_id', 'permission_id', 'status_alta'];
+    protected $allowedFields    = ['name', 'icon', 'order', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
