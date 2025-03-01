@@ -10,7 +10,7 @@ const store = () => {
     process_store({
         form: '#form-route',
         fields: [
-            'id_menu', 'name', 'route', 'controller', 'method'
+            'name', 'route', 'controller', 'method'
         ],
         route: 'admin/routes/store',
         datatable: {
@@ -33,7 +33,7 @@ const update = () => {
     process_update({
         form: '#form-route',
         fields: [
-            'id_menu', 'name', 'route', 'controller', 'method'
+            'name', 'route', 'controller', 'method'
         ],
         route: 'admin/routes/store',
         datatable: {

@@ -12,7 +12,7 @@ $permisos = $roleRouteModel
     ->join('sys_menus', 'sys_menus.id = sys_routes.id_menu')
     ->where('sys_role_routes.role_id', $userRole)
     ->like('sys_routes.method', 'index')
-    ->orderBy('sys_routes.name', 'ASC')
+    ->orderBy('sys_menus.order', 'ASC')
     ->findAll();
 // Agrupar por controlador para los submenús
 $menu = [];
@@ -23,7 +23,7 @@ foreach ($permisos as $key => $value) {
         'routes' => []
     ];    
 }
-
+// dd($permisos);
 foreach ($permisos as $key => $value) {
     $menu[$value['menu']]['routes'][] = $value;
 }
@@ -67,8 +67,8 @@ foreach ($permisos as $key => $value) {
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                <li class="nav-item">
+                with font-awesome or any other icon font library -->
+                <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
@@ -78,13 +78,13 @@ foreach ($permisos as $key => $value) {
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="<?= site_url('/dashboard'); ?>" class="nav-link">
+                            <a href="<? // site_url('/dashboard'); ?>" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Dashboard v1</p>
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
 
                 <!-- Menú dinámico -->
                 <?php $currentRoute = uri_string(); // Obtiene la ruta actual sin dominio ?>
@@ -96,7 +96,8 @@ foreach ($permisos as $key => $value) {
                         <i class="nav-icon <?= $value['icon']; ?>"></i> <!-- Icono general para módulos -->
                         <p>
                             <?= ucfirst($key) ?>
-                            <i class="nav-arrow bi bi-chevron-right"></i>
+                            <!-- <i class="nav-arrow bi bi-chevron-right"></i> -->
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">

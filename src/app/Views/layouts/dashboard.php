@@ -125,18 +125,36 @@
         <!--end::Sidebar-->
 
         <!-- Content Wrapper. Contains page content -->
+        <?php 
+            $roleRouteModel = new \App\Models\RoleRouteModel();
+            $currentRoute = uri_string(); // Obtiene la ruta actual sin dominio 
+            
+            // Obtener los permisos del usuario y organizarlos por controlador (para submenús)
+            $menu = [];
+            $menu = $roleRouteModel
+                ->select('sys_routes.controller, sys_routes.method, sys_routes.name, sys_routes.route, sys_routes.icon, sys_menus.name AS menu, sys_menus.icon AS menu_icon')
+                ->join('sys_roles', 'sys_roles.id = sys_role_routes.role_id')
+                ->join('sys_routes', 'sys_routes.id = sys_role_routes.route_id')
+                ->join('sys_menus', 'sys_menus.id = sys_routes.id_menu')
+                ->where('sys_routes.route', $currentRoute)
+                ->like('sys_routes.method', 'index')
+                ->orderBy('sys_menus.order', 'ASC')
+                ->first();
+        ?>
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
+                            <h1 class="m-0 text-capitalize"><?= $menu['menu']; ?></h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
+                                <li class="breadcrumb-item text-capitalize"><a href="#"><?= $menu['name']; ?></a></li>
+                                <li class="breadcrumb-item text-capitalize active">
+                                    <?= $menu['method']; ?>
+                                </li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->

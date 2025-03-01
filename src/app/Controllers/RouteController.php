@@ -36,6 +36,7 @@ class RouteController extends BaseController
             $rutaModel = new RouteModel();
             // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
             $data->name = limpiar_cadena_texto($data->name);
+            if($data->icon == "") unset($data->icon);
             
             // VALIDAMOS SI EXISTE EL ID PARA EDITAR O AGREGAR
             if($id != ""){
