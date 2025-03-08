@@ -65,6 +65,24 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('menus/destroy', 'MenuController::destroy'); 
 });
 
+$routes->group('catalogos', ['filter' => 'auth'], function($routes) {
+    // EMPRESAS
+    $routes->get('empresas/', 'CatEmpresaController::index');
+    $routes->post('empresas/store', 'CatEmpresaController::store');
+    $routes->post('empresas/edit', 'CatEmpresaController::edit');
+    $routes->post('empresas/destroy', 'CatEmpresaController::destroy'); 
+     // ORGANIZACIONES
+    $routes->get('organizaciones/', 'CatOrganizacionController::index');
+    $routes->post('organizaciones/store', 'CatOrganizacionController::store');
+    $routes->post('organizaciones/edit', 'CatOrganizacionController::edit');
+    $routes->post('organizaciones/destroy', 'CatOrganizacionController::destroy'); 
+    // PRODUCTOS
+    $routes->get('productos/', 'CatProductoController::index');
+    $routes->post('productos/store', 'CatProductoController::store');
+    $routes->post('productos/edit', 'CatProductoController::edit');
+    $routes->post('productos/destroy', 'CatProductoController::destroy'); 
+});
+
 // Rutas protegidas para Administradores
 // $routes->group('admin', ['filter' => 'role:admin'], function($routes) {
 //     $routes->get('usuarios', 'Admin::usuarios');

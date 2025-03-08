@@ -59,6 +59,17 @@ const init = (_data = { datatable: {} }) => {
     $('.selectpicker').select2({
         theme: 'bootstrap4'
     });
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL TRUMBOWYG - TEXTAREA
+    $('.textareapicker').trumbowyg({
+        resetCss: true,
+        autogrow: true
+    });
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL NUMBER
+    $('.numeric').number(true, 2);
 }
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -265,8 +276,23 @@ const process_edit = (_data = { form: '', route: '', fields: [], data: {}, datat
 
                 // Llenar automáticamente los campos del formulario
                 $.each(_response.data, function (key, value) {
-                    // Rellenar inputs que coincidan con los nombres
-                    _form.find(`[name="${key}"]`).val(value);
+                    let field = _form.find(`[name="${key}"]`);
+
+                    if (field.length) {
+                        // Si es un select, activar Select2
+                        if (field.is('select')) {
+                            field.val(value).trigger('change'); // Cambiar el valor y disparar evento de cambio
+                            field.select2({
+                                theme: 'bootstrap4'
+                            });
+                        } else if (field.is('textarea') && field.hasClass('textareapicker')) {
+                            // Si es un textarea, asignar el valor correctamente
+                            field.trumbowyg('html', value);
+                        } else {
+                            // Si es un input normal, solo asignar el valor
+                            field.val(value);
+                        }
+                    }
                 });
 
                 btn_action_change({ action: 'update' });
@@ -623,7 +649,13 @@ const split_datetime = (_date_time = '') => {
 const form_clean = (element) => {
     $(element)[0].reset();
     // $('.selectpicker').val("").trigger("change");
-    $(`${element} .selectpicker`).val("").select2();
+    $(`${element} .selectpicker`).val("").select2({
+        theme: 'bootstrap4'
+    });
+
+    $(`${element} textarea.textareapicker`).each(function () {
+        $(this).trumbowyg('empty'); // Alternativamente, usar .trumbowyg('html', '')
+    });
 }
 
 const clearLocalStorageByPrefix = (prefix) => {

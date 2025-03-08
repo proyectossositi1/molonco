@@ -42,6 +42,8 @@
     <link rel="stylesheet" href="<?= base_url('adminlte/plugins/select2/css/select2.min.css'); ?>">
     <link rel="stylesheet"
         href="<?= base_url('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
+    <!-- Trumbowyg -->
+    <link rel="stylesheet" href="<?= base_url('plugins/trumbowyg/dist/ui/trumbowyg.min.css'); ?>">
 
 
     <!--begin::Script-->
@@ -99,6 +101,14 @@
     <!-- Tempusdominus Bootstrap 4 -->
     <script src="<?= base_url('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js'); ?>">
     </script>
+    <!-- Trumbowyg -->
+    <script src="<?= base_url('plugins/trumbowyg/dist/trumbowyg.min.js'); ?>">
+    </script>
+    <!-- Import Trumbowyg plugins... -->
+    <script src="<?= base_url('plugins/trumbowyg/dist/plugins/upload/trumbowyg.cleanpaste.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/trumbowyg/dist/plugins/upload/trumbowyg.pasteimage.min.js'); ?>"></script>
+    <!-- Number -->
+    <script src="<?= base_url('plugins/number/jquery.number.min.js'); ?>"></script>
 
     <!-- JavaScript Customs -->
     <script>
@@ -147,13 +157,16 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0 text-capitalize"><?= $menu['menu']; ?></h1>
+                            <h1 class="m-0 text-capitalize">
+                                <?= (!empty($menu['menu'])) ? $menu['menu'] : "SIN MENU" ; ?>
+                            </h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item text-capitalize"><a href="#"><?= $menu['name']; ?></a></li>
+                                <li class="breadcrumb-item text-capitalize"><a
+                                        href="#"><?= (!empty($menu['name'])) ? $menu['name'] : "SIN MENU" ; ?></a></li>
                                 <li class="breadcrumb-item text-capitalize active">
-                                    <?= $menu['method']; ?>
+                                    <?= (!empty($menu['method'])) ? $menu['method'] : "SIN MENU" ; ?>
                                 </li>
                             </ol>
                         </div><!-- /.col -->

@@ -52,6 +52,8 @@ abstract class BaseController extends Controller
         parent::initController($request, $response, $logger);
         helper(['url', 'form', 'cookie']);
         $this->session = session();
+        $this->user_id = $this->session->get('user_id');
+        
         if (!$this->session->get('isLoggedIn') && get_cookie('remember_token')) {
             $userId = base64_decode(get_cookie('remember_token'));
             $userModel = new \App\Models\UserModel();
