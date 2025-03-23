@@ -9,10 +9,7 @@ $(document).ready(function () {
 const store = () => {
     process_store({
         form: '#form',
-        fields: [
-            'nombre', 'abreviacion', 'razon_social', 'frc'
-        ],
-        route: 'catalogos/empresas/store',
+        route: 'catalogos/tipopagos/store',
         datatable: {
             id: '#datatable'
         }
@@ -22,7 +19,7 @@ const store = () => {
 const edit = (_id) => {
     process_edit({
         form: '#form',
-        route: 'catalogos/empresas/edit',
+        route: 'catalogos/tipopagos/edit',
         data: {
             id: _id
         }
@@ -32,10 +29,7 @@ const edit = (_id) => {
 const update = () => {
     process_update({
         form: '#form',
-        fields: [
-            'nombre', 'abreviacion', 'razon_social', 'frc'
-        ],
-        route: 'catalogos/empresas/store',
+        route: 'catalogos/tipopagos/store',
         datatable: {
             id: '#datatable'
         }
@@ -45,7 +39,7 @@ const update = () => {
 function destroy(_id) {
     procees_destroy({
         form: '#form',
-        route: 'catalogos/empresas/destroy',
+        route: 'catalogos/tipopagos/destroy',
         datatable: {
             id: '#datatable'
         },

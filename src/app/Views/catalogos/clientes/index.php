@@ -1,4 +1,4 @@
-<script src="<?= base_url('js/catalogos/organizaciones/index.js?v='.time()); ?>"></script>
+<script src="<?= base_url('js/catalogos/clientes/index.js?v='.time()); ?>"></script>
 
 <div class="row">
     <div class="col-md-12">
@@ -6,7 +6,7 @@
         <div class="card card-primary card-outline mb-4">
             <!--begin::Header-->
             <div class="card-header">
-                <div class="card-title">FORMULARIO PARA NUEVAS ORGANIZACIONES</div>
+                <div class="card-title">FORMULARIO PARA NUEVOS CLIENTES</div>
             </div>
             <!--end::Header-->
             <!--begin::Form-->
@@ -15,51 +15,13 @@
                 <!--begin::Body-->
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="id_sat_regimen_fiscal" class="form-label">REGIMEN FISCAL</label>
-                                <select class="form-control selectpicker" name="id_sat_regimen_fiscal"
-                                    id="id_sat_regimen_fiscal">
+                                <label for="id_organizacion" class="form-label">ORGANIZACION</label>
+                                <select class="form-control selectpicker" name="id_organizacion" id="id_organizacion">
                                     <option value="">SELECIONE UNA OPCION</option>
-                                    <? foreach ($list_regimen as $key => $value): ?>
-                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['descripcion']); ?>
-                                    </option>
-                                    <? endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label for="id_sat_tipo_cfdi" class="form-label">TIPO CFDI</label>
-                                <select class="form-control selectpicker" name="id_sat_tipo_cfdi" id="id_sat_tipo_cfdi">
-                                    <option value="">SELECIONE UNA OPCION</option>
-                                    <? foreach ($list_tipocfdi as $key => $value): ?>
-                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['descripcion']); ?>
-                                    </option>
-                                    <? endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label for="id_sat_uso_cfdi" class="form-label">USO CFDI</label>
-                                <select class="form-control selectpicker" name="id_sat_uso_cfdi" id="id_sat_uso_cfdi">
-                                    <option value="">SELECIONE UNA OPCION</option>
-                                    <? foreach ($list_usocfdi as $key => $value): ?>
-                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['descripcion']); ?>
-                                    </option>
-                                    <? endforeach ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label for="id_sat_forma_pago" class="form-label">FORMA DE PAGO</label>
-                                <select class="form-control selectpicker" name="id_sat_forma_pago"
-                                    id="id_sat_forma_pago">
-                                    <option value="">SELECIONE UNA OPCION</option>
-                                    <? foreach ($list_formapago as $key => $value): ?>
-                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['descripcion']); ?>
+                                    <? foreach ($list_organizacion as $key => $value): ?>
+                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['razon_social']); ?>
                                     </option>
                                     <? endforeach ?>
                                 </select>
@@ -67,17 +29,22 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="razon_social" class="form-label">RAZON SOCIAL</label>
-                                <input type="text" class="form-control" id="razon_social" name="razon_social" />
+                                <label for="nombres" class="form-label">NOMBRE(S)</label>
+                                <input type="text" class="form-control" id="nombres" name="nombres" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="rfc" class="form-label">RFC</label>
-                                <input type="text" class="form-control" id="rfc" name="rfc" minlength="13"
-                                    maxlength="13" />
+                                <label for="apellido_paterno" class="form-label">APELLIDO PATERNO</label>
+                                <input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="apellido_materno" class="form-label">APELLIDO MATERNO</label>
+                                <input type="text" class="form-control" id="apellido_materno" name="apellido_materno" />
                             </div>
                         </div>
                     </div>
@@ -99,18 +66,12 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="moneda" class="form-label">MOENDA</label>
-                                <input type="text" class="form-control number" id="moneda" name="moneda" />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
                                 <label for="email_primario" class="form-label">E-MAIL</label>
-                                <input type="text" class="form-control email" id="email_primario"
+                                <input type="email" class="form-control email" id="email_primario"
                                     name="email_primario" />
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-3">
                                 <label for="telefono_primario" class="form-label">TELEFONO</label>
                                 <input type="text" class="form-control numeric-integer" id="telefono_primario"
@@ -136,7 +97,7 @@
     <div class="col-md-12">
         <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title">LISTADO DE ORGANIZACIONES</h3>
+                <h3 class="card-title">LISTADO DE CLIENTES</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body" id="datatable_refresh">
@@ -144,15 +105,14 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>RAZON SOCIAL</th>
+                            <th>ORGANIZACION</th>
+                            <th>NOMBRE</th>
+                            <th>APELLIDO PATERNO</th>
+                            <th>APELLIDO MATERNO</th>
                             <th>DIRECCION</th>
-                            <th>MONEDA</th>
+                            <th>CODIGO POSTAL</th>
                             <th>EMAIL</th>
                             <th>TELEFONO</th>
-                            <th>REGIMEN FISCAL</th>
-                            <th>USO CFDI</th>
-                            <th>TIPO CFDI</th>
-                            <th>FORMA DE PAGO</th>
                             <th>ACTION</th>
                         </tr>
                     </thead>
@@ -172,15 +132,14 @@
                         ?>
                         <tr>
                             <td><?= esc($value['id']); ?></td>
-                            <td><?= esc($value['razon_social']); ?></td>
+                            <td><?= esc($value['organizacion']); ?></td>
+                            <td><?= esc($value['nombres']); ?></td>
+                            <td><?= esc($value['apellido_paterno']); ?></td>
+                            <td><?= esc($value['apellido_materno']); ?></td>
                             <td><?= esc($value['direccion']); ?></td>
-                            <td><?= esc($value['moneda']); ?></td>
+                            <td><?= esc($value['codigo_postal']); ?></td>
                             <td><?= esc($value['email_primario']); ?></td>
                             <td><?= esc($value['telefono_primario']); ?></td>
-                            <td><?= esc($value['regimen_fiscal']); ?></td>
-                            <td><?= esc($value['uso_cfdi']); ?></td>
-                            <td><?= esc($value['tipo_cfdi']); ?></td>
-                            <td><?= esc($value['forma_pago']); ?></td>
                             <td class="text-center">
                                 <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>)"><i
                                         class="fas fa-pencil-alt" aria-hidden="true"></i></button>

@@ -5,16 +5,7 @@
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
-            <th>ABREV</th>
-            <th>RAZON SOCIAL</th>
-            <th>DIRECCION</th>
-            <th>MONEDA</th>
-            <th>EMAIL</th>
-            <th>TELEFONO</th>
-            <th>REGIMEN FISCAL</th>
-            <th>USO CFDI</th>
-            <th>TIPO CFDI</th>
-            <th>FORMA DE PAGO</th>
+            <th>DESCRIPCION</th>
             <th>ACTION</th>
         </tr>
     </thead>
@@ -35,16 +26,7 @@
         <tr>
             <td><?= esc($value['id']); ?></td>
             <td><?= esc($value['nombre']); ?></td>
-            <td><?= esc($value['abreviacion']); ?></td>
-            <td><?= esc($value['razon_social']); ?></td>
-            <td><?= esc($value['direccion']); ?></td>
-            <td><?= esc($value['moneda']); ?></td>
-            <td><?= esc($value['email_primario']); ?></td>
-            <td><?= esc($value['telefono_primario']); ?></td>
-            <td><?= esc($value['regimen_fiscal']); ?></td>
-            <td><?= esc($value['uso_cfdi']); ?></td>
-            <td><?= esc($value['tipo_cfdi']); ?></td>
-            <td><?= esc($value['forma_pago']); ?></td>
+            <td><?= ($value['descripcion']); ?></td>
             <td class="text-center">
                 <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>)"><i class="fas fa-pencil-alt"
                         aria-hidden="true"></i></button>

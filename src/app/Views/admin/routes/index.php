@@ -47,7 +47,17 @@
                     </div>
                     <div class="mb-3">
                         <label for="method" class="form-label">METHOD</label>
-                        <input type="text" class="form-control" id="method" name="method"
+                        <select class="form-control selectpicker" name="method" id="method" multiple style="width:100%">
+                            <option value="index">INDEX</option>
+                            <option value="store">STORE</option>
+                            <option value="update">UPDATE</option>
+                            <option value="edit">EDIT</option>
+                            <option value="destroy">DESTROY</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_method" class="form-label">NUEVO METHOD</label>
+                        <input type="text" class="form-control" id="new_method" name="new_method"
                             aria-describedby="methodHelp" />
                         <!-- <div id="routeHelp" class="form-text">
                             We'll never share your email with anyone else.

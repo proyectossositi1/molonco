@@ -29,8 +29,11 @@ class RouteController extends BaseController
     public function store(){
         $data = json_decode($this->request->getPost('data'));
         $response = ['response_message' => ['type' => '', 'message' => ''], 'next' => false, 'csrf_token' => csrf_hash()];
-        $id = (isset($data->data->id)) ? $data->data->id : "" ;
-        unset($data->data);
+        $id = (isset($data->data->id)) ? $data->data->id : "" ;        
+        $methods = (isset($data->data->data->methods)) ? $data->data->data->methods : [] ;
+        $text_method = (isset($data->new_method)) ? $data->new_method : '';
+        if($data->new_method != "") array_push($methods, $data->new_method);
+        unset($data->data, $data->new_method, $data->method);
             
         if($data->name != ""){
             $rutaModel = new RouteModel();
@@ -42,7 +45,9 @@ class RouteController extends BaseController
             if($id != ""){
                 // VERIFICAMOS SI EL CAMPO URL YA EXISTE, EN CASO DE QUE SI, ELIMINAMOS DEL ARREGLO
                 if ($rutaModel->where('route', $data->route)->countAllResults() > 0) unset($data->route);
-                // ACTUALIZAMOS 
+                // ACTUALIZAMOS DATOS DE UNO A UNO
+                $data->method = $text_method;
+                
                 if($rutaModel->update($id, (array)($data))){
                     $response['next'] = true;
                     $response['response_message'] = [
@@ -58,19 +63,42 @@ class RouteController extends BaseController
             }else{
                 // REALIZAMOS LA CREACION DEL ELEMENTO
                 // PRIMERO VERIFICAMOS EL QUE LA RUTA NO EXISTA
-                if ($rutaModel->where('route', $data->route)->countAllResults() > 0) {
-                    $response['response_message'] = [
-                        'type' => 'error',
-                        'message' => 'LA RUTA YA SE ENCUENTRA AGREGADA. INTENTE CON OTRA RUTA.'
-                    ];
-                }else{
-                    $resultModel = $rutaModel->save((array)$data);
+                if(!empty($methods)){
+                    $data_route = [];
                     $response['next'] = true;
                     $response['response_message'] = [
-                        'type' => 'success',
-                        'message' => 'SE AGREGO CON EXITO LA NUEVA RUTA.'
-                    ];  
-                }                                  
+                        'type' => 'warning',
+                        'message' => '<p>ESTAS RUTAS YA SE ENCUENTRAN REGISTRADAS.</p>'
+                    ];
+                    
+                    foreach ($methods as $key => $value) {
+                        if($value == 'index'){
+                            $route = $data->route;
+                            $name = $data->name;
+                            $id_menu = $data->id_menu;
+                        }else{
+                            $route = $data->route.'/'.$value;
+                            $name = $data->name.' - '.strtoupper($value);
+                            $id_menu = null;
+                        }
+
+                        if ($rutaModel->where('route', $route)->countAllResults() > 0) {
+                            $response['response_message']['message'] .= $route.'<br>';
+                        }else{
+                            // INSERTAREMOS LAS RUTAS QUE NO EXISTAN
+                            $data_route = [
+                                'id_menu' => $id_menu,
+                                'name'  => $name,
+                                'route' => $route,
+                                'controller'    => $data->controller,
+                                'method' => $value
+                            ];
+
+                            $resultModel = $rutaModel->save($data_route);
+                            $response['response_message']['message'] .= 'LA RUTA '.$route.' SE REGISTRO CON EXITO.<br>';
+                        }
+                    }
+                }                           
             }                
             
 

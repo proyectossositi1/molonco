@@ -63,6 +63,11 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('menus/store', 'MenuController::store');
     $routes->post('menus/edit', 'MenuController::edit');
     $routes->post('menus/destroy', 'MenuController::destroy'); 
+    // USERS
+    $routes->get('users/', 'UserController::index');
+    $routes->post('users/store', 'UserController::store');
+    $routes->post('users/edit', 'UserController::edit');
+    $routes->post('users/destroy', 'UserController::destroy'); 
 });
 
 $routes->group('catalogos', ['filter' => 'auth'], function($routes) {
@@ -76,11 +81,26 @@ $routes->group('catalogos', ['filter' => 'auth'], function($routes) {
     $routes->post('organizaciones/store', 'CatOrganizacionController::store');
     $routes->post('organizaciones/edit', 'CatOrganizacionController::edit');
     $routes->post('organizaciones/destroy', 'CatOrganizacionController::destroy'); 
+     // CLIETNES
+    $routes->get('clientes/', 'ClienteController::index');
+    $routes->post('clientes/store', 'ClienteController::store');
+    $routes->post('clientes/edit', 'ClienteController::edit');
+    $routes->post('clientes/destroy', 'ClienteController::destroy'); 
     // PRODUCTOS
     $routes->get('productos/', 'CatProductoController::index');
     $routes->post('productos/store', 'CatProductoController::store');
     $routes->post('productos/edit', 'CatProductoController::edit');
     $routes->post('productos/destroy', 'CatProductoController::destroy'); 
+    // TIPO DE PAGOS
+    $routes->get('tipopagos/', 'CatTipoPagoController::index');
+    $routes->post('tipopagos/store', 'CatTipoPagoController::store');
+    $routes->post('tipopagos/edit', 'CatTipoPagoController::edit');
+    $routes->post('tipopagos/destroy', 'CatTipoPagoController::destroy'); 
+    // SERVICIOS
+    $routes->get('servicios/', 'CatServicioController::index');
+    $routes->post('servicios/store', 'CatServicioController::store');
+    $routes->post('servicios/edit', 'CatServicioController::edit');
+    $routes->post('servicios/destroy', 'CatServicioController::destroy'); 
 });
 
 // Rutas protegidas para Administradores

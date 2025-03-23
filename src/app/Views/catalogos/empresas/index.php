@@ -1,7 +1,7 @@
 <script src="<?= base_url('js/catalogos/empresas/index.js?v='.time()); ?>"></script>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <!--begin::Quick Example-->
         <div class="card card-primary card-outline mb-4">
             <!--begin::Header-->
@@ -14,33 +14,124 @@
                 <?= csrf_field() ?>
                 <!--begin::Body-->
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">NOMBRE</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="id_sat_regimen_fiscal" class="form-label">REGIMEN FISCAL</label>
+                                <select class="form-control selectpicker" name="id_sat_regimen_fiscal"
+                                    id="id_sat_regimen_fiscal">
+                                    <option value="">SELECIONE UNA OPCION</option>
+                                    <? foreach ($list_regimen as $key => $value): ?>
+                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['descripcion']); ?>
+                                    </option>
+                                    <? endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="id_sat_tipo_cfdi" class="form-label">TIPO CFDI</label>
+                                <select class="form-control selectpicker" name="id_sat_tipo_cfdi" id="id_sat_tipo_cfdi">
+                                    <option value="">SELECIONE UNA OPCION</option>
+                                    <? foreach ($list_tipocfdi as $key => $value): ?>
+                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['descripcion']); ?>
+                                    </option>
+                                    <? endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="id_sat_uso_cfdi" class="form-label">USO CFDI</label>
+                                <select class="form-control selectpicker" name="id_sat_uso_cfdi" id="id_sat_uso_cfdi">
+                                    <option value="">SELECIONE UNA OPCION</option>
+                                    <? foreach ($list_usocfdi as $key => $value): ?>
+                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['descripcion']); ?>
+                                    </option>
+                                    <? endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label for="id_sat_forma_pago" class="form-label">FORMA DE PAGO</label>
+                                <select class="form-control selectpicker" name="id_sat_forma_pago"
+                                    id="id_sat_forma_pago">
+                                    <option value="">SELECIONE UNA OPCION</option>
+                                    <? foreach ($list_formapago as $key => $value): ?>
+                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['descripcion']); ?>
+                                    </option>
+                                    <? endforeach ?>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="abreviacion" class="form-label">ABREVIACION</label>
-                        <input type="text" class="form-control" id="abreviacion" name="abreviacion" />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">NOMBRE</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="abreviacion" class="form-label">ABREVIACION</label>
+                                <input type="text" class="form-control" id="abreviacion" name="abreviacion"
+                                    minlength="3" maxlength="3" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="razon_social" class="form-label">RAZON SOCIAL</label>
-                        <input type="text" class="form-control" id="razon_social" name="razon_social" />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="razon_social" class="form-label">RAZON SOCIAL</label>
+                                <input type="text" class="form-control" id="razon_social" name="razon_social" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="rfc" class="form-label">RFC</label>
+                                <input type="text" class="form-control" id="rfc" name="rfc" minlength="13"
+                                    maxlength="13" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="rfc" class="form-label">RFC</label>
-                        <input type="text" class="form-control" id="rfc" name="rfc" />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="direccion" class="form-label">DIRECCION</label>
+                                <input type="text" class="form-control" id="direccion" name="direccion" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="codigo_postal" class="form-label">CODIGO POSTAL</label>
+                                <input type="text" class="form-control numeric-integer" id="codigo_postal"
+                                    name="codigo_postal" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="regimen" class="form-label">REGIMEN FISCAL</label>
-                        <input type="text" class="form-control" id="regimen" name="regimen" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="codigo_postal" class="form-label">CODIGO POSTAL</label>
-                        <input type="text" class="form-control number" id="codigo_postal" name="codigo_postal" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">E-MAIL</label>
-                        <input type="text" class="form-control email" id="email" name="email" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="moneda" class="form-label">MOENDA</label>
+                                <input type="text" class="form-control numeric-integer" id="moneda" name="moneda" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="email_primario" class="form-label">E-MAIL</label>
+                                <input type="email" class="form-control email" id="email_primario"
+                                    name="email_primario" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="telefono_primario" class="form-label">TELEFONO</label>
+                                <input type="text" class="form-control numeric-integer" id="telefono_primario"
+                                    name="telefono_primario" minlength="10" maxlength="10" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--end::Body-->
@@ -54,8 +145,10 @@
         </div>
         <!--end::Footer-->
     </div>
-    <!--end::Quick Example-->
-    <div class="col-md-8">
+</div>
+
+<div class="row">
+    <div class="col-md-12">
         <div class="card card-primary card-outline">
             <div class="card-header">
                 <h3 class="card-title">LISTADO DE EMPRESAS</h3>
@@ -67,12 +160,16 @@
                         <tr>
                             <th>ID</th>
                             <th>NOMBRE</th>
-                            <th>ABREVIACION</th>
+                            <th>ABREV</th>
                             <th>RAZON SOCIAL</th>
-                            <th>RFC</th>
-                            <th>REGIMEN FISCAL</th>
-                            <th>CODIGO POSTAL</th>
+                            <th>DIRECCION</th>
+                            <th>MONEDA</th>
                             <th>EMAIL</th>
+                            <th>TELEFONO</th>
+                            <th>REGIMEN FISCAL</th>
+                            <th>USO CFDI</th>
+                            <th>TIPO CFDI</th>
+                            <th>FORMA DE PAGO</th>
                             <th>ACTION</th>
                         </tr>
                     </thead>
@@ -95,10 +192,14 @@
                             <td><?= esc($value['nombre']); ?></td>
                             <td><?= esc($value['abreviacion']); ?></td>
                             <td><?= esc($value['razon_social']); ?></td>
-                            <td><?= esc($value['rfc']); ?></td>
-                            <td><?= esc($value['regimen']); ?></td>
-                            <td><?= esc($value['codigo_postal']); ?></td>
-                            <td><?= esc($value['email']); ?></td>
+                            <td><?= esc($value['direccion']); ?></td>
+                            <td><?= esc($value['moneda']); ?></td>
+                            <td><?= esc($value['email_primario']); ?></td>
+                            <td><?= esc($value['telefono_primario']); ?></td>
+                            <td><?= esc($value['regimen_fiscal']); ?></td>
+                            <td><?= esc($value['uso_cfdi']); ?></td>
+                            <td><?= esc($value['tipo_cfdi']); ?></td>
+                            <td><?= esc($value['forma_pago']); ?></td>
                             <td class="text-center">
                                 <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>)"><i
                                         class="fas fa-pencil-alt" aria-hidden="true"></i></button>

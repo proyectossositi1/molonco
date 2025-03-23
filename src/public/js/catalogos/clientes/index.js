@@ -10,9 +10,13 @@ const store = () => {
     process_store({
         form: '#form',
         fields: [
-            'nombre', 'abreviacion', 'razon_social', 'frc'
+            'nombres',
+            'apellido_paterno',
+            'apellido_materno',
+            'email_primario',
+            'telefono_primario'
         ],
-        route: 'catalogos/empresas/store',
+        route: 'catalogos/clientes/store',
         datatable: {
             id: '#datatable'
         }
@@ -22,7 +26,7 @@ const store = () => {
 const edit = (_id) => {
     process_edit({
         form: '#form',
-        route: 'catalogos/empresas/edit',
+        route: 'catalogos/clientes/edit',
         data: {
             id: _id
         }
@@ -33,9 +37,13 @@ const update = () => {
     process_update({
         form: '#form',
         fields: [
-            'nombre', 'abreviacion', 'razon_social', 'frc'
+            'nombres',
+            'apellido_paterno',
+            'apellido_materno',
+            'email_primario',
+            'telefono_primario'
         ],
-        route: 'catalogos/empresas/store',
+        route: 'catalogos/clientes/store',
         datatable: {
             id: '#datatable'
         }
@@ -45,7 +53,7 @@ const update = () => {
 function destroy(_id) {
     procees_destroy({
         form: '#form',
-        route: 'catalogos/empresas/destroy',
+        route: 'catalogos/clientes/destroy',
         datatable: {
             id: '#datatable'
         },

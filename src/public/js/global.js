@@ -69,7 +69,34 @@ const init = (_data = { datatable: {} }) => {
     // ------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------
     // INICIAMOS EL NUMBER
-    $('.numeric').number(true, 2);
+    $('.moneda').number(true, 2);
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL NUMERIC
+    $('.numeric').numeric();
+    $('.numeric-integer').numeric(
+        false,
+        function () {
+            this.value = '';
+            this.focus();
+        }
+    );
+    $('.numeric-decimal').numeric({ decimalPlaces: 2 });
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL VALIDADOR DE CORREO
+    $('.email').on("input", function () {
+        const _email = $(this).val().trim();
+        const _re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Expresión regular para email
+
+        if (_email === "") {
+            $(this).removeClass("is-valid is-invalid");
+        } else if (_re.test(_email)) {
+            $(this).removeClass("is-invalid").addClass("is-valid");
+        } else {
+            $(this).removeClass("is-valid").addClass("is-invalid");
+        }
+    });
 }
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -282,6 +309,7 @@ const process_edit = (_data = { form: '', route: '', fields: [], data: {}, datat
                         // Si es un select, activar Select2
                         if (field.is('select')) {
                             field.val(value).trigger('change'); // Cambiar el valor y disparar evento de cambio
+                            // field.val(value).select2(); 
                             field.select2({
                                 theme: 'bootstrap4'
                             });
@@ -649,6 +677,8 @@ const split_datetime = (_date_time = '') => {
 const form_clean = (element) => {
     $(element)[0].reset();
     // $('.selectpicker').val("").trigger("change");
+    $(`${element}`).prop('disabled', false);
+    $(`${element} .selectpicker`).prop('disabled', false);
     $(`${element} .selectpicker`).val("").select2({
         theme: 'bootstrap4'
     });
@@ -684,3 +714,13 @@ const splitAfterSlash = (str, fromIndex = 0) => {
     // ✅ Retornar las partes después del índice especificado
     return parts.slice(fromIndex);
 }
+
+const validateMatch = (_data = { field1: '', field2: '' }) => {
+    $(_data.field2).on('input', function () {
+        if ($(_data.field1).val() === $(this).val()) {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+        } else {
+            $(this).removeClass('is-valid').addClass('is-invalid');
+        }
+    });
+};

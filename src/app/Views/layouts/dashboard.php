@@ -109,6 +109,8 @@
     <script src="<?= base_url('plugins/trumbowyg/dist/plugins/upload/trumbowyg.pasteimage.min.js'); ?>"></script>
     <!-- Number -->
     <script src="<?= base_url('plugins/number/jquery.number.min.js'); ?>"></script>
+    <!-- Numeric -->
+    <script src="<?= base_url('plugins/numeric/jquery.numeric.min.js'); ?>"></script>
 
     <!-- JavaScript Customs -->
     <script>
