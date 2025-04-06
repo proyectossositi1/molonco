@@ -38,6 +38,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     // ROLES
     $routes->get('roles/', 'RoleController::index');
     $routes->post('roles/store', 'RoleController::store');
+    $routes->post('roles/update', 'RoleController::update');
     $routes->post('roles/edit', 'RoleController::edit');
     $routes->post('roles/destroy', 'RoleController::destroy'); 
     // ASIGNACION DE ROLES A MENUS
@@ -47,6 +48,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     // PERMISOS
     $routes->get('permisos/', 'PermissionController::index');
     $routes->post('permisos/store', 'PermissionController::store');
+    $routes->post('permisos/update', 'PermissionController::update');
     $routes->post('permisos/edit', 'PermissionController::edit');
     $routes->post('permisos/destroy', 'PermissionController::destroy');  
     // RUTAS
@@ -58,11 +60,57 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('routes/asignar', 'RouteController::index_assignRoles');
     $routes->post('routes/asignar/store', 'RouteController::store_roleAssignment');
     $routes->post('routes/asignar/destroy', 'RouteController::destroy_roleAssignment');
-    // MENUS
+    // MENU S
     $routes->get('menus/', 'MenuController::index');
     $routes->post('menus/store', 'MenuController::store');
+    $routes->post('menus/update', 'MenuController::update');
     $routes->post('menus/edit', 'MenuController::edit');
     $routes->post('menus/destroy', 'MenuController::destroy'); 
+    // USERS
+    $routes->get('users/', 'UserController::index');
+    $routes->post('users/store', 'UserController::store');
+    $routes->post('users/update', 'UserController::update');
+    $routes->post('users/edit', 'UserController::edit');
+    $routes->post('users/destroy', 'UserController::destroy'); 
+});
+
+$routes->group('catalogos', ['filter' => 'auth'], function($routes) {
+    // EMPRESAS
+    $routes->get('empresas/', 'CatEmpresaController::index');
+    $routes->post('empresas/store', 'CatEmpresaController::store');
+    $routes->post('empresas/update', 'CatEmpresaController::update');
+    $routes->post('empresas/edit', 'CatEmpresaController::edit');
+    $routes->post('empresas/destroy', 'CatEmpresaController::destroy'); 
+     // ORGANIZACIONES
+    $routes->get('organizaciones/', 'CatOrganizacionController::index');
+    $routes->post('organizaciones/store', 'CatOrganizacionController::store');
+    $routes->post('organizaciones/update', 'CatOrganizacionController::update');
+    $routes->post('organizaciones/edit', 'CatOrganizacionController::edit');
+    $routes->post('organizaciones/destroy', 'CatOrganizacionController::destroy'); 
+     // CLIETNES
+    $routes->get('clientes/', 'ClienteController::index');
+    $routes->post('clientes/store', 'ClienteController::store');
+    $routes->post('clientes/update', 'ClienteController::update');
+    $routes->post('clientes/edit', 'ClienteController::edit');
+    $routes->post('clientes/destroy', 'ClienteController::destroy'); 
+    // PRODUCTOS
+    $routes->get('productos/', 'CatProductoController::index');
+    $routes->post('productos/store', 'CatProductoController::store');
+    $routes->post('productos/update', 'CatProductoController::update');
+    $routes->post('productos/edit', 'CatProductoController::edit');
+    $routes->post('productos/destroy', 'CatProductoController::destroy'); 
+    // TIPO DE PAGOS
+    $routes->get('tipopagos/', 'CatTipoPagoController::index');
+    $routes->post('tipopagos/store', 'CatTipoPagoController::store');
+    $routes->post('tipopagos/update', 'CatTipoPagoController::update');
+    $routes->post('tipopagos/edit', 'CatTipoPagoController::edit');
+    $routes->post('tipopagos/destroy', 'CatTipoPagoController::destroy'); 
+    // SERVICIOS
+    $routes->get('servicios/', 'CatServicioController::index');
+    $routes->post('servicios/store', 'CatServicioController::store');
+    $routes->post('servicios/update', 'CatServicioController::update');
+    $routes->post('servicios/edit', 'CatServicioController::edit');
+    $routes->post('servicios/destroy', 'CatServicioController::destroy'); 
 });
 
 // Rutas protegidas para Administradores

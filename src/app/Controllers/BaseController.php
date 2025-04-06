@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use CodeIgniter\Session\Session;
 
 /**
  * Class BaseController
@@ -50,22 +51,38 @@ abstract class BaseController extends Controller
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
+        // Cargamos todas las librerias para heredar a todos los controladores
         helper(['url', 'form', 'cookie']);
-        $this->session = session();
-        if (!$this->session->get('isLoggedIn') && get_cookie('remember_token')) {
-            $userId = base64_decode(get_cookie('remember_token'));
-            $userModel = new \App\Models\UserModel();
-            $user = $userModel->find($userId);
-    
-            if ($user) {
+        // Varaibles y Funciones globales
+        $session = session();
+        $cookie = request()->getCookie('remember_token');
+
+        if ($cookie) {
+            $data = json_decode(base64_decode($cookie), true);
+        
+            if (isset($data['id_usuario']) && isset($data['email'])) {
+                // Validar si existe el usuario, o iniciar sesión automática                
                 $session->set([
-                    'user_id'   => $user['id'],
-                    'username'  => $user['usr'],
-                    'email'     => $user['email'],
-                    'isLoggedIn'=> true,
+                    'id_usuario'         => $data['id_usuario'],
+                    'id_usuario_empresa' => $data['id_usuario_empresa'],
+                    'id_empresa'    => $data['id_empresa'],
+                    'username'      => $data['username'],
+                    'email'         => $data['email'],
+                    'id_role'       => $data['id_role'],
+                    'isLoggedIn'    => true,
                 ]);
+
+                // $this->user_id = $session->get('id_usuario');
+                // $this->user_empresa_id = $session->get('id_usuario_empresa');
+                // Redireccionar si lo deseas
             }
         }
+
+        if($session->get('isLoggedIn')){
+            tracker();
+        }
+        
+        
 
         // Preload any models, libraries, etc, here.
 

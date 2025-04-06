@@ -59,6 +59,44 @@ const init = (_data = { datatable: {} }) => {
     $('.selectpicker').select2({
         theme: 'bootstrap4'
     });
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL TRUMBOWYG - TEXTAREA
+    $('.textareapicker').trumbowyg({
+        resetCss: true,
+        autogrow: true
+    });
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL NUMBER
+    $('.moneda').number(true, 2);
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL NUMERIC
+    $('.numeric').numeric();
+    $('.numeric-integer').numeric(
+        false,
+        function () {
+            this.value = '';
+            this.focus();
+        }
+    );
+    $('.numeric-decimal').numeric({ decimalPlaces: 2 });
+    // ------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
+    // INICIAMOS EL VALIDADOR DE CORREO
+    $('.email').on("input", function () {
+        const _email = $(this).val().trim();
+        const _re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Expresión regular para email
+
+        if (_email === "") {
+            $(this).removeClass("is-valid is-invalid");
+        } else if (_re.test(_email)) {
+            $(this).removeClass("is-invalid").addClass("is-valid");
+        } else {
+            $(this).removeClass("is-valid").addClass("is-invalid");
+        }
+    });
 }
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -265,8 +303,24 @@ const process_edit = (_data = { form: '', route: '', fields: [], data: {}, datat
 
                 // Llenar automáticamente los campos del formulario
                 $.each(_response.data, function (key, value) {
-                    // Rellenar inputs que coincidan con los nombres
-                    _form.find(`[name="${key}"]`).val(value);
+                    let field = _form.find(`[name="${key}"]`);
+
+                    if (field.length) {
+                        // Si es un select, activar Select2
+                        if (field.is('select')) {
+                            field.val(value).trigger('change'); // Cambiar el valor y disparar evento de cambio
+                            // field.val(value).select2(); 
+                            field.select2({
+                                theme: 'bootstrap4'
+                            });
+                        } else if (field.is('textarea') && field.hasClass('textareapicker')) {
+                            // Si es un textarea, asignar el valor correctamente
+                            field.trumbowyg('html', value);
+                        } else {
+                            // Si es un input normal, solo asignar el valor
+                            field.val(value);
+                        }
+                    }
                 });
 
                 btn_action_change({ action: 'update' });
@@ -623,7 +677,15 @@ const split_datetime = (_date_time = '') => {
 const form_clean = (element) => {
     $(element)[0].reset();
     // $('.selectpicker').val("").trigger("change");
-    $(`${element} .selectpicker`).val("").select2();
+    $(`${element}`).prop('disabled', false);
+    $(`${element} .selectpicker`).prop('disabled', false);
+    $(`${element} .selectpicker`).val("").select2({
+        theme: 'bootstrap4'
+    });
+
+    $(`${element} textarea.textareapicker`).each(function () {
+        $(this).trumbowyg('empty'); // Alternativamente, usar .trumbowyg('html', '')
+    });
 }
 
 const clearLocalStorageByPrefix = (prefix) => {
@@ -652,3 +714,13 @@ const splitAfterSlash = (str, fromIndex = 0) => {
     // ✅ Retornar las partes después del índice especificado
     return parts.slice(fromIndex);
 }
+
+const validateMatch = (_data = { field1: '', field2: '' }) => {
+    $(_data.field2).on('input', function () {
+        if ($(_data.field1).val() === $(this).val()) {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+        } else {
+            $(this).removeClass('is-valid').addClass('is-invalid');
+        }
+    });
+};

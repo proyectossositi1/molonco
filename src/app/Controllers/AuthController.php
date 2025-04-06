@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\UserModel;
+use App\Models\CatUserModel;
 use App\Models\UserRoleModel;
 use App\Models\PasswordResetModel;
 use CodeIgniter\I18n\Time;
@@ -22,7 +22,7 @@ class AuthController extends BaseController{
 
     public function process_login(){
         $session = session();
-        $model = new UserModel();
+        $model = new CatUserModel();
 
         $username = $this->request->getPost('usr');
         $password = $this->request->getPost('pwd');
@@ -34,9 +34,10 @@ class AuthController extends BaseController{
         }
 
         // Buscar usuario en la base de datos
-        $user = $model->select('xx_usuarios.*, sys_user_roles.role_id')
-            ->join('sys_user_roles', 'xx_usuarios.id = sys_user_roles.user_id')
-            ->where('xx_usuarios.usr', $username)
+        $user = $model->select('cat_usuarios.id, cat_usuarios.usr, cat_usuarios.pwd, cat_usuarios.email, sys_usuarios_empresas.id AS id_usuario_empresa, sys_usuarios_empresas.id_empresa, sys_user_roles.id_role')
+            ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')    
+            ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id')           
+            ->where(['sys_usuarios_empresas.status_alta' => 1, 'cat_usuarios.usr' => $username])
             ->first();
 
         if (!$user) {
@@ -49,26 +50,35 @@ class AuthController extends BaseController{
         }
 
         // Iniciar sesión
-        $session->set([
-            'user_id' => $user['id'],
-            'username' => $user['usr'],
-            'email' => $user['email'],
-            'role_id' => $user['role_id'],
-            'isLoggedIn' => true,
-        ]);
+        $data = [
+            'id_usuario'         => $user['id'],
+            'id_usuario_empresa' => $user['id_usuario_empresa'],
+            'id_empresa'    => $user['id_empresa'],
+            'username'      => $user['usr'],
+            'email'         => $user['email'],
+            'id_role'       => $user['id_role'],
+            'isLoggedIn'    => true,
+        ];
+        $session->set($data);
 
-        // ✅ Si activó "Remember Me", creamos una cookie
+        // Si activó "Remember Me", creamos una cookie
         if ($rememberMe) {
-            set_cookie([
-                'name'   => 'remember_token',
-                'value'  => base64_encode(json_encode([
-                    'id' => $user['id'],
-                    'role_id' => $user['role_id']
-                ])),
-                'expire' => 86400 * 30, // 30 días
-                'secure' => true,
+            $response = service('response');
+             // Elimina la cookie anterior (opcional, pero recomendado)
+            $response->deleteCookie('remember_token');
+            unset($data['isLoggedIn']);
+
+            $response->setCookie([
+                'name'     => 'remember_token',
+                'value'    => base64_encode(json_encode($data)),
+                'expire'   => 86400 * 30, // 30 días
+                'secure'   => false,      // TRUE solo si estás en HTTPS
                 'httponly' => true,
+                'path'     => '/',
+                'samesite' => 'Lax',
             ]);
+            
+            return $response->redirect('/dashboard');
         }
 
         return redirect()->to('/dashboard');
@@ -91,7 +101,7 @@ class AuthController extends BaseController{
     public function process_register(){
         $rules = [
             'nombre' => 'required|min_length[3]',
-            'email' => 'required|valid_email|is_unique[xx_usuarios.email]',
+            'email' => 'required|valid_email|is_unique[cat_usuarios.email]',
             'pwd' => 'required|min_length[6]',
             'confirm_pwd' => 'required|matches[pwd]',
         ];
@@ -100,7 +110,7 @@ class AuthController extends BaseController{
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
     
-        $userModel = new UserModel();
+        $userModel = new CatUserModel();
         $userId = $userModel->insert([
             'nombre' => $this->request->getPost('nombre'),
             'usr'    => $this->request->getPost('email'), 
@@ -111,8 +121,8 @@ class AuthController extends BaseController{
         // Asignar rol por defecto (user)
         $userRoleModel = new UserRoleModel();
         $userRoleModel->insert([
-            'user_id' => $userId,
-            'role_id' => 3 // user
+            'id_usuario_empresa' => $userId,
+            'id_role' => 3 // user
         ]);
     
         return redirect()->to('/login')->with('success', 'Usuario creado correctamente. Ahora puedes iniciar sesión.');
@@ -127,7 +137,7 @@ class AuthController extends BaseController{
     
     public function proccess_forgot_password(){
         $email = $this->request->getPost('email');
-        $userModel = new UserModel();
+        $userModel = new CatUserModel();
         $user = $userModel->where('email', $email)->first();
 
         if (!$user) {
@@ -185,7 +195,7 @@ class AuthController extends BaseController{
             return redirect()->back()->with('error', 'El enlace es inválido o ha expirado.');
         }
 
-        $userModel = new UserModel();
+        $userModel = new CatUserModel();
         $userModel->where('email', $reset['email'])
                 ->set(['pwd' => password_hash($password, PASSWORD_DEFAULT)])
                 ->update();

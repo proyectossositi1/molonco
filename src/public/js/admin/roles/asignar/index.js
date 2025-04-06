@@ -8,7 +8,7 @@ $(document).ready(function () {
 
 const store = () => {
     let _next = false;
-    let _permissions = $('#permission_id').val();
+    let _permissions = $('#id_permission').val();
 
     if (_permissions != "") {
         _next = true;
@@ -22,7 +22,7 @@ const store = () => {
         process_store({
             form: '#form',
             fields: [
-                'role_id'
+                'id_role'
             ],
             route: 'admin/roles/asignar/store',
             data: {
