@@ -4,6 +4,7 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>EMPRESA</th>
             <th>ROLE</th>
             <th>USER</th>
             <th>NOMBRE COMPLETO</th>
@@ -27,6 +28,7 @@
             ?>
         <tr>
             <td><?= esc($value['id']); ?></td>
+            <td><?= esc($value['empresa']); ?></td>
             <td><?= esc($value['role']); ?></td>
             <td><?= esc($value['usr']); ?></td>
             <td><?= esc($value['nombre']); ?></td>

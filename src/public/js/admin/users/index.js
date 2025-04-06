@@ -20,6 +20,7 @@ const store = () => {
         process_store({
             form: '#form',
             fields: [
+                'id_empresa',
                 'id_role',
                 'nombre',
                 'email',
@@ -52,6 +53,7 @@ const update = () => {
     process_update({
         form: '#form',
         fields: [
+            'id_empresa',
             'id_role',
             'nombre',
             'email'

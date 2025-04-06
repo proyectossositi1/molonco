@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CatUserModel;
+use App\Models\CatEmpresaModel;
 use App\Models\CatRoleModel;
 use App\Models\UserRoleModel;
 use App\Models\UserEmpresaModel;
@@ -14,13 +15,16 @@ class UserController extends BaseController
     public function index(){
         $model = new CatUserModel();        
         $modelRole = new CatRoleModel();        
+        $modelEmpresa = new CatEmpresaModel();    
         $data['data'] = $model
-            ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+            ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
+            ->join('cat_empresas', 'cat_empresas.id = sys_usuarios_empresas.id_empresa', 'left')
             ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
             ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
-            ->select('cat_usuarios.*, cat_sys_roles.name AS role')
+            ->select('cat_usuarios.*, cat_sys_roles.name AS role, cat_empresas.nombre AS empresa')
             ->findAll();
         $data['list_role'] = $modelRole->where(['status_alta' => 1])->findAll();
+        $data['list_empresa'] = $modelEmpresa->where(['status_alta' => 1])->findAll();
         
         return renderPage([
             'view'  => 'admin/users/index',
@@ -31,7 +35,6 @@ class UserController extends BaseController
     function store() {
         $data = json_decode($this->request->getPost('data'));
         $model = new CatUserModel();
-        $id_role = ($data->id_role == "") ? "" :  $data->id_role ;
 
         return process_store([
             'data'        => $data,
@@ -42,10 +45,11 @@ class UserController extends BaseController
                 'load' => 'admin/users/ajax/table_data',
                 'data'  => function(){
                     return (new CatUserModel())
-                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
+                        ->join('cat_empresas', 'cat_empresas.id = sys_usuarios_empresas.id_empresa', 'left')
                         ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
                         ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
-                        ->select('cat_usuarios.*, cat_sys_roles.name AS role')
+                        ->select('cat_usuarios.*, cat_sys_roles.name AS role, cat_empresas.nombre AS empresa')
                         ->findAll();
                 }
             ],
@@ -58,16 +62,22 @@ class UserController extends BaseController
                 }else{
                     $return->pwd = password_hash($return->pwd, PASSWORD_DEFAULT);
                 }                   
-                unset($return->confirm_pwd, $return->id_role);
+                unset($return->confirm_pwd);
                 
                 return $return;
             },
-            'postcallback' => function($id, $data) use ($id_role){
-                // UNA VEZ QUE SE HAYA INSERTADO, ASIGNAMEROS EL ROLE AL USUARIO
+            'postcallback' => function($id, $data){
+                // UNA VEZ QUE SE HAYA INSERTADO, ASIGNAMEROS EL ROLE AL USUARIO Y CREAMOS EL USUARIO EMPRESA
+                $modelUsuarioEmpresa = new UserEmpresaModel();
+                $modelUsuarioEmpresa->insert([
+                    'id_usuario' => $id,
+                    'id_empresa' => $data->id_empresa
+                ]);
+
                 $userRoleModel = new UserRoleModel();
                 $userRoleModel->insert([
-                    'id_usuario_empresa' => $id,
-                    'id_role' => $id_role
+                    'id_usuario_empresa' => $modelUsuarioEmpresa->getInsertID(),
+                    'id_role' => $data->id_role
                 ]);
             }
         ]);
@@ -82,10 +92,10 @@ class UserController extends BaseController
             'field_name' => 'usuario',
             'query' => function($model, $id) {
                 return $model->where(['cat_usuarios.id' => $id])
-                    ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+                    ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
                     ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
                     ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
-                    ->select('cat_usuarios.id, cat_usuarios.nombre, cat_usuarios.usr, cat_usuarios.status_alta, cat_usuarios.email, cat_sys_roles.id AS id_role, cat_sys_roles.name AS role')
+                    ->select('cat_usuarios.id, cat_usuarios.nombre, cat_usuarios.usr, cat_usuarios.status_alta, cat_usuarios.email, cat_sys_roles.id AS id_role, cat_sys_roles.name AS role, sys_usuarios_empresas.id_empresa')
                     ->first();
             }
         ]);
@@ -105,10 +115,11 @@ class UserController extends BaseController
                 'load' => 'admin/users/ajax/table_data',
                 'data'  => function(){
                     return (new CatUserModel())
-                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
+                        ->join('cat_empresas', 'cat_empresas.id = sys_usuarios_empresas.id_empresa', 'left')
                         ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
                         ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
-                        ->select('cat_usuarios.*, cat_sys_roles.name AS role')
+                        ->select('cat_usuarios.*, cat_sys_roles.name AS role, cat_empresas.nombre AS empresa')
                         ->findAll();
                 }
                 
@@ -123,21 +134,17 @@ class UserController extends BaseController
                 // HAY QUE BUSCAR EL ID_USUARIO_EMPRESA ANTES DE REALIZAR LA ACTUALIZACION
                 $modelUsuarioEmpresa = new UserEmpresaModel();
                 $encontrado = $modelUsuarioEmpresa->where('id_usuario', $id)->first();
-
-                if(!empty($encontrado)){
-                    $userRoleModel = new UserRoleModel();
-                    if(!$userRoleModel->where(['id_usuario_empresa' => $encontrado['id']])->first()){
-                        $userRoleModel->insert([
-                            'id_usuario_empresa' => $encontrado['id'],
-                            'id_role' => $data->id_role
-                        ]);
-                    }else{
-                        $userRoleModel->where('id_usuario_empresa', $encontrado['id'])
-                            ->set(['id_role' => $data->id_role])
-                            ->update();
-                    }
-                }
                 
+                if(!empty($encontrado)){
+                    $modelUsuarioEmpresa->where('id_usuario', $id)
+                        ->set(['id_empresa' => $data->id_empresa])
+                        ->update();        
+                
+                    $userRoleModel = new UserRoleModel();
+                    $userRoleModel->where('id_usuario_empresa', $encontrado['id'])
+                        ->set(['id_role' => $data->id_role])
+                        ->update();                
+                }                
             }
         ]);
     }
@@ -154,10 +161,11 @@ class UserController extends BaseController
                 'load' => 'admin/users/ajax/table_data',
                 'data'  => function(){
                     return (new CatUserModel())
-                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
+                        ->join('cat_empresas', 'cat_empresas.id = sys_usuarios_empresas.id_empresa', 'left')
                         ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
                         ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
-                        ->select('cat_usuarios.*, cat_sys_roles.name AS role')
+                        ->select('cat_usuarios.*, cat_sys_roles.name AS role, cat_empresas.nombre AS empresa')
                         ->findAll();
                 }
             ]         
