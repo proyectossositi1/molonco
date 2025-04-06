@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RoleModel extends Model
+class SysTrackerModel extends Model
 {
-    protected $table            = 'sys_roles';
+    protected $table            = 'sys_tracker';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'description', 'status_alta'];
+    protected $allowedFields    = ['id_usuario', 'id_usuario_empresa', 'agent', 'platform', 'visited', 'referrer', 'uuid', 'ip', 'hostname', 'city', 'region', 'country', 'loc', 'org', 'postal'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

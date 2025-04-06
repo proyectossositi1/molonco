@@ -13,9 +13,12 @@ class AuthFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         $session = session();
-        $userRole = $session->get('role_id');
+        $userRole = $session->get('id_role');
         $userLoggedIn = $session->get('isLoggedIn');
-        $userId = $session->get('user_id');
+        $userId = $this->user_id = $session->get('id_usuario');
+        $userEmpresaId = $this->user_empresa_id = $session->get('id_usuario_empresa');
+        $empresaId = $this->empresa_id = $session->get('id_usuario_empresa');
+        $username = $this->username = $session->get('username');
 
         if (!$userLoggedIn) {
             return redirect()->to('/login')->with('error', 'Debes iniciar sesión.');

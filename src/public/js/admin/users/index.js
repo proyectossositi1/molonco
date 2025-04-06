@@ -56,7 +56,7 @@ const update = () => {
             'nombre',
             'email'
         ],
-        route: 'admin/users/store',
+        route: 'admin/users/update',
         datatable: {
             id: '#datatable'
         }

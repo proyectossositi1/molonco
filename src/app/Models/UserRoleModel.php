@@ -12,7 +12,7 @@ class UserRoleModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_id', 'role_id'];
+    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_usuario_empresa', 'id_role'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

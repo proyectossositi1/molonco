@@ -9,7 +9,7 @@ $(document).ready(function () {
 const store = () => {
     process_store({
         form: '#form',
-        route: 'catalogos/tipopagos/store',
+        route: 'catalogos/servicios/store',
         datatable: {
             id: '#datatable'
         }
@@ -19,7 +19,7 @@ const store = () => {
 const edit = (_id) => {
     process_edit({
         form: '#form',
-        route: 'catalogos/tipopagos/edit',
+        route: 'catalogos/servicios/edit',
         data: {
             id: _id
         }
@@ -29,7 +29,7 @@ const edit = (_id) => {
 const update = () => {
     process_update({
         form: '#form',
-        route: 'catalogos/tipopagos/store',
+        route: 'catalogos/servicios/update',
         datatable: {
             id: '#datatable'
         }
@@ -39,7 +39,7 @@ const update = () => {
 function destroy(_id) {
     procees_destroy({
         form: '#form',
-        route: 'catalogos/tipopagos/destroy',
+        route: 'catalogos/servicios/destroy',
         datatable: {
             id: '#datatable'
         },

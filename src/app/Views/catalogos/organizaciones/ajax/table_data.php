@@ -4,6 +4,7 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>RFC</th>
             <th>RAZON SOCIAL</th>
             <th>DIRECCION</th>
             <th>MONEDA</th>
@@ -32,6 +33,7 @@
             ?>
         <tr>
             <td><?= esc($value['id']); ?></td>
+            <td><?= esc($value['rfc']); ?></td>
             <td><?= esc($value['razon_social']); ?></td>
             <td><?= esc($value['direccion']); ?></td>
             <td><?= esc($value['moneda']); ?></td>

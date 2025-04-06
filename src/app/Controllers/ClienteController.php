@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\ClienteModel;
+use App\Models\CatClienteModel;
 use App\Models\CatOrganizacionModel;
 use App\Models\SatRegimenFiscalModel;
 use App\Models\SatTipoCfdiModel;
@@ -14,12 +14,12 @@ use App\Models\SatFormaPagoModel;
 class ClienteController extends BaseController
 {
     public function index(){
-        $model = new ClienteModel();
+        $model = new CatClienteModel();
         $modelOrganizacion = new CatOrganizacionModel();
         
         $data['data'] = $model
-            ->join('cat_organizaciones', 'cat_organizaciones.id = xx_clientes.id_organizacion', 'left')
-            ->select('cat_organizaciones.razon_social AS organizacion, xx_clientes.*')
+            ->join('cat_organizaciones', 'cat_organizaciones.id = cat_clientes.id_organizacion', 'left')
+            ->select('cat_organizaciones.razon_social AS organizacion, cat_clientes.*')
             ->findAll();
         $data['list_organizacion'] = $modelOrganizacion->where(['status_alta' => 1])->findAll();
         
@@ -29,144 +29,92 @@ class ClienteController extends BaseController
         ]);
     }
 
-    public function store(){
+    function store() {
         $data = json_decode($this->request->getPost('data'));
-        $response = ['response_message' => ['type' => '', 'message' => ''], 'next' => false, 'csrf_token' => csrf_hash()];
-        $id = (isset($data->data->id)) ? $data->data->id : "" ;
-        $next = true;
-        unset($data->data);
-            
-        if(!empty($data)){
-            $model = new ClienteModel();
-            // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
-            $data->nombres = limpiar_cadena_texto($data->nombres);
-            $data->apellido_paterno = limpiar_cadena_texto($data->apellido_paterno);
-            $data->apellido_materno = limpiar_cadena_texto($data->apellido_materno);
-            
-            // ANTES DE AGREGAR/ACTUALIZAR, VALIDAMOS QUE NO EXISTA
-            $encontrado = $model->where('email_primario', $data->email_primario)->first();
-            if(!empty($encontrado)){
-                // SI EXISTE, MANDAMOS UN MENSAJE DE LA EXISTENCIA
-                // ANTES VERIFICAMOS QUE SEA EL MISMO REGISTRO ENCONTRADO
-                if($encontrado['id'] != $id && $encontrado['email_primario'] != $data->email_primario){
-                    $next = false;
-                    $response['response_message'] = [
-                        'type' => 'warning',
-                        'message' => 'EL E-MAIL'.$data->email_primario.' YA SE ENCUENTRA REGISTRADO. INTENTE CON OTRO E-MAIL.'
-                    ];
-                }
-            }
-            // ANTES DE AGREGAR/ACTUALIZAR, VALIDAMOS QUE NO EXISTA
-            $encontrado = $model->where('telefono_primario', $data->telefono_primario)->first();
-            if(!empty($encontrado)){
-                // SI EXISTE, MANDAMOS UN MENSAJE DE LA EXISTENCIA DE LA EMPRESA
-                // ANTES VERIFICAMOS QUE SEA EL MISMO REGISTRO ENCONTRADO
-                if($encontrado['id'] != $id && $encontrado['telefono_primario'] != $data->telefono_primario){
-                    $next = false;
-                    $response['response_message'] = [
-                        'type' => 'warning',
-                        'message' => 'EL TELEFONO '.$data->telefono_primario.' YA SE ENCUENTRA REGISTRADO. INTENTE CON OTRO TELEFONO.'
-                    ];
-                }
-            }
+        $model = new CatClienteModel();
 
-            if($next){
-                // VALIDAMOS SI EXISTE EL ID PARA EDITAR O AGREGAR
-                if($id != ""){                
-                    // ACTUALIZAMOS 
-                    $data->id_usuario_edicion = $this->user_id;
-
-                    if($model->update($id, (array)($data))){
-                        $response['next'] = true;
-                        $response['response_message'] = [
-                            'type' => 'success',
-                            'message' => 'SE ACTUALIZO EL REGISTO CON ID <strong>'.$id.'</strong> EXITOSAMENTE.'
-                        ];
-                    }else{
-                        $response['response_message'] = [
-                            'type' => 'error',
-                            'message' => 'HUBO UN PROBLEMA PARA ACTUALIZAR EL ID <strong>'.$id.'</strong>. VUELVA A INTENTARLO.'
-                        ];
-                    } 
-                }else{
-                    // REALIZAMOS LA CREACION DEL ELEMENTO
-                    $data->id_usuario_creacion = $this->user_id;
-                    
-                    $resultModel = $model->save((array)$data);
-                    $response['next'] = true;
-                    $response['response_message'] = [
-                        'type' => 'success',
-                        'message' => 'SE AGREGO CON EXITO EL NUEVO CLIENTE.'
-                    ];                                   
-                } 
-            }
-        
-            $data_view['data'] = $model
-                ->join('cat_organizaciones', 'cat_organizaciones.id = xx_clientes.id_organizacion', 'left')
-                ->select('cat_organizaciones.razon_social AS organizacion, xx_clientes.*')
-                ->findAll();
-            $response['view'] =  view('catalogos/clientes/ajax/table_data', $data_view);
-        }
-        
-        return json_encode($response);
-    }
-
-    public function edit() {
-        $data = json_decode($this->request->getPost('data'));
-        $response = ['response_message' => ['type' => '', 'message' => 'NO SE ENCONTRO EL IDENTIFICADOR PARA REALIZAR LA OPERACION.'], 'next' => false, 'csrf_token' => csrf_hash()];
-        $id = (isset($data->data->id)) ? $data->data->id : "" ;
-
-        if($id != ""){
-            $model = new ClienteModel();
-            $encontrado = $model->where('id', $id)->first();
-
-            if(!empty($encontrado)){
-                $response['next'] = true;
-                $response['data'] = $encontrado;
-            }else{
-                $response['response_message'] = [
-                    'type' => 'error',
-                    'message' => 'NO SE ENCONTRO EL ID <strong>'.$id.'</strong> DENTRO DE NUESTRA BASE DE DATOS.'
-                ];
-            }
-        }
-        
-        return json_encode($response);
-    }
-
-    public function destroy() {
-        $data = json_decode($this->request->getPost('data'));
-        $response = ['response_message' => ['type' => '', 'message' => 'NO SE ENCONTRO EL IDENTIFICADOR PARA REALIZAR LA OPERACION.'], 'next' => false, 'csrf_token' => csrf_hash()];        
-        $id = (isset($data->data->id)) ? $data->data->id : "" ;
-        
-        if($id != ""){
-            $model = new ClienteModel();
-            $encontrado = $model->where('id', $id)->first();
-
-            if(!empty($encontrado)){
-                $nuevoEstado = ($encontrado['status_alta'] == 1) ? 0 : 1;
-                $messageEstado = ($encontrado['status_alta'] == 1) ? 'INACTIVO' : 'ACTIVO';
-                if($model->update($id, ['status_alta' => $nuevoEstado])){
-                    $response['next'] = true;
-                    $response['response_message'] = [
-                        'type' => 'success',
-                        'message' => 'SE '.$messageEstado.' EL REGISTO CON ID <strong>'.$id.'</strong> EXITOSAMENTE.'
-                    ];
-                    $data_view['data'] =  $model
-                        ->join('cat_organizaciones', 'cat_organizaciones.id = xx_clientes.id_organizacion', 'left')
-                        ->select('cat_organizaciones.razon_social AS organizacion, xx_clientes.*')
+        return process_store([
+            'data'        => $data,
+            'model'       => $model,
+            'field_check' => ['email_primario', 'telefono_primario'],
+            'field_name'  => 'cliente',
+            'view' => [
+                'load' => 'catalogos/clientes/ajax/table_data',
+                'data'  => function(){
+                    return (new CatClienteModel())
+                        ->join('cat_organizaciones', 'cat_organizaciones.id = cat_clientes.id_organizacion', 'left')
+                        ->select('cat_organizaciones.razon_social AS organizacion, cat_clientes.*')
                         ->findAll();
-                    $response['view'] =  view('catalogos/clientes/ajax/table_data', $data_view);
-                }else{
-                    $response['response_message'] = [
-                        'type' => 'error',
-                        'message' => 'HUBO UN PROBLEMA PARA ACTUALIZAR EL ID <strong>'.$id.'</strong>. VUELVA A INTENTARLO.'
-                    ];
-                }   
+                }
+            ],
+            'precallback' => function($return) {
+                // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
+                $return->nombres = limpiar_cadena_texto($return->nombres);
+                $return->apellido_paterno = limpiar_cadena_texto($return->apellido_paterno);
+                $return->apellido_materno = limpiar_cadena_texto($return->apellido_materno);
+                
+                return $return;
             }
-
-        }
-        
-        return json_encode($response);
+        ]);
     }
+
+    function edit() {
+        $data = json_decode($this->request->getPost('data'));
+        
+        return process_edit([
+            'data' => $data,
+            'model' => new CatClienteModel(),
+            'field_name' => 'cliente'
+        ]);
+    }
+
+    function update() {
+        $data = json_decode($this->request->getPost('data'));
+        $model = new CatClienteModel();
+
+        return process_update([
+            'data'        => $data,
+            'model'       => $model,
+            'field_check' => ['email_primario', 'telefono_primario'],
+            'field_name'  => 'cliente',
+            'view' => [
+                'load' => 'catalogos/clientes/ajax/table_data',
+                'data'  => function(){
+                    return (new CatClienteModel())
+                        ->join('cat_organizaciones', 'cat_organizaciones.id = cat_clientes.id_organizacion', 'left')
+                        ->select('cat_organizaciones.razon_social AS organizacion, cat_clientes.*')
+                        ->findAll();
+                }
+            ],
+            'precallback' => function($return) {
+                // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
+                $return->nombres = limpiar_cadena_texto($return->nombres);
+                $return->apellido_paterno = limpiar_cadena_texto($return->apellido_paterno);
+                $return->apellido_materno = limpiar_cadena_texto($return->apellido_materno);
+                
+                return $return;
+            }
+        ]);
+    }
+
+    function destroy() {
+        $data = json_decode($this->request->getPost('data'));
+        $model = new CatClienteModel();
+        
+        return process_destroy([
+            'data'       => $data,
+            'model'      => $model,
+            'field_name' => 'cliente',
+            'view' => [
+                'load' => 'catalogos/clientes/ajax/table_data',
+                'data'  => function(){
+                    return (new CatClienteModel())
+                        ->join('cat_organizaciones', 'cat_organizaciones.id = cat_clientes.id_organizacion', 'left')
+                        ->select('cat_organizaciones.razon_social AS organizacion, cat_clientes.*')
+                        ->findAll();
+                }
+            ]         
+        ]);
+    }
+
 }

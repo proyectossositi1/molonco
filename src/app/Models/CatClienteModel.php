@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CatEmpresaModel extends Model
+class CatClienteModel extends Model
 {
-    protected $table            = 'cat_empresas';
+    protected $table            = 'cat_clientes';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_sat_regimen_fiscal', 'id_sat_tipo_cfdi', 'id_sat_forma_pago', 'id_sat_uso_cfdi', 'nombre', 'abreviacion', 'codigo_postal', 'rfc', 'razon_social', 'direccion', 'moneda', 'email_primario', 'email_secundario', 'telefono_primario', 'telefono_secundario', 'status_alta'];
+    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_organizacion', 'nombres', 'apellido_paterno', 'apellido_materno', 'direccion', 'email_primario', 'email_secundario', 'telefono_primario', 'telefono_secundario', 'codigo_postal', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

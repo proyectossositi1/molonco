@@ -29,7 +29,7 @@ const edit = (_id) => {
 const update = () => {
     process_update({
         form: '#form',
-        route: 'catalogos/tipopagos/store',
+        route: 'catalogos/tipopagos/update',
         datatable: {
             id: '#datatable'
         }

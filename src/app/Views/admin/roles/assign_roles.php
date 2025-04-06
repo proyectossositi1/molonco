@@ -15,8 +15,8 @@
                 <!--begin::Body-->
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="role_id" class="form-label">ROLES</label>
-                        <select id="role_id" name="role_id" class="form-control selectpicker">
+                        <label for="id_role" class="form-label">ROLES</label>
+                        <select id="id_role" name="id_role" class="form-control selectpicker">
                             <option value="">ES NECESARIO SELECCIONAR UNA OPCION.</option>
                             <?php foreach ($roles as $rol): ?>
                             <option value="<?= esc($rol['id']); ?>"><?= esc($rol['name']); ?></option>
@@ -24,8 +24,8 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="permission_id" class="form-label">PERMISOS</label>
-                        <select id="permission_id" name="permission_id" class="form-control selectpicker" multiple>
+                        <label for="id_permission" class="form-label">PERMISOS</label>
+                        <select id="id_permission" name="id_permission" class="form-control selectpicker" multiple>
                             <option value="">ES NECESARIO SELECCIONAR UNA OPCION.</option>
                             <?php foreach ($permissions as $permission): ?>
                             <option value="<?= esc($permission['id']); ?>"><?= esc($permission['name']); ?></option>

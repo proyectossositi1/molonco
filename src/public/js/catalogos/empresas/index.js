@@ -35,7 +35,7 @@ const update = () => {
         fields: [
             'nombre', 'abreviacion', 'razon_social', 'frc'
         ],
-        route: 'catalogos/empresas/store',
+        route: 'catalogos/empresas/update',
         datatable: {
             id: '#datatable'
         }

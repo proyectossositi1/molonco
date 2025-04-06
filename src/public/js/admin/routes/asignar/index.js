@@ -8,7 +8,7 @@ $(document).ready(function () {
 
 const store = () => {
     let _next = false;
-    let _route_id = $('#route_id').val();
+    let _route_id = $('#id_route').val();
 
     if (_route_id != "") {
         _next = true;
@@ -22,7 +22,7 @@ const store = () => {
         process_store({
             form: '#form',
             fields: [
-                'role_id'
+                'id_role'
             ],
             route: 'admin/routes/asignar/store',
             data: {

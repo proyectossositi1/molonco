@@ -144,13 +144,13 @@
             // Obtener los permisos del usuario y organizarlos por controlador (para submenús)
             $menu = [];
             $menu = $roleRouteModel
-                ->select('sys_routes.controller, sys_routes.method, sys_routes.name, sys_routes.route, sys_routes.icon, sys_menus.name AS menu, sys_menus.icon AS menu_icon')
-                ->join('sys_roles', 'sys_roles.id = sys_role_routes.role_id')
-                ->join('sys_routes', 'sys_routes.id = sys_role_routes.route_id')
-                ->join('sys_menus', 'sys_menus.id = sys_routes.id_menu')
-                ->where('sys_routes.route', $currentRoute)
-                ->like('sys_routes.method', 'index')
-                ->orderBy('sys_menus.order', 'ASC')
+                ->select('cat_sys_routes.controller, cat_sys_routes.method, cat_sys_routes.name, cat_sys_routes.route, cat_sys_routes.icon, cat_sys_menus.name AS menu, cat_sys_menus.icon AS menu_icon')
+                ->join('cat_sys_roles', 'cat_sys_roles.id = sys_role_routes.id_role')
+                ->join('cat_sys_routes', 'cat_sys_routes.id = sys_role_routes.id_route')
+                ->join('cat_sys_menus', 'cat_sys_menus.id = cat_sys_routes.id_menu')
+                ->where('cat_sys_routes.route', $currentRoute)
+                ->like('cat_sys_routes.method', 'index')
+                ->orderBy('cat_sys_menus.order', 'ASC')
                 ->first();
         ?>
         <div class="content-wrapper">

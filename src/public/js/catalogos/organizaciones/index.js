@@ -9,6 +9,9 @@ $(document).ready(function () {
 const store = () => {
     process_store({
         form: '#form',
+        fields: [
+            'razon_social', 'rfc'
+        ],
         route: 'catalogos/organizaciones/store',
         datatable: {
             id: '#datatable'
@@ -29,7 +32,10 @@ const edit = (_id) => {
 const update = () => {
     process_update({
         form: '#form',
-        route: 'catalogos/organizaciones/store',
+        fields: [
+            'razon_social', 'rfc'
+        ],
+        route: 'catalogos/organizaciones/update',
         datatable: {
             id: '#datatable'
         }

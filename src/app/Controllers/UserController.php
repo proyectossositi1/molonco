@@ -4,19 +4,21 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\UserModel;
-use App\Models\RoleModel;
+use App\Models\CatUserModel;
+use App\Models\CatRoleModel;
 use App\Models\UserRoleModel;
+use App\Models\UserEmpresaModel;
 
 class UserController extends BaseController
 {
     public function index(){
-        $model = new UserModel();        
-        $modelRole = new RoleModel();        
+        $model = new CatUserModel();        
+        $modelRole = new CatRoleModel();        
         $data['data'] = $model
-            ->join('sys_user_roles', 'sys_user_roles.user_id = xx_usuarios.id',' left')
-            ->join('sys_roles', 'sys_roles.id = sys_user_roles.role_id', 'left')
-            ->select('xx_usuarios.*, sys_roles.name AS role')
+            ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+            ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
+            ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
+            ->select('cat_usuarios.*, cat_sys_roles.name AS role')
             ->findAll();
         $data['list_role'] = $modelRole->where(['status_alta' => 1])->findAll();
         
@@ -26,161 +28,139 @@ class UserController extends BaseController
         ]);
     }
 
-    public function store(){
+    function store() {
         $data = json_decode($this->request->getPost('data'));
-        $response = ['response_message' => ['type' => '', 'message' => ''], 'next' => false, 'csrf_token' => csrf_hash()];
-        $id = (isset($data->data->id)) ? $data->data->id : "" ;
-        $next = true;
-        unset($data->data);
-            
-        if(!empty($data)){
-            $model = new UserModel();
-            // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
-            $data->nombre = limpiar_cadena_texto($data->nombre);
-            
-            // ANTES DE AGREGAR/ACTUALIZAR, VALIDAMOS QUE NO EXISTA
-            $encontrado = $model->where('email', $data->email)->first();
-            if(!empty($encontrado)){
-                // SI EXISTE, MANDAMOS UN MENSAJE DE LA EXISTENCIA
-                // ANTES VERIFICAMOS QUE SEA EL MISMO REGISTRO ENCONTRADO
-                if($encontrado['id'] != $id && $encontrado['email'] != $data->email){
-                    $next = false;
-                    $response['response_message'] = [
-                        'type' => 'warning',
-                        'message' => 'EL E-MAIL'.$data->email.' YA SE ENCUENTRA REGISTRADO. INTENTE CON OTRO E-MAIL.'
-                    ];
-                }
-            }
+        $model = new CatUserModel();
+        $id_role = ($data->id_role == "") ? "" :  $data->id_role ;
 
-            if($next){                
-                // SETEAMOS EL DATA
-                $data->usr = $data->email;
-                $id_role = ($data->id_role == "") ? "" :  $data->id_role ;
-                if($data->pwd == ""){
-                    unset($data->pwd);
-                }else{
-                    $data->pwd = password_hash($data->pwd, PASSWORD_DEFAULT);
-                }                   
-                unset($data->confirm_pwd, $data->id_role);
-
-                // VALIDAMOS SI EXISTE EL ID PARA EDITAR O AGREGAR
-                if($id != ""){                
-                    // ACTUALIZAMOS 
-                    $data->id_usuario_edicion = $this->user_id;
-
-                    if($model->update($id, (array)($data))){
-                        // UNA VEZ QUE SE HAYA ACTUALIZADO, ASIGNAMEROS EL ROLE AL USUARIO PERO ANTES, HAY QUE VALIDAR QUE EXISTA
-                        $userRoleModel = new UserRoleModel();
-                        if(!$userRoleModel->where(['user_id' => $id])->first()){
-                            $userRoleModel->insert([
-                                'user_id' => $id,
-                                'role_id' => $id_role
-                            ]);
-                        }else{
-                            $userRoleModel->where('user_id', $id)
-                                ->set(['role_id' => $id_role])
-                                ->update();
-                        }
-                        $response['next'] = true;
-                        $response['response_message'] = [
-                            'type' => 'success',
-                            'message' => 'SE ACTUALIZO EL REGISTO CON ID <strong>'.$id.'</strong> EXITOSAMENTE.'
-                        ];
-                    }else{
-                        $response['response_message'] = [
-                            'type' => 'error',
-                            'message' => 'HUBO UN PROBLEMA PARA ACTUALIZAR EL ID <strong>'.$id.'</strong>. VUELVA A INTENTARLO.'
-                        ];
-                    } 
-                }else{
-                    // REALIZAMOS LA CREACION DEL ELEMENTO
-                    $data->id_usuario_creacion = $this->user_id;
-                    
-                    $resultModel = $model->save((array)$data);
-                    // UNA VEZ QUE SE HAYA INSERTADO, ASIGNAMEROS EL ROLE AL USUARIO
-                    $userRoleModel = new UserRoleModel();
-                    $userRoleModel->insert([
-                        'user_id' => $resultModel,
-                        'role_id' => $id_role
-                    ]);
-                    $response['next'] = true;
-                    $response['response_message'] = [
-                        'type' => 'success',
-                        'message' => 'SE AGREGO CON EXITO EL NUEVO USUARIO.'
-                    ];                                   
-                } 
-            }
-        
-            $data_view['data'] = $model
-                ->join('sys_user_roles', 'sys_user_roles.user_id = xx_usuarios.id',' left')
-                ->join('sys_roles', 'sys_roles.id = sys_user_roles.role_id', 'left')
-                ->select('xx_usuarios.*, sys_roles.name AS role')
-                ->findAll();
-            $response['view'] =  view('admin/users/ajax/table_data', $data_view);
-        }
-        
-        return json_encode($response);
-    }
-
-    public function edit() {
-        $data = json_decode($this->request->getPost('data'));
-        $response = ['response_message' => ['type' => '', 'message' => 'NO SE ENCONTRO EL IDENTIFICADOR PARA REALIZAR LA OPERACION.'], 'next' => false, 'csrf_token' => csrf_hash()];
-        $id = (isset($data->data->id)) ? $data->data->id : "" ;
-
-        if($id != ""){
-            $model = new UserModel();
-            $encontrado = $model->where(['xx_usuarios.id' => $id])
-                ->join('sys_user_roles', 'sys_user_roles.user_id = xx_usuarios.id',' left')
-                ->join('sys_roles', 'sys_roles.id = sys_user_roles.role_id', 'left')
-                ->select('xx_usuarios.id, xx_usuarios.nombre, xx_usuarios.usr, xx_usuarios.status_alta, xx_usuarios.email, sys_roles.id AS id_role, sys_roles.name AS role')->first();
-
-            if(!empty($encontrado)){
-                $response['next'] = true;
-                $response['data'] = $encontrado;
-            }else{
-                $response['response_message'] = [
-                    'type' => 'error',
-                    'message' => 'NO SE ENCONTRO EL ID <strong>'.$id.'</strong> DENTRO DE NUESTRA BASE DE DATOS.'
-                ];
-            }
-        }
-        
-        return json_encode($response);
-    }
-
-    public function destroy() {
-        $data = json_decode($this->request->getPost('data'));
-        $response = ['response_message' => ['type' => '', 'message' => 'NO SE ENCONTRO EL IDENTIFICADOR PARA REALIZAR LA OPERACION.'], 'next' => false, 'csrf_token' => csrf_hash()];        
-        $id = (isset($data->data->id)) ? $data->data->id : "" ;
-        
-        if($id != ""){
-            $model = new UserModel();
-            $encontrado = $model->where('id', $id)->first();
-
-            if(!empty($encontrado)){
-                $nuevoEstado = ($encontrado['status_alta'] == 1) ? 0 : 1;
-                $messageEstado = ($encontrado['status_alta'] == 1) ? 'INACTIVO' : 'ACTIVO';
-                if($model->update($id, ['status_alta' => $nuevoEstado])){
-                    $response['next'] = true;
-                    $response['response_message'] = [
-                        'type' => 'success',
-                        'message' => 'SE '.$messageEstado.' EL REGISTO CON ID <strong>'.$id.'</strong> EXITOSAMENTE.'
-                    ];
-                    $data_view['data'] =  $model
-                        ->join('cat_organizaciones', 'cat_organizaciones.id = xx_clientes.id_organizacion', 'left')
-                        ->select('cat_organizaciones.razon_social AS organizacion, xx_clientes.*')
+        return process_store([
+            'data'        => $data,
+            'model'       => $model,
+            'field_check' => ['email'],
+            'field_name'  => 'usuario',
+            'view' => [
+                'load' => 'admin/users/ajax/table_data',
+                'data'  => function(){
+                    return (new CatUserModel())
+                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+                        ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
+                        ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
+                        ->select('cat_usuarios.*, cat_sys_roles.name AS role')
                         ->findAll();
-                    $response['view'] =  view('catalogos/clientes/ajax/table_data', $data_view);
+                }
+            ],
+            'precallback' => function($return) {
+                // SETEAMOS EL DATA
+                $return->nombre = limpiar_cadena_texto($return->nombre);
+                $return->usr = $return->email;
+                if($return->pwd == ""){
+                    unset($return->pwd);
                 }else{
-                    $response['response_message'] = [
-                        'type' => 'error',
-                        'message' => 'HUBO UN PROBLEMA PARA ACTUALIZAR EL ID <strong>'.$id.'</strong>. VUELVA A INTENTARLO.'
-                    ];
-                }   
+                    $return->pwd = password_hash($return->pwd, PASSWORD_DEFAULT);
+                }                   
+                unset($return->confirm_pwd, $return->id_role);
+                
+                return $return;
+            },
+            'postcallback' => function($id, $data) use ($id_role){
+                // UNA VEZ QUE SE HAYA INSERTADO, ASIGNAMEROS EL ROLE AL USUARIO
+                $userRoleModel = new UserRoleModel();
+                $userRoleModel->insert([
+                    'id_usuario_empresa' => $id,
+                    'id_role' => $id_role
+                ]);
             }
+        ]);
+    }
 
-        }
+    function edit() {
+        $data = json_decode($this->request->getPost('data'));
+    
+        return process_edit([
+            'data' => $data,
+            'model' => new CatUserModel(),
+            'field_name' => 'usuario',
+            'query' => function($model, $id) {
+                return $model->where(['cat_usuarios.id' => $id])
+                    ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+                    ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
+                    ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
+                    ->select('cat_usuarios.id, cat_usuarios.nombre, cat_usuarios.usr, cat_usuarios.status_alta, cat_usuarios.email, cat_sys_roles.id AS id_role, cat_sys_roles.name AS role')
+                    ->first();
+            }
+        ]);
+    }
+
+    function update(){
+        $data = json_decode($this->request->getPost('data'));
+        $model = new CatUserModel();
+        $id_role = ($data->id_role == "") ? "" :  $data->id_role ;
         
-        return json_encode($response);
+        return process_update([
+            'data' => $data,
+            'model' => $model,
+            'field_check' => ['name'],
+            'field_name' => 'usuario',
+            'view' => [
+                'load' => 'admin/users/ajax/table_data',
+                'data'  => function(){
+                    return (new CatUserModel())
+                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+                        ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
+                        ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
+                        ->select('cat_usuarios.*, cat_sys_roles.name AS role')
+                        ->findAll();
+                }
+                
+            ],        
+            'precallback' => function ($return) {
+                $return->nombre = limpiar_cadena_texto($return->nombre);
+                
+                return $return;
+            },
+            'postcallback' => function($id, $data){
+                // UNA VEZ QUE SE HAYA ACTUALIZADO, ASIGNAMEROS EL ROLE AL USUARIO PERO ANTES, HAY QUE VALIDAR QUE EXISTA
+                // HAY QUE BUSCAR EL ID_USUARIO_EMPRESA ANTES DE REALIZAR LA ACTUALIZACION
+                $modelUsuarioEmpresa = new UserEmpresaModel();
+                $encontrado = $modelUsuarioEmpresa->where('id_usuario', $id)->first();
+
+                if(!empty($encontrado)){
+                    $userRoleModel = new UserRoleModel();
+                    if(!$userRoleModel->where(['id_usuario_empresa' => $encontrado['id']])->first()){
+                        $userRoleModel->insert([
+                            'id_usuario_empresa' => $encontrado['id'],
+                            'id_role' => $data->id_role
+                        ]);
+                    }else{
+                        $userRoleModel->where('id_usuario_empresa', $encontrado['id'])
+                            ->set(['id_role' => $data->id_role])
+                            ->update();
+                    }
+                }
+                
+            }
+        ]);
+    }
+
+    function destroy() {
+        $data = json_decode($this->request->getPost('data'));
+        $model = new CatUserModel();
+        
+        return process_destroy([
+            'data'       => $data,
+            'model'      => $model,
+            'field_name' => 'usuario',
+            'view' => [
+                'load' => 'admin/users/ajax/table_data',
+                'data'  => function(){
+                    return (new CatUserModel())
+                        ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')
+                        ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
+                        ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role', 'left')
+                        ->select('cat_usuarios.*, cat_sys_roles.name AS role')
+                        ->findAll();
+                }
+            ]         
+        ]);
     }
 }

@@ -162,6 +162,7 @@
                             <th>NOMBRE</th>
                             <th>ABREV</th>
                             <th>RAZON SOCIAL</th>
+                            <th>RFC</th>
                             <th>DIRECCION</th>
                             <th>MONEDA</th>
                             <th>EMAIL</th>
@@ -192,6 +193,7 @@
                             <td><?= esc($value['nombre']); ?></td>
                             <td><?= esc($value['abreviacion']); ?></td>
                             <td><?= esc($value['razon_social']); ?></td>
+                            <td><?= esc($value['rfc']); ?></td>
                             <td><?= esc($value['direccion']); ?></td>
                             <td><?= esc($value['moneda']); ?></td>
                             <td><?= esc($value['email_primario']); ?></td>

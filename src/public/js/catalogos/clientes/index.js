@@ -43,7 +43,7 @@ const update = () => {
             'email_primario',
             'telefono_primario'
         ],
-        route: 'catalogos/clientes/store',
+        route: 'catalogos/clientes/update',
         datatable: {
             id: '#datatable'
         }
