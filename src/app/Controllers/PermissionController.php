@@ -5,12 +5,19 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CatPermissionModel;
+use App\Models\CatEmpresaModel;
 
 class PermissionController extends BaseController
 {
     public function index(){
         $permissionModel = new CatPermissionModel();
-        $data['data'] = $permissionModel->findAll();
+        $modelEmpresa = new CatEmpresaModel(); 
+        $data['list_empresas'] = $modelEmpresa->where(['status_alta' => 1])->findAll();
+        $data['data'] = $permissionModel
+            ->where(['cat_sys_permissions.id_empresa' => $this->id_empresa])
+            ->join('cat_empresas', 'cat_empresas.id = cat_sys_permissions.id_empresa', 'left')
+            ->select('cat_empresas.nombre AS empresa, cat_sys_permissions.*')
+            ->findAll();
         
         return renderPage([
             'view'  => 'admin/permissions/index',
@@ -31,6 +38,7 @@ class PermissionController extends BaseController
                 'load' => 'admin/permissions/ajax/table_data'
             ],
             'precallback' => function($return) {
+                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->name = limpiar_cadena_texto($return->name);
                 
                 return $return;
@@ -62,6 +70,7 @@ class PermissionController extends BaseController
                 
             ],        
             'precallback' => function ($return) {
+                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->name = limpiar_cadena_texto($return->name);
                 
                 return $return;

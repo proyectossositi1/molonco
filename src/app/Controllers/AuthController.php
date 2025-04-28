@@ -34,9 +34,10 @@ class AuthController extends BaseController{
         }
 
         // Buscar usuario en la base de datos
-        $user = $model->select('cat_usuarios.id, cat_usuarios.usr, cat_usuarios.pwd, cat_usuarios.email, sys_usuarios_empresas.id AS id_usuario_empresa, sys_usuarios_empresas.id_empresa, sys_user_roles.id_role')
+        $user = $model->select('cat_usuarios.id, cat_usuarios.usr, cat_usuarios.pwd, cat_usuarios.email, sys_usuarios_empresas.id AS id_usuario_empresa, sys_usuarios_empresas.id_empresa, sys_user_roles.id_role, cat_sys_roles.name AS role')
             ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')    
-            ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id')           
+            ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id')        
+            ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role')   
             ->where(['sys_usuarios_empresas.status_alta' => 1, 'cat_usuarios.usr' => $username])
             ->first();
 
@@ -57,6 +58,7 @@ class AuthController extends BaseController{
             'username'      => $user['usr'],
             'email'         => $user['email'],
             'id_role'       => $user['id_role'],
+            'role'          => $user['role'],
             'isLoggedIn'    => true,
         ];
         $session->set($data);

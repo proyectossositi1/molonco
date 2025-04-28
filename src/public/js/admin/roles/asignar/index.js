@@ -22,7 +22,7 @@ const store = () => {
         process_store({
             form: '#form',
             fields: [
-                'id_role'
+                'id_empresa', 'id_role'
             ],
             route: 'admin/roles/asignar/store',
             data: {

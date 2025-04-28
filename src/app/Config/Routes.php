@@ -56,11 +56,13 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('routes/store', 'RouteController::store');
     $routes->post('routes/edit', 'RouteController::edit');
     $routes->post('routes/destroy', 'RouteController::destroy');    
+    // RUTAS - AJAX
+    $routes->post('routes/ajax_empresas_menu', 'RouteController::ajax_empresas_menu');    
     // ASIGNACION DE RUTAS A ROLES
     $routes->get('routes/asignar', 'RouteController::index_assignRoles');
     $routes->post('routes/asignar/store', 'RouteController::store_roleAssignment');
     $routes->post('routes/asignar/destroy', 'RouteController::destroy_roleAssignment');
-    // MENU S
+    // MENUS
     $routes->get('menus/', 'MenuController::index');
     $routes->post('menus/store', 'MenuController::store');
     $routes->post('menus/update', 'MenuController::update');
@@ -93,12 +95,6 @@ $routes->group('catalogos', ['filter' => 'auth'], function($routes) {
     $routes->post('clientes/update', 'ClienteController::update');
     $routes->post('clientes/edit', 'ClienteController::edit');
     $routes->post('clientes/destroy', 'ClienteController::destroy'); 
-    // PRODUCTOS
-    $routes->get('productos/', 'CatProductoController::index');
-    $routes->post('productos/store', 'CatProductoController::store');
-    $routes->post('productos/update', 'CatProductoController::update');
-    $routes->post('productos/edit', 'CatProductoController::edit');
-    $routes->post('productos/destroy', 'CatProductoController::destroy'); 
     // TIPO DE PAGOS
     $routes->get('tipopagos/', 'CatTipoPagoController::index');
     $routes->post('tipopagos/store', 'CatTipoPagoController::store');
@@ -111,6 +107,56 @@ $routes->group('catalogos', ['filter' => 'auth'], function($routes) {
     $routes->post('servicios/update', 'CatServicioController::update');
     $routes->post('servicios/edit', 'CatServicioController::edit');
     $routes->post('servicios/destroy', 'CatServicioController::destroy'); 
+    // PRODUCTOS
+    $routes->get('productos/', 'CatProductoController::index');
+    $routes->post('productos/store', 'CatProductoController::store');
+    $routes->post('productos/update', 'CatProductoController::update');
+    $routes->post('productos/edit', 'CatProductoController::edit');
+    $routes->post('productos/destroy', 'CatProductoController::destroy'); 
+    // PRODUCTOS - AJAX
+    $routes->post('productos/ajax_refresh_table', 'CatProductoController::ajax_refresh_table');     
+    $routes->post('productos/ajax_onchange_categorias', 'CatProductoController::ajax_onchange_categorias');     
+    
+    // PRODUCTOS - CATEGORIAS
+    // $routes->get('productos/categorias/', 'CatProductoCategoriaController::index');
+    $routes->post('productos/categorias/store', 'CatProductoCategoriaController::store');
+    $routes->post('productos/categorias/update', 'CatProductoCategoriaController::update');
+    $routes->post('productos/categorias/edit', 'CatProductoCategoriaController::edit');
+    $routes->post('productos/categorias/destroy', 'CatProductoCategoriaController::destroy'); 
+    // PRODUCTOS - CATEGORIAS - AJAX
+    $routes->post('productos/categorias/ajax_refresh_table', 'CatProductoCategoriaController::ajax_refresh_table');     
+    // PRODUCTOS - SUBCATEGORIAS
+    // $routes->get('productos/subcategorias/', 'CatProductoSubcategoriaController::index');
+    $routes->post('productos/subcategorias/store', 'CatProductoSubcategoriaController::store');
+    $routes->post('productos/subcategorias/update', 'CatProductoSubcategoriaController::update');
+    $routes->post('productos/subcategorias/edit', 'CatProductoSubcategoriaController::edit');
+    $routes->post('productos/subcategorias/destroy', 'CatProductoSubcategoriaController::destroy');
+    // PRODUCTOS - SUBCATEGORIAS - AJAX
+    $routes->post('productos/subcategorias/ajax_refresh_table', 'CatProductoSubcategoriaController::ajax_refresh_table');     
+    // PRODUCTOS - MARCAS
+    // $routes->get('productos/marcas/', 'CatProductoMarcaController::index');
+    $routes->post('productos/marcas/store', 'CatProductoMarcaController::store');
+    $routes->post('productos/marcas/update', 'CatProductoMarcaController::update');
+    $routes->post('productos/marcas/edit', 'CatProductoMarcaController::edit');
+    $routes->post('productos/marcas/destroy', 'CatProductoMarcaController::destroy'); 
+    // PRODUCTOS - MARCAS - AJAX
+    $routes->post('productos/marcas/ajax_refresh_table', 'CatProductoMarcaController::ajax_refresh_table');     
+    // PRODUCTOS - TIPOS
+    // $routes->get('productos/tipos/', 'CatProductoTipoController::index');
+    $routes->post('productos/tipos/store', 'CatProductoTipoController::store');
+    $routes->post('productos/tipos/update', 'CatProductoTipoController::update');
+    $routes->post('productos/tipos/edit', 'CatProductoTipoController::edit');
+    $routes->post('productos/tipos/destroy', 'CatProductoTipoController::destroy'); 
+    // PRODUCTOS - TIPOS - AJAX
+    $routes->post('productos/tipos/ajax_refresh_table', 'CatProductoTipoController::ajax_refresh_table');     
+     // PRODUCTOS - PRECIOS
+    // $routes->get('productos/precios/', 'CatProductoEmpresaPrecioController::index');
+    $routes->post('productos/precios/store', 'CatProductoEmpresaPrecioController::store');
+    $routes->post('productos/precios/update', 'CatProductoEmpresaPrecioController::update');
+    $routes->post('productos/precios/edit', 'CatProductoEmpresaPrecioController::edit');
+    $routes->post('productos/precios/destroy', 'CatProductoEmpresaPrecioController::destroy'); 
+    // PRODUCTOS - PREICOS - AJAX
+    $routes->post('productos/precios/ajax_refresh_table', 'CatProductoEmpresaPrecioController::ajax_refresh_table'); 
 });
 
 // Rutas protegidas para Administradores

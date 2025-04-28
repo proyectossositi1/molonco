@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class UserEmpresaModel extends Model
+class CatProductoEmpresa extends Model
 {
-    protected $table            = 'sys_usuarios_empresas';
+    protected $table            = 'cat_productos_empresa';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_usuario', 'id_empresa', 'status_alta'];
+    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_empresa', 'id_producto', 'id_inv_uom', 'sku', 'cantidad', 'descripcion', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

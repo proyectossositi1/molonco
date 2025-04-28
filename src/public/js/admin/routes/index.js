@@ -12,7 +12,7 @@ const store = () => {
     process_store({
         form: '#form-route',
         fields: [
-            'name', 'route', 'controller', 'method'
+            'id_empresa', 'id_menu', 'name', 'route', 'controller', 'method'
         ],
         route: 'admin/routes/store',
         data: {
@@ -34,8 +34,9 @@ const edit = (_id) => {
         onSuccess: () => {
             let _tmp = localstorage_function('get', 'ls_admin');
 
-            $('#method').prop('disabled', true);
+            $('#method, #id_menu').prop('disabled', true);
             $('#new_method').val(_tmp.method);
+            $('#id_menu').val(_tmp.id_menu);
         }
     });
 }
@@ -44,7 +45,7 @@ const update = () => {
     process_update({
         form: '#form-route',
         fields: [
-            'name', 'route', 'controller', 'method'
+            'id_empresa', 'id_menu', 'name', 'route', 'controller', 'method'
         ],
         route: 'admin/routes/store',
         datatable: {
@@ -64,4 +65,32 @@ function destroy(_id) {
             id: _id
         }
     });
+}
+
+const onchange_empresa = () => {
+    let _value = $('#id_empresa option:selected').val();
+
+    if (_value != "") {
+        ajax_function_object({
+            route: 'admin/routes/ajax_empresas_menu',
+            method: 'post',
+            data: {
+                id_empresa: _value
+            },
+            function: (_response) => {
+                if (_response.next) {
+                    $('#id_menu').html(_response.select);
+                } else {
+                    alert_toastr({
+                        type: _response.response_message.type,
+                        message: _response.response_message.message
+                    });
+                }
+
+
+            }
+        });
+    } else {
+        $('#id_menu').html('<option value="">SELECCIONE UNA OPCION</option>');
+    }
 }

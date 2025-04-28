@@ -111,6 +111,10 @@
     <script src="<?= base_url('plugins/number/jquery.number.min.js'); ?>"></script>
     <!-- Numeric -->
     <script src="<?= base_url('plugins/numeric/jquery.numeric.min.js'); ?>"></script>
+    <!-- Loading Overlay -->
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
+    </script>
+
 
     <!-- JavaScript Customs -->
     <script>

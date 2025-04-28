@@ -34,10 +34,14 @@
             <td><?= esc($value['nombre']); ?></td>
             <td><?= esc($value['email']); ?></td>
             <td class="text-center">
+                <? if(can('editar')): ?>
                 <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>)"><i class="fas fa-pencil-alt"
                         aria-hidden="true"></i></button>
+                <? endif; ?>
+                <? if(can('eliminar')): ?>
                 <button class="btn btn-<?=$btn_class;?> btn-xs" onclick="destroy(<?= $value['id'] ?>)"><i
                         class="fa fa-<?=$btn_icon;?>" aria-hidden="true"></i></button>
+                <? endif; ?>
             </td>
         </tr>
         <?php endforeach; ?>

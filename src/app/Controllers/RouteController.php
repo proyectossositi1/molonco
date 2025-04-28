@@ -5,8 +5,9 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CatRouteModel;
+use App\Models\CatEmpresaModel;
 use App\Models\RoleRouteModel;
-use App\Models\RoleModel;
+use App\Models\CatRoleModel;
 use App\Models\CatMenuModel;
 
 class RouteController extends BaseController
@@ -14,10 +15,14 @@ class RouteController extends BaseController
     function index(){
         $rutaModel = new CatRouteModel();
         $menuModel = new CatMenuModel();
-        $data['menus'] = $menuModel->where(['status_alta' => 1])->findAll();
+        $modelEmpresa = new CatEmpresaModel();
+        $data['list_menus'] = $menuModel->where(['status_alta' => 1, 'id_empresa' => $this->id_empresa])->findAll();
+        $data['list_empresas'] = $modelEmpresa->where(['status_alta' => 1])->findAll();
         $data['rutas'] = $rutaModel
+            ->where('cat_sys_routes.id_empresa', $this->id_empresa)
             ->join('cat_sys_menus', 'cat_sys_menus.id = cat_sys_routes.id_menu', 'left')
-            ->select('cat_sys_routes.*, cat_sys_menus.name AS menu')
+            ->join('cat_empresas', 'cat_empresas.id = cat_sys_routes.id_empresa', 'left')
+            ->select('cat_sys_routes.*, cat_sys_menus.name AS menu, cat_empresas.nombre AS empresa')
             ->findAll();
         
         return renderPage([
@@ -47,6 +52,10 @@ class RouteController extends BaseController
                 if ($rutaModel->where('route', $data->route)->countAllResults() > 0) unset($data->route);
                 // ACTUALIZAMOS DATOS DE UNO A UNO
                 $data->method = $text_method;
+                if(array_key_exists('id_menu', (array)$data)){
+                    if($data->id_menu == "") unset($data->id_menu);
+                }
+                
                 
                 if($rutaModel->update($id, (array)($data))){
                     $response['next'] = true;
@@ -86,7 +95,9 @@ class RouteController extends BaseController
                             $response['response_message']['message'] .= $route.'<br>';
                         }else{
                             // INSERTAREMOS LAS RUTAS QUE NO EXISTAN
+                            if(!array_key_exists('id_empresa', (array)$data)) $data->id_empresa = $this->id_empresa;
                             $data_route = [
+                                'id_empresa'    => $data->id_empresa, 
                                 'id_menu' => $id_menu,
                                 'name'  => $name,
                                 'route' => $route,
@@ -100,11 +111,12 @@ class RouteController extends BaseController
                     }
                 }                           
             }                
-            
 
-            $data_view['rutas'] =  $rutaModel
+            $data_view['data'] =  $rutaModel
+                ->where('cat_sys_routes.id_empresa', $this->id_empresa)
                 ->join('cat_sys_menus', 'cat_sys_menus.id = cat_sys_routes.id_menu', 'left')
-                ->select('cat_sys_routes.*, cat_sys_menus.name AS menu')
+                ->join('cat_empresas', 'cat_empresas.id = cat_sys_routes.id_empresa', 'left')
+                ->select('cat_sys_routes.*, cat_sys_menus.name AS menu, cat_empresas.nombre AS empresa')
                 ->findAll();
             $response['view'] =  view('admin/routes/ajax/table_data', $data_view);
         }
@@ -132,46 +144,32 @@ class RouteController extends BaseController
                 'load' => 'admin/routes/ajax/table_data',
                 'data' => function(){
                     return (new CatRouteModel())
+                    ->where('cat_sys_routes.id_empresa', $this->id_empresa)
                     ->join('cat_sys_menus', 'cat_sys_menus.id = cat_sys_routes.id_menu', 'left')
-                    ->select('cat_sys_routes.*, cat_sys_menus.name AS menu')
+                    ->join('cat_empresas', 'cat_empresas.id = cat_sys_routes.id_empresa', 'left')
+                    ->select('cat_sys_routes.*, cat_sys_menus.name AS menu, cat_empresas.nombre AS empresa')
                     ->findAll();
                 }
             ]         
         ]);
     }
 
-    public function destroy_bk() {
+    function ajax_empresas_menu() {
         $data = json_decode($this->request->getPost('data'));
-        $response = ['response_message' => ['type' => '', 'message' => 'NO SE ENCONTRO EL IDENTIFICADOR PARA REALIZAR LA OPERACION.'], 'next' => false, 'csrf_token' => csrf_hash()];        
-        $id = (isset($data->data->id)) ? $data->data->id : "" ;
-        
-        if($id != ""){
-            $rutaModel = new CatRouteModel();
-            $encontrado = $rutaModel->where('id', $id)->first();
+        $response = ['response_message' => ['type' => 'warning', 'message' => 'NO SE ENCONTRARON REGISTROS CON LA OPCION SELECCIONADA.'], 'next' => false, 'csrf_token' => csrf_hash()];        
+        $modelMenu = new CatMenuModel();
 
-            if(!empty($encontrado)){
-                $nuevoEstado = ($encontrado['status_alta'] == 1) ? 0 : 1;
-                $messageEstado = ($encontrado['status_alta'] == 1) ? 'INACTIVO' : 'ACTIVO';
-                if($rutaModel->update($id, ['status_alta' => $nuevoEstado])){
-                    $response['next'] = true;
-                    $response['response_message'] = [
-                        'type' => 'success',
-                        'message' => 'SE '.$messageEstado.' EL REGISTO CON ID <strong>'.$id.'</strong> EXITOSAMENTE.'
-                    ];
-                    $data_view['rutas'] =  $rutaModel
-                        ->join('cat_sys_menus', 'cat_sys_menus.id = cat_sys_routes.id_menu', 'left')
-                        ->select('cat_sys_routes.*, cat_sys_menus.name AS menu')
-                        ->findAll();
-                    $response['view'] =  view('admin/routes/ajax/table_data', $data_view);
-                }else{
-                    $response['response_message'] = [
-                        'type' => 'error',
-                        'message' => 'HUBO UN PROBLEMA PARA ACTUALIZAR EL ID <strong>'.$id.'</strong>. VUELVA A INTENTARLO.'
-                    ];
-                }   
+        $encontrado = $modelMenu->where(['status_alta' => 1, 'id_empresa' => $data->id_empresa])->findAll();
+        $html = '<option value="">SELECCIONE UNA OPCION</option>';
+        if(!empty($encontrado)){
+            foreach ($encontrado as $key => $value) {
+                $html .= '<option value="'.$value['id'].'">'.$value['name'].'</option>';
             }
 
+            $response['next'] = true;            
         }
+        
+        $response['select'] = $html;
         
         return json_encode($response);
     }
@@ -181,15 +179,15 @@ class RouteController extends BaseController
     // INDEX: ASIGNACION DE RUTAS
     public function index_assignRoles(){
         $rutaModel = new CatRouteModel();
-        $roleModel = new RoleModel();
-        $roleRouteModel = new RoleCatRouteModel();
-        $listRoutes = $rutaModel->where(['method' => 'index', 'status_alta' => 1])->findAll();
+        $roleModel = new CatRoleModel();
+        $roleRouteModel = new RoleRouteModel();
+        $listRoutes = $rutaModel->like('method', 'index')->where('status_alta', 1)->findAll();
         $data['rutas'] = select_group( $listRoutes );
         $data['roles'] = $roleModel->where('status_alta', 1)->findAll();
         $data['data'] = $roleRouteModel
-            ->join('sys_roles', 'sys_roles.id = sys_role_routes.id_role')
+            ->join('cat_sys_roles', 'cat_sys_roles.id = sys_role_routes.id_role')
             ->join('cat_sys_routes', 'cat_sys_routes.id = sys_role_routes.id_route')
-            ->select('sys_role_routes.id, sys_roles.name AS role, cat_sys_routes.name AS route, cat_sys_routes.method, sys_role_routes.status_alta')
+            ->select('sys_role_routes.id, cat_sys_roles.name AS role, cat_sys_routes.name AS route, cat_sys_routes.method, sys_role_routes.status_alta')
             ->findAll();
         
         return renderPage([
@@ -207,8 +205,8 @@ class RouteController extends BaseController
         
         if($data->id_role != ""){
             $response['next'] = true;
-            $rolesRutasModel = new RoleCatRouteModel();
-            $roleModel = new RoleModel();
+            $rolesRutasModel = new RoleRouteModel();
+            $roleModel = new CatRoleModel();
             // OBTENEMOS EL NOMBRE DEL ROLE
             $role_name = $roleModel->where('id', $data->id_role)->first();
             // Eliminar permisos previos del rol antes de agregar nuevos
@@ -282,9 +280,9 @@ class RouteController extends BaseController
 
             $response['response_message']['message'] .= '</ul>';
             $data_view['data'] = $rolesRutasModel
-                ->join('sys_roles', 'sys_roles.id = sys_role_routes.id_role')
+                ->join('cat_sys_roles', 'cat_sys_roles.id = sys_role_routes.id_role')
                 ->join('cat_sys_routes', 'cat_sys_routes.id = sys_role_routes.id_route')
-                ->select('sys_role_routes.id, sys_roles.name AS role, cat_sys_routes.name AS route, cat_sys_routes.method, sys_role_routes.status_alta')
+                ->select('sys_role_routes.id, cat_sys_roles.name AS role, cat_sys_routes.name AS route, cat_sys_routes.method, sys_role_routes.status_alta')
                 ->findAll();
             $response['view'] =  view('admin/routes/ajax/table_roles_routes', $data_view);
         }
@@ -298,7 +296,7 @@ class RouteController extends BaseController
         $id = (isset($data->data->id)) ? $data->data->id : "" ;
         
         if($id != ""){
-            $rolesRutasModel = new RoleCatRouteModel();
+            $rolesRutasModel = new RoleRouteModel();
             $encontrado = $rolesRutasModel->where('id', $id)->first();
 
             if(!empty($encontrado)){
@@ -311,9 +309,9 @@ class RouteController extends BaseController
                         'message' => 'SE '.$messageEstado.' EL REGISTO CON ID <strong>'.$id.'</strong> EXITOSAMENTE.'
                     ];
                     $data_view['data'] = $rolesRutasModel
-                        ->join('sys_roles', 'sys_roles.id = sys_role_routes.id_role')
+                        ->join('cat_sys_roles', 'cat_sys_roles.id = sys_role_routes.id_role')
                         ->join('cat_sys_routes', 'cat_sys_routes.id = sys_role_routes.id_route')
-                        ->select('sys_role_routes.id, sys_roles.name AS role, cat_sys_routes.name AS route, cat_sys_routes.method, sys_role_routes.status_alta')
+                        ->select('sys_role_routes.id, cat_sys_roles.name AS role, cat_sys_routes.name AS route, cat_sys_routes.method, sys_role_routes.status_alta')
                         ->findAll();
                     $response['view'] =  view('admin/routes/ajax/table_roles_routes', $data_view);
                 }else{
