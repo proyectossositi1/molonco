@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CatPermissionModel extends Model
+class CatProductoTipo extends Model
 {
-    protected $table            = 'cat_sys_permissions';
+    protected $table            = 'cat_productos_tipos';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_empresa', 'name', 'description', 'status_alta'];
+    protected $allowedFields    = ['id_empresa', 'id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'nombre', 'descripcion', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

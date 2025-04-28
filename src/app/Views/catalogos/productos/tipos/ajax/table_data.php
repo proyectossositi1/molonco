@@ -5,9 +5,8 @@
         <tr>
             <th>ID</th>
             <th>EMPRESA</th>
-            <th>NAME</th>
-            <th>ICON</th>
-            <th>ORDER</th>
+            <th>NOMBRE</th>
+            <th>DESCRIPCION</th>
             <th>ACTION</th>
         </tr>
     </thead>
@@ -28,16 +27,15 @@
         <tr>
             <td><?= esc($value['id']); ?></td>
             <td><?= esc($value['empresa']); ?></td>
-            <td><?= esc($value['name']); ?></td>
-            <td><?= esc($value['icon']); ?></td>
-            <td><?= esc($value['order']); ?></td>
+            <td><?= esc($value['nombre']); ?></td>
+            <td><?= ($value['descripcion']); ?></td>
             <td class="text-center">
                 <? if(can('editar')): ?>
-                <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>)"><i class="fas fa-pencil-alt"
-                        aria-hidden="true"></i></button>
+                <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>, 'tipos')"><i
+                        class="fas fa-pencil-alt" aria-hidden="true"></i></button>
                 <? endif; ?>
                 <? if(can('eliminar')): ?>
-                <button class="btn btn-<?=$btn_class;?> btn-xs" onclick="destroy(<?= $value['id'] ?>)"><i
+                <button class="btn btn-<?=$btn_class;?> btn-xs" onclick="destroy(<?= $value['id'] ?>, 'tipos')"><i
                         class="fa fa-<?=$btn_icon;?>" aria-hidden="true"></i></button>
                 <? endif; ?>
             </td>

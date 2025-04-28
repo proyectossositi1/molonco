@@ -12,7 +12,7 @@ class CatRouteModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_menu', 'name', 'route', 'controller', 'method', 'icon', 'status_alta'];
+    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_empresa', 'id_menu', 'name', 'route', 'controller', 'method', 'icon', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

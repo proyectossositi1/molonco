@@ -17,6 +17,7 @@ class UserController extends BaseController
         $modelRole = new CatRoleModel();        
         $modelEmpresa = new CatEmpresaModel();    
         $data['data'] = $model
+            ->where('sys_usuarios_empresas.id_empresa', $this->id_empresa)
             ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
             ->join('cat_empresas', 'cat_empresas.id = sys_usuarios_empresas.id_empresa', 'left')
             ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
@@ -45,6 +46,7 @@ class UserController extends BaseController
                 'load' => 'admin/users/ajax/table_data',
                 'data'  => function(){
                     return (new CatUserModel())
+                        ->where('sys_usuarios_empresas.id_empresa', $this->id_empresa)
                         ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
                         ->join('cat_empresas', 'cat_empresas.id = sys_usuarios_empresas.id_empresa', 'left')
                         ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
@@ -55,6 +57,7 @@ class UserController extends BaseController
             ],
             'precallback' => function($return) {
                 // SETEAMOS EL DATA
+                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->nombre = limpiar_cadena_texto($return->nombre);
                 $return->usr = $return->email;
                 if($return->pwd == ""){
@@ -115,6 +118,7 @@ class UserController extends BaseController
                 'load' => 'admin/users/ajax/table_data',
                 'data'  => function(){
                     return (new CatUserModel())
+                        ->where('sys_usuarios_empresas.id_empresa', $this->id_empresa)
                         ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
                         ->join('cat_empresas', 'cat_empresas.id = sys_usuarios_empresas.id_empresa', 'left')
                         ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')
@@ -125,7 +129,13 @@ class UserController extends BaseController
                 
             ],        
             'precallback' => function ($return) {
+                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->nombre = limpiar_cadena_texto($return->nombre);
+                if($return->pwd == ""){
+                    unset($return->pwd);
+                }else{
+                    $return->pwd = password_hash($return->pwd, PASSWORD_DEFAULT);
+                } 
                 
                 return $return;
             },
@@ -161,6 +171,7 @@ class UserController extends BaseController
                 'load' => 'admin/users/ajax/table_data',
                 'data'  => function(){
                     return (new CatUserModel())
+                        ->where('sys_usuarios_empresas.id_empresa', $this->id_empresa)
                         ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id', 'left')
                         ->join('cat_empresas', 'cat_empresas.id = sys_usuarios_empresas.id_empresa', 'left')
                         ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id',' left')

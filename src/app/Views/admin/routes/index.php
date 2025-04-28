@@ -14,12 +14,24 @@
                 <?= csrf_field() ?>
                 <!--begin::Body-->
                 <div class="card-body">
+                    <? if(role(['super admin'])): ?>
+                    <div class="mb-3">
+                        <label for="id_empresa" class="form-label">EMPRESAS</label>
+                        <select class="form-control selectpicker" name="id_empresa" id="id_empresa"
+                            onchange="onchange_empresa()">
+                            <option value="">SELECCIONE UNA OPCION</option>
+                            <? foreach($list_empresas as $key => $value): ?>
+                            <option value="<?= $value['id']; ?>"><?= $value['nombre'];?></option>
+                            <? endforeach; ?>
+                        </select>
+                    </div>
+                    <? endif; ?>
                     <div class="mb-3">
                         <label for="id_menu" class="form-label">MENUS</label>
                         <select class="form-control selectpicker" name="id_menu" id="id_menu">
                             <option value="">SELECCIONE UNA OPCION</option>
-                            <? foreach ($menus as $key => $value): ?>
-                            <option value="<?= $value['id']; ?>"><?= $value['name']; ?></option>
+                            <? foreach($list_menus as $key => $value): ?>
+                            <option value="<?= $value['id']; ?>"><?= $value['name'];?></option>
                             <? endforeach; ?>
                         </select>
                     </div>
@@ -74,8 +86,12 @@
                 <!--end::Body-->
                 <!--begin::Footer-->
                 <div class="card-footer text-right">
+                    <? if(can('agregar')): ?>
                     <button type="button" class="btn btn-primary" id="btn_store" onclick="store()">AGREGAR</button>
+                    <? endif; ?>
+                    <? if(can('actualizar')): ?>
                     <button type="button" class="btn btn-primary" id="btn_update" onclick="update()">ACTUALIZAR</button>
+                    <? endif; ?>
                 </div>
             </form>
             <!--end::Form-->
@@ -94,6 +110,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>EMPRESA</th>
                             <th>MENU</th>
                             <th>NAME</th>
                             <th>ROUTE</th>
@@ -119,6 +136,7 @@
                         ?>
                         <tr>
                             <td><?= esc($ruta['id']); ?></td>
+                            <td><?= esc($ruta['empresa']); ?></td>
                             <td><?= esc($ruta['menu']); ?></td>
                             <td><?= esc($ruta['name']); ?></td>
                             <td><?= esc($ruta['route']); ?></td>
@@ -126,10 +144,14 @@
                             <td><?= esc($ruta['method']); ?></td>
                             <td class="text-center"><i class="<?= esc($ruta['icon']); ?>"></i></td>
                             <td class="text-center">
+                                <? if(can('editar')): ?>
                                 <button class="btn btn-default btn-xs" onclick="edit(<?= $ruta['id'] ?>)"><i
                                         class="fas fa-pencil-alt" aria-hidden="true"></i></button>
+                                <? endif; ?>
+                                <? if(can('eliminar')): ?>
                                 <button class="btn btn-<?=$btn_class;?> btn-xs" onclick="destroy(<?= $ruta['id'] ?>)"><i
                                         class="fa fa-<?=$btn_icon;?>" aria-hidden="true"></i></button>
+                                <? endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

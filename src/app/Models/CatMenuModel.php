@@ -12,7 +12,7 @@ class CatMenuModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'name', 'icon', 'order', 'status_alta'];
+    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_empresa', 'name', 'icon', 'order', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

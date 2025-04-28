@@ -47,10 +47,21 @@ abstract class BaseController extends Controller
     /**
      * @return void
      */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-    {
+
+    protected $empresa_id;
+    protected $user_id;
+    protected $user_empresa_id;
+    
+    protected function initUserSessionData(){
+        $this->id_empresa           = session('id_empresa');
+        $this->id_usuario           = session('id_usuario');
+        $this->id_usuario_empresa   = session('id_usuario_empresa');
+    }
+
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger){
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
+        $this->initUserSessionData();
         // Cargamos todas las librerias para heredar a todos los controladores
         helper(['url', 'form', 'cookie']);
         // Varaibles y Funciones globales

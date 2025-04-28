@@ -2,6 +2,13 @@ $(document).ready(function () {
 
 });
 
+$(document).ajaxSend(function (event, jqxhr, settings) {
+    $.LoadingOverlay("show");
+});
+$(document).ajaxComplete(function (event, jqxhr, settings) {
+    $.LoadingOverlay("hide");
+});
+
 const init = (_data = { datatable: {} }) => {
     // ------------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------------------------------------------------------------------------
@@ -520,6 +527,13 @@ const ajax_function_object = (data = { server: 'default', route: '', data: {}, m
                 // }
                 if (typeof data.data.blob != undefined) _newData['blob'] = data.data.blob;
             } else {
+                // VARIABLE PARA OBTENER EL TOKEN, SIN FORMULARIO
+                _csrfToken = $('input[name="csrf_test_name"]').val();
+                if (_csrfToken != "") {
+                    $("meta[name='X-CSRF-TOKEN']").attr("content", _csrfToken);
+                    data.data.csrf_token = _csrfToken;
+                }
+                // OBJETO DE DATA
                 _newData = data.data;
             }
 
@@ -721,6 +735,19 @@ const validateMatch = (_data = { field1: '', field2: '' }) => {
             $(this).removeClass('is-invalid').addClass('is-valid');
         } else {
             $(this).removeClass('is-valid').addClass('is-invalid');
+        }
+    });
+};
+
+const tabactive = (callback) => {
+    $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
+        const tabId = $(e.target).attr('id');
+        const tabHref = $(e.target).attr('href');
+        const tabText = $(e.target).text().trim();
+        const tabName = $(e.target).attr('href').replace('#tab-', '');
+
+        if (typeof callback === 'function') {
+            callback({ id: tabId, href: tabHref, text: tabText, name: tabName });
         }
     });
 };

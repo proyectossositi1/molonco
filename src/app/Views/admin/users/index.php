@@ -15,6 +15,7 @@
                 <!--begin::Body-->
                 <div class="card-body">
                     <div class="row">
+                        <? if(role(['super admin'])): ?>
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="id_empresa" class="form-label">EMPRESAS</label>
@@ -26,6 +27,7 @@
                                 </select>
                             </div>
                         </div>
+                        <? endif; ?>
                         <div class="col-md-2">
                             <div class="mb-3">
                                 <label for="id_role" class="form-label">ROLES</label>
@@ -70,8 +72,12 @@
                 <!--end::Body-->
                 <!--begin::Footer-->
                 <div class="card-footer text-right">
+                    <? if(can('agregar')): ?>
                     <button type="button" class="btn btn-primary" id="btn_store" onclick="store()">AGREGAR</button>
+                    <? endif; ?>
+                    <? if(can('actualizar')): ?>
                     <button type="button" class="btn btn-primary" id="btn_update" onclick="update()">ACTUALIZAR</button>
+                    <? endif; ?>
                 </div>
             </form>
             <!--end::Form-->
@@ -122,11 +128,15 @@
                             <td><?= esc($value['nombre']); ?></td>
                             <td><?= esc($value['email']); ?></td>
                             <td class="text-center">
+                                <? if(can('editar')): ?>
                                 <button class="btn btn-default btn-xs" onclick="edit(<?= $value['id'] ?>)"><i
                                         class="fas fa-pencil-alt" aria-hidden="true"></i></button>
+                                <? endif; ?>
+                                <? if(can('eliminar')): ?>
                                 <button class="btn btn-<?=$btn_class;?> btn-xs"
                                     onclick="destroy(<?= $value['id'] ?>)"><i class="fa fa-<?=$btn_icon;?>"
                                         aria-hidden="true"></i></button>
+                                <? endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

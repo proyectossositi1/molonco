@@ -1,5 +1,6 @@
 <?php
-        use Config\Services;
+    use Config\Services;
+    use App\Models\RolePermissionModel;
 
 if (!function_exists('tracker')){
     function tracker(){
@@ -536,5 +537,43 @@ if (!function_exists('process_destroy')) {
         }
 
         return json_encode($response);
+    }
+}
+
+if (!function_exists('can')) {
+    function can(string $permission): bool {
+        $modelRolePermission = new RolePermissionModel();
+        $id_role = session('id_role') ?? null;
+
+        if(!$id_role) return false;
+
+        $encontrado = $modelRolePermission
+            ->where('sys_roles_permissions.id_role', $id_role)
+            ->whereIn('UPPER(cat_sys_permissions.name)', [strtoupper($permission)])
+            ->join('cat_sys_permissions', 'cat_sys_permissions.id = sys_roles_permissions.id_permission')
+            ->select('UPPER(cat_sys_permissions.name) AS permission')
+            ->first();
+        
+        return $encontrado ? true : false;
+    }
+}
+
+if (!function_exists('role')) {
+    function role($roles = []): bool {
+        $userRole = session('role') ?? null;
+
+        if (!$userRole) return false;
+
+        $userRole = strtoupper($userRole);
+
+        if (is_string($roles)) {
+            return strtoupper($roles) === $userRole;
+        }
+
+        if (is_array($roles)) {
+            return in_array($userRole, array_map('strtoupper', $roles));
+        }
+
+        return false;
     }
 }
