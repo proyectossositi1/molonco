@@ -45,10 +45,10 @@
                 </a>
             </div> -->
             <!-- /.social-auth-links -->
-            <p class="mt-5 mb-1"><a href="<?= site_url('forgot-password'); ?>">I forgot my password</a></p>
+            <!-- <p class="mt-5 mb-1"><a href="<? // site_url('forgot-password'); ?>">I forgot my password</a></p>
             <p class="mb-0">
-                <a href="<?= site_url('register') ?>" class="text-center"> Register a new membership </a>
-            </p>
+                <a href="<? // site_url('register') ?>" class="text-center"> Register a new membership </a>
+            </p> -->
         </div>
         <!-- /.login-card-body -->
     </div>
