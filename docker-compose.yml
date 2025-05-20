@@ -1,0 +1,19 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ci4_app
+    ports:
+      - "8000:80"
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - net_molonco
+    environment:
+      - PHP_EXTENSION=mysqli
+      - TZ=UTC
+
+networks:
+  net_molonco:
+    driver: bridge
