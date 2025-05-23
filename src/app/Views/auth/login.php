@@ -1,34 +1,37 @@
 <div class="login-box">
     <div class="login-logo">
-        <a href="<?= site_url('login') ?>"><b>Admin</b> MOLONCO</a>
+        <!-- <a href="<? // site_url('login') ?>"><b>Admin</b> MOLONCO</a> -->
+        <img src="<?= base_url('images/logo.png'); ?>" alt="" class="w-50">
     </div>
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">Sign in to start your session</p>
+            <p class="login-box-msg">
+                Iniciar Sesión
+            </p>
             <form action="<?= site_url('login') ?>" method="post">
                 <?= csrf_field() ?>
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Email" name="usr" />
+                    <input type="email" class="form-control" placeholder="Correo" name="usr" />
                     <div class="input-group-text"><span class="bi bi-envelope"></span></div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="Password" name="pwd" />
+                    <input type="password" class="form-control" placeholder="Contraseña" name="pwd" />
                     <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-6">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me"
                                 value="1" />
-                            <label class="form-check-label" for="remember_me"> Remember Me </label>
+                            <label class="form-check-label" for="remember_me"> Recuerdame </label>
                         </div>
                     </div>
                     <!-- /.col -->
-                    <div class="col-4">
+                    <div class="col-6 text-right">
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Sign In</button>
+                            <button type="submit" class="btn btn-primary">Entrar</button>
                         </div>
                     </div>
                     <!-- /.col -->

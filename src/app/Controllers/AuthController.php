@@ -87,10 +87,12 @@ class AuthController extends BaseController{
     }
 
     public function logout(){
-        delete_cookie('remember_token');
+        $response = service('response');
+        $response->deleteCookie('remember_token', '', '/');
+        
         session()->destroy();
         
-        return redirect()->to('/login');
+        return $response->redirect('/login');
     }
 
     public function register(){
