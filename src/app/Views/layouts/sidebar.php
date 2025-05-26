@@ -54,7 +54,7 @@ foreach ($permisos as $key => $value) {
         <!-- SidebarSearch Form -->
         <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Buscar" aria-label="Search">
                 <div class="input-group-append">
                     <button class="btn btn-sidebar">
                         <i class="fas fa-search fa-fw"></i>
@@ -103,7 +103,7 @@ foreach ($permisos as $key => $value) {
                     <ul class="nav nav-treeview">
                         <?php foreach ($value['routes'] as $key_route => $value_route): ?>
                         <?php $isActive = ($currentRoute == strtolower($value_route['route'])) ? 'active' : ''; ?>
-                        <li class="nav-item ml-2">
+                        <li class="nav-item pl-2">
                             <a href="<?= site_url(strtolower($value_route['route'])); ?>"
                                 class="nav-link <?= $isActive; ?>">
                                 <i class="nav-icon <?= $value_route['icon']; ?>"></i>

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CatProductoSubcategoria extends Model
+class CatProductoSubCategoria extends Model
 {
     protected $table            = 'cat_productos_subcategorias';
     protected $primaryKey       = 'id';

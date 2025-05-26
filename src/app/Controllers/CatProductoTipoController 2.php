@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CatProductoTipo;
-
 class CatProductoTipoController extends BaseController
 {
     function index(){

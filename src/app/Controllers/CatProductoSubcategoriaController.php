@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\CatProductoSubcategoria;
+use App\Models\CatProductoSubCategoria;
 
-class CatProductoSubcategoriaController extends BaseController
+class CatProductoSubCategoriaController extends BaseController
 {
     function index(){
     
@@ -14,7 +14,7 @@ class CatProductoSubcategoriaController extends BaseController
 
     function store() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoSubcategoria();
+        $model = new CatProductoSubCategoria();
 
         return process_store([
             'data'        => $data,
@@ -24,7 +24,7 @@ class CatProductoSubcategoriaController extends BaseController
             'view' => [
                 'load' => 'catalogos/productos/subcategorias/ajax/table_data',
                 'data'  => function(){
-                    return (new CatProductoSubcategoria())
+                    return (new CatProductoSubCategoria())
                         ->where('cat_productos_subcategorias.id_empresa', $this->id_empresa)
                         ->join('cat_empresas', 'cat_empresas.id = cat_productos_subcategorias.id_empresa', 'left')
                         ->join('cat_productos_categorias', 'cat_productos_categorias.id = cat_productos_subcategorias.id_categoria', 'left')
@@ -47,14 +47,14 @@ class CatProductoSubcategoriaController extends BaseController
         
         return process_edit([
             'data' => $data,
-            'model' => new CatProductoSubcategoria(),
+            'model' => new CatProductoSubCategoria(),
             'field_name' => 'sub categoria'
         ]);
     }
 
     function update() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoSubcategoria();
+        $model = new CatProductoSubCategoria();
 
         return process_update([
             'data'        => $data,
@@ -64,7 +64,7 @@ class CatProductoSubcategoriaController extends BaseController
             'view' => [
                 'load' => 'catalogos/productos/subcategorias/ajax/table_data',
                 'data'  => function(){
-                    return (new CatProductoSubcategoria())
+                    return (new CatProductoSubCategoria())
                         ->where('cat_productos_subcategorias.id_empresa', $this->id_empresa)
                         ->join('cat_empresas', 'cat_empresas.id = cat_productos_subcategorias.id_empresa', 'left')
                         ->join('cat_productos_categorias', 'cat_productos_categorias.id = cat_productos_subcategorias.id_categoria', 'left')
@@ -84,7 +84,7 @@ class CatProductoSubcategoriaController extends BaseController
 
     function destroy() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoSubcategoria();
+        $model = new CatProductoSubCategoria();
         
         return process_destroy([
             'data'       => $data,
@@ -93,7 +93,7 @@ class CatProductoSubcategoriaController extends BaseController
             'view' => [
                 'load' => 'catalogos/productos/subcategorias/ajax/table_data',
                 'data'  => function(){
-                    return (new CatProductoSubcategoria())
+                    return (new CatProductoSubCategoria())
                         ->where('cat_productos_subcategorias.id_empresa', $this->id_empresa)
                         ->join('cat_empresas', 'cat_empresas.id = cat_productos_subcategorias.id_empresa', 'left')
                         ->join('cat_productos_categorias', 'cat_productos_categorias.id = cat_productos_subcategorias.id_categoria', 'left')
@@ -107,7 +107,7 @@ class CatProductoSubcategoriaController extends BaseController
     function ajax_refresh_table() {
         $data = json_decode($this->request->getPost('data'));
         $response = ['response_message' => ['type' => '', 'message' => ''], 'next' => false, 'csrf_token' => csrf_hash()];
-        $model = new CatProductoSubcategoria();
+        $model = new CatProductoSubCategoria();
 
         $encontrado['data'] = $model
             ->where('cat_productos_subcategorias.id_empresa', $this->id_empresa)
