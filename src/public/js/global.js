@@ -34,9 +34,6 @@ const init = (_data = { datatable: {} }) => {
         ordering: true,
         info: true,
         autoWidth: false,
-<<<<<<< HEAD
-        responsive: true
-=======
         responsive: true,
         language: {
             url: 'https://cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
@@ -45,7 +42,6 @@ const init = (_data = { datatable: {} }) => {
             "<'row'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
->>>>>>> af4c69ae568a200e9234b72a0cb8ebf08eadd320
     };
 
     // Definir configuración según el tipo
