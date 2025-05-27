@@ -32,6 +32,8 @@ foreach ($permisos as $key => $value) {
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
+
+
     <a href="<?= site_url('/dashboard'); ?>" class="brand-link text-center">
         <img src="<?= base_url('images/logo.png'); ?>" alt="" class="w-50" style="opacity: .8">
         <!-- <span class="brand-text font-weight-light">Molonko</span> -->
@@ -42,6 +44,7 @@ foreach ($permisos as $key => $value) {
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
+
                 <img src="<?= base_url('adminlte/dist/img/avatar5.png'); ?>" class="img-circle elevation-2"
                     alt="User Image">
             </div>
@@ -53,6 +56,7 @@ foreach ($permisos as $key => $value) {
         <!-- SidebarSearch Form -->
         <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
+
                 <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
                 <div class="input-group-append">
                     <button class="btn btn-sidebar">
@@ -102,6 +106,7 @@ foreach ($permisos as $key => $value) {
                     <ul class="nav nav-treeview">
                         <?php foreach ($value['routes'] as $key_route => $value_route): ?>
                         <?php $isActive = ($currentRoute == strtolower($value_route['route'])) ? 'active' : ''; ?>
+
                         <li class="nav-item">
                             <a href="<?= site_url(strtolower($value_route['route'])); ?>"
                                 class="nav-link <?= $isActive; ?>">

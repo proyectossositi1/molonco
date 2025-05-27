@@ -87,6 +87,7 @@ class AuthController extends BaseController{
     }
 
     public function logout(){
+
         $response = service('response');
         $response->deleteCookie('remember_token', '', '/');
         

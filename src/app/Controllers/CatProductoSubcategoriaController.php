@@ -6,7 +6,8 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CatProductoSubCategoria;
 
-class CatProductoSubcategoriaController extends BaseController
+
+class CatProductoSubCategoriaController extends BaseController
 {
     function index(){
     
