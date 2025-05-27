@@ -11,6 +11,7 @@ $permisos = $roleRouteModel
     ->join('cat_sys_routes', 'cat_sys_routes.id = sys_role_routes.id_route')
     ->join('cat_sys_menus', 'cat_sys_menus.id = cat_sys_routes.id_menu')
     ->where('sys_role_routes.id_role', $userRole)
+    ->where('sys_role_routes.status_alta', 1)
     ->like('cat_sys_routes.method', 'index')
     ->orderBy('cat_sys_menus.order', 'ASC')
     ->findAll();
