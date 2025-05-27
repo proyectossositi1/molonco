@@ -105,6 +105,10 @@ if (!function_exists('limpiar_cadena_texto')) {
 
         //SEPARAMOS LAS CADENAS EN UN ARRAY - LIMPIAMOS ESPACIOS EN BLANCOS
         $tmp_separador = explode(" ", $cadena);
+<<<<<<< HEAD
+=======
+        $tmp_string = [];
+>>>>>>> af4c69ae568a200e9234b72a0cb8ebf08eadd320
         foreach ($tmp_separador as $key => $value) {
             if($value != "") $tmp_string[] = $value;
         }

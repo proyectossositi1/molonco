@@ -1,10 +1,16 @@
 <div class="login-box">
     <div class="login-logo">
+<<<<<<< HEAD
         <a href="<?= site_url('login') ?>"><b>Admin</b> MOLONCO</a>
+=======
+        <!-- <a href="<? // site_url('login') ?>"><b>Admin</b> MOLONCO</a> -->
+        <img src="<?= base_url('images/logo.png'); ?>" alt="" class="w-50">
+>>>>>>> af4c69ae568a200e9234b72a0cb8ebf08eadd320
     </div>
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
+<<<<<<< HEAD
             <p class="login-box-msg">Sign in to start your session</p>
             <form action="<?= site_url('login') ?>" method="post">
                 <?= csrf_field() ?>
@@ -14,10 +20,24 @@
                 </div>
                 <div class="input-group mb-3">
                     <input type="password" class="form-control" placeholder="Password" name="pwd" />
+=======
+            <p class="login-box-msg">
+                Iniciar Sesión
+            </p>
+            <form action="<?= site_url('login') ?>" method="post">
+                <?= csrf_field() ?>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Correo" name="usr" />
+                    <div class="input-group-text"><span class="bi bi-envelope"></span></div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="Contraseña" name="pwd" />
+>>>>>>> af4c69ae568a200e9234b72a0cb8ebf08eadd320
                     <div class="input-group-text"><span class="bi bi-lock-fill"></span></div>
                 </div>
                 <!--begin::Row-->
                 <div class="row">
+<<<<<<< HEAD
                     <div class="col-8">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me"
@@ -29,6 +49,19 @@
                     <div class="col-4">
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Sign In</button>
+=======
+                    <div class="col-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me"
+                                value="1" />
+                            <label class="form-check-label" for="remember_me"> Recuerdame </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-6 text-right">
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Entrar</button>
+>>>>>>> af4c69ae568a200e9234b72a0cb8ebf08eadd320
                         </div>
                     </div>
                     <!-- /.col -->
@@ -45,10 +78,17 @@
                 </a>
             </div> -->
             <!-- /.social-auth-links -->
+<<<<<<< HEAD
             <p class="mt-5 mb-1"><a href="<?= site_url('forgot-password'); ?>">I forgot my password</a></p>
             <p class="mb-0">
                 <a href="<?= site_url('register') ?>" class="text-center"> Register a new membership </a>
             </p>
+=======
+            <!-- <p class="mt-5 mb-1"><a href="<? // site_url('forgot-password'); ?>">I forgot my password</a></p>
+            <p class="mb-0">
+                <a href="<? // site_url('register') ?>" class="text-center"> Register a new membership </a>
+            </p> -->
+>>>>>>> af4c69ae568a200e9234b72a0cb8ebf08eadd320
         </div>
         <!-- /.login-card-body -->
     </div>
