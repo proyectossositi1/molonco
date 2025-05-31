@@ -7,7 +7,7 @@
     <meta name="title" content="Molonco | Dashboard" />
     <meta name="author" content="jantor,foca,pedro" />
     <meta name="X-CSRF-TOKEN" content="" />
-    <title><?= $title ?? 'MOLONCO' ?></title>
+    <title><?= $title ?? 'MOLONKO' ?></title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -183,9 +183,11 @@
 
             <!-- Main content -->
             <section class="content">
-                <div class="container-fluid">
-                    <?= $body ?? '' ?>
-                </div><!-- /.container-fluid -->
+                <div class="dashboard-container">
+                    <div class="container-fluid">
+                        <?= $body ?? '' ?>
+                    </div><!-- /.container-fluid -->
+                </div>
             </section>
             <!-- /.content -->
         </div>

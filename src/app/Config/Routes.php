@@ -159,6 +159,13 @@ $routes->group('catalogos', ['filter' => 'auth'], function($routes) {
     $routes->post('productos/precios/ajax_refresh_table', 'CatProductoEmpresaPrecioController::ajax_refresh_table'); 
 });
 
+// Rutas para el Punto de Venta
+$routes->group('punto-venta', ['filter' => 'auth'], function($routes) {
+    $routes->get('/', 'PuntoVentaController::index');
+    $routes->post('buscar-producto', 'PuntoVentaController::buscarProducto');
+    $routes->post('guardar-venta', 'PuntoVentaController::guardarVenta');
+});
+
 // Rutas protegidas para Administradores
 // $routes->group('admin', ['filter' => 'role:admin'], function($routes) {
 //     $routes->get('usuarios', 'Admin::usuarios');

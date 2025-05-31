@@ -57,7 +57,7 @@ foreach ($permisos as $key => $value) {
         <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
 
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Buscar" aria-label="Search">
                 <div class="input-group-append">
                     <button class="btn btn-sidebar">
                         <i class="fas fa-search fa-fw"></i>
@@ -110,7 +110,7 @@ foreach ($permisos as $key => $value) {
                         <li class="nav-item">
                             <a href="<?= site_url(strtolower($value_route['route'])); ?>"
                                 class="nav-link <?= $isActive; ?>">
-                                <i class="nav-icon <?= $value_route['icon']; ?>"></i>
+                                <i class="nav-icon ml-3 <?= $value_route['icon']; ?>"></i>
                                 <p><?= ucfirst($value_route['name']); ?></p>
                             </a>
                         </li>
@@ -118,7 +118,12 @@ foreach ($permisos as $key => $value) {
                     </ul>
                 </li>
                 <?php endforeach; ?>
-
+                <li class="nav-item">
+                    <a href="<?= site_url('punto-venta'); ?>" class="nav-link">
+                        <i class="nav-icon fas fa-cash-register"></i>
+                        <p>Punto de Venta</p>
+                    </a>
+                </li>
                 <!-- Logout -->
                 <li class="nav-item">
                     <a href="<?= site_url('/logout'); ?>" class="nav-link">
