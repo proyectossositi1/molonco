@@ -16,8 +16,8 @@ class AuthFilter implements FilterInterface
         $userRole = $session->get('id_role');
         $userLoggedIn = $session->get('isLoggedIn');
         $userId = $this->user_id = $session->get('id_usuario');
-        $userEmpresaId = $this->user_empresa_id = $session->get('id_usuario_empresa');
-        $empresaId = $this->empresa_id = $session->get('id_empresa');
+        // $userEmpresaId = $this->user_empresa_id = $session->get('id_usuario_empresa');
+        // $empresaId = $this->empresa_id = $session->get('id_empresa');
         $username = $this->username = $session->get('username');
 
         if (!$userLoggedIn) {

@@ -34,11 +34,10 @@ class AuthController extends BaseController{
         }
 
         // Buscar usuario en la base de datos
-        $user = $model->select('cat_usuarios.id, cat_usuarios.usr, cat_usuarios.pwd, cat_usuarios.email, sys_usuarios_empresas.id AS id_usuario_empresa, sys_usuarios_empresas.id_empresa, sys_user_roles.id_role, cat_sys_roles.name AS role')
-            ->join('sys_usuarios_empresas', 'sys_usuarios_empresas.id_usuario = cat_usuarios.id')    
-            ->join('sys_user_roles', 'sys_user_roles.id_usuario_empresa = sys_usuarios_empresas.id')        
-            ->join('cat_sys_roles', 'cat_sys_roles.id = sys_user_roles.id_role')   
-            ->where(['sys_usuarios_empresas.status_alta' => 1, 'cat_usuarios.usr' => $username])
+        $user = $model->select('cat_usuarios.id, cat_usuarios.usr, cat_usuarios.pwd, cat_usuarios.email, cat_usuarios.id_instancia, cat_usuarios.id_role, cat_sys_roles.name AS role, sys_instancias.nombre AS instancia')
+            ->join('cat_sys_roles', 'cat_sys_roles.id = cat_usuarios.id_role')   
+            ->join('sys_instancias', 'sys_instancias.id = cat_usuarios.id_instancia')   
+            ->where(['cat_usuarios.status_alta' => 1, 'cat_usuarios.usr' => $username])
             ->first();
 
         if (!$user) {
@@ -52,13 +51,13 @@ class AuthController extends BaseController{
 
         // Iniciar sesión
         $data = [
-            'id_usuario'         => $user['id'],
-            'id_usuario_empresa' => $user['id_usuario_empresa'],
-            'id_empresa'    => $user['id_empresa'],
+            'id_usuario'    => $user['id'],
+            'id_instancia'  => $user['id_instancia'],
             'username'      => $user['usr'],
             'email'         => $user['email'],
             'id_role'       => $user['id_role'],
             'role'          => $user['role'],
+            'instancia'     => $user['instancia'],
             'isLoggedIn'    => true,
         ];
         $session->set($data);
@@ -118,15 +117,8 @@ class AuthController extends BaseController{
         $userId = $userModel->insert([
             'nombre' => $this->request->getPost('nombre'),
             'usr'    => $this->request->getPost('email'), 
-            'email'  => $this->request->getPost('email'),
+            'email'  => $this->request->getPost('email'),            
             'pwd'    => password_hash($this->request->getPost('pwd'), PASSWORD_DEFAULT)
-        ]);
-
-        // Asignar rol por defecto (user)
-        $userRoleModel = new UserRoleModel();
-        $userRoleModel->insert([
-            'id_usuario_empresa' => $userId,
-            'id_role' => 3 // user
         ]);
     
         return redirect()->to('/login')->with('success', 'Usuario creado correctamente. Ahora puedes iniciar sesión.');

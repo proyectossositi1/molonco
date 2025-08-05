@@ -38,12 +38,10 @@ if (!function_exists('tracker')){
         
         // Recuperamos el ID de usuario de la sesión
         $id_usuario = ($session->get('id_usuario')) ? $session->get('id_usuario') : 0;
-        $id_usuario_empresa = ($session->get('id_usuario_empresa')) ? $session->get('id_usuario_empresa') : 0;
         
         // Definimos los datos a guardar
         $data = [
             'id_usuario' => $id_usuario,
-            'id_usuario_empresa' => $id_usuario_empresa,
             'agent' => $userAgent,
             'platform' => $agent->getPlatform(),
             'visited' => base_url(uri_string()),

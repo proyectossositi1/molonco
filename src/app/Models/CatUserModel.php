@@ -12,7 +12,7 @@ class CatUserModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'usr', 'pwd', 'nombre', 'email', 'status_alta'];
+    protected $allowedFields    = ['id_instancia', 'id_role', 'usr', 'pwd', 'nombre', 'email', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

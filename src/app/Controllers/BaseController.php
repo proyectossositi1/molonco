@@ -48,14 +48,14 @@ abstract class BaseController extends Controller
      * @return void
      */
 
-    protected $empresa_id;
-    protected $user_id;
-    protected $user_empresa_id;
+    protected $id_instancia;
+    protected $id_usuario;
+    protected $id_role;
     
     protected function initUserSessionData(){
-        $this->id_empresa           = session('id_empresa');
+        $this->id_instancia         = session('id_instancia');
         $this->id_usuario           = session('id_usuario');
-        $this->id_usuario_empresa   = session('id_usuario_empresa');
+        $this->id_role              = session('id_role');
     }
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger){
@@ -74,12 +74,12 @@ abstract class BaseController extends Controller
             if (isset($data['id_usuario']) && isset($data['email'])) {
                 // Validar si existe el usuario, o iniciar sesión automática                
                 $session->set([
-                    'id_usuario'         => $data['id_usuario'],
-                    'id_usuario_empresa' => $data['id_usuario_empresa'],
-                    'id_empresa'    => $data['id_empresa'],
+                    'id_usuario'    => $data['id_usuario'],
+                    'id_role'       => $data['id_role'],
+                    'id_instancia'  => $data['id_instancia'],
+                    'instancia'     => $data['instancia'],
                     'username'      => $data['username'],
                     'email'         => $data['email'],
-                    'id_role'       => $data['id_role'],
                     'isLoggedIn'    => true,
                 ]);
 
