@@ -13,6 +13,8 @@ composer.lock
 
 # 🚀 Ignorar configuraciones de Docker
 docker-compose.override.yml
+docker-compose.yml
+Dockerfile
 db_data/
 logs/
 node_modules/
@@ -34,5 +36,5 @@ uploads/*
 *.code-workspace
 
 # 🚀 Ignorar archivos de permisos y configuración
-config.php
-database.php
+# config.php
+# database.php
