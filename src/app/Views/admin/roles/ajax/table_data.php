@@ -4,7 +4,6 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>EMPRESA</th>
             <th>NAME</th>
             <th>DESCRIPCION</th>
             <th>ACTION</th>
@@ -26,7 +25,6 @@
         ?>
         <tr>
             <td><?= esc($value['id']); ?></td>
-            <td><?= esc($value['empresa']); ?></td>
             <td><?= esc($value['name']); ?></td>
             <td><?= esc($value['description']); ?></td>
             <td class="text-center">

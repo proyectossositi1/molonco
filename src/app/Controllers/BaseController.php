@@ -63,7 +63,7 @@ abstract class BaseController extends Controller
         parent::initController($request, $response, $logger);
         $this->initUserSessionData();
         // Cargamos todas las librerias para heredar a todos los controladores
-        helper(['url', 'form', 'cookie']);
+        helper(['url', 'form', 'cookie', 'menu']);
         // Varaibles y Funciones globales
         $session = session();
         $cookie = request()->getCookie('remember_token');

@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CatRoleModel;
-use App\Models\CatEmpresaModel;
 use App\Models\CatPermissionModel;
 use App\Models\RolePermissionModel;
 
@@ -13,12 +12,10 @@ class RoleController extends BaseController
 {
     function index(){
         $roleModel = new CatRoleModel();
-        $modelEmpresa = new CatEmpresaModel(); 
-        $data['list_empresas'] = $modelEmpresa->where(['status_alta' => 1])->findAll();
         $data['data'] = $roleModel
-            ->where(['cat_sys_roles.id_empresa' => $this->id_empresa])
-            ->join('cat_empresas', 'cat_empresas.id = cat_sys_roles.id_empresa', 'left')
-            ->select('cat_empresas.nombre AS empresa, cat_sys_roles.*')
+            ->where(['cat_sys_roles.id_instancia' => $this->id_instancia])
+            ->join('sys_instancias', 'sys_instancias.id = cat_sys_roles.id_instancia', 'left')
+            ->select('sys_instancias.nombre AS instancia, cat_sys_roles.*')
             ->findAll();
         
         return renderPage([
@@ -40,14 +37,13 @@ class RoleController extends BaseController
                 'load' => 'admin/roles/ajax/table_data',
                 'data'  => function(){
                     return (new CatRoleModel())
-                        ->where(['cat_sys_roles.id_empresa' => $this->id_empresa])
-                        ->join('cat_empresas', 'cat_empresas.id = cat_sys_roles.id_empresa', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_sys_roles.*')
+                        ->where(['cat_sys_roles.id_instancia' => $this->id_instancia])
+                        ->join('sys_instancias', 'sys_instancias.id = cat_sys_roles.id_instancia', 'left')
+                        ->select('sys_instancias.nombre AS instancia, cat_sys_roles.*')
                         ->findAll();
                 }
             ],
             'precallback' => function($return) {                
-                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->name = limpiar_cadena_texto($return->name);                            
                 
                 return $return;
@@ -78,14 +74,13 @@ class RoleController extends BaseController
                 'load' => 'admin/roles/ajax/table_data',
                 'data'  => function(){
                     return (new CatRoleModel())
-                        ->where(['cat_sys_roles.id_empresa' => $this->id_empresa])
-                        ->join('cat_empresas', 'cat_empresas.id = cat_sys_roles.id_empresa', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_sys_roles.*')
+                        ->where(['cat_sys_roles.id_instancia' => $this->id_instancia])
+                        ->join('sys_instancias', 'sys_instancias.id = cat_sys_roles.id_instancia', 'left')
+                        ->select('sys_instancias.nombre AS instancia, cat_sys_roles.*')
                         ->findAll();
                 }
             ],        
             'precallback' => function ($return) {
-                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->name = limpiar_cadena_texto($return->name);
                 
                 return $return;
@@ -105,9 +100,9 @@ class RoleController extends BaseController
                 'load' => 'admin/roles/ajax/table_data',
                 'data'  => function(){
                     return (new CatRoleModel())
-                        ->where(['cat_sys_roles.id_empresa' => $this->id_empresa])
-                        ->join('cat_empresas', 'cat_empresas.id = cat_sys_roles.id_empresa', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_sys_roles.*')
+                        ->where(['cat_sys_roles.id_instancia' => $this->id_instancia])
+                        ->join('sys_instancias', 'sys_instancias.id = cat_sys_roles.id_instancia', 'left')
+                        ->select('sys_instancias.nombre AS instancia, cat_sys_roles.*')
                         ->findAll();
                 }
             ]         
@@ -120,13 +115,11 @@ class RoleController extends BaseController
     public function index_assignRoles(){
         $roleModel = new CatRoleModel();
         $permissionModel = new CatPermissionModel();
-        $modelEmpresa = new CatEmpresaModel(); 
         $rolePermissionModel = new RolePermissionModel();
-        $data['list_empresas'] = $modelEmpresa->where(['status_alta' => 1])->findAll();
-        $data['list_roles'] = $roleModel->where(['status_alta' => 1, 'id_empresa' => $this->id_empresa])->findAll();
-        $data['list_permissions'] = $permissionModel->where(['status_alta' => 1, 'id_empresa' => $this->id_empresa])->findAll();
+        $data['list_roles'] = $roleModel->where(['status_alta' => 1, 'id_instancia' => $this->id_instancia])->findAll();
+        $data['list_permissions'] = $permissionModel->where(['status_alta' => 1, 'id_instancia' => $this->id_instancia])->findAll();
         $data['data'] = $rolePermissionModel
-            ->where(['cat_sys_permissions.id_empresa' => $this->id_empresa])
+            ->where(['cat_sys_permissions.id_instancia' => $this->id_instancia])
             ->join('cat_sys_roles', 'cat_sys_roles.id = sys_roles_permissions.id_role')
             ->join('cat_sys_permissions', 'cat_sys_permissions.id = sys_roles_permissions.id_permission')
             ->select('sys_roles_permissions.id, cat_sys_roles.name AS role, cat_sys_permissions.name AS permission, sys_roles_permissions.status_alta')
@@ -189,7 +182,7 @@ class RoleController extends BaseController
 
             $response['response_message']['message'] .= '</ul>';
             $data_view['data'] = $rolePermissionModel
-                ->where(['cat_sys_permissions.id_empresa' => $this->id_empresa])
+                ->where(['cat_sys_permissions.id_instancia' => $this->id_instancia])
                 ->join('cat_sys_roles', 'cat_sys_roles.id = sys_roles_permissions.id_role')
                 ->join('cat_sys_permissions', 'cat_sys_permissions.id = sys_roles_permissions.id_permission')
                 ->select('sys_roles_permissions.id, cat_sys_roles.name AS role, cat_sys_permissions.name AS permission, sys_roles_permissions.status_alta')
@@ -219,7 +212,7 @@ class RoleController extends BaseController
                         'message' => 'SE '.$messageEstado.' EL REGISTO CON ID <strong>'.$id.'</strong> EXITOSAMENTE.'
                     ];
                     $data_view['data'] = $rolePermissionModel
-                        ->where(['cat_sys_permissions.id_empresa' => $this->id_empresa])
+                        ->where(['cat_sys_permissions.id_instancia' => $this->id_instancia])
                         ->join('cat_sys_roles', 'cat_sys_roles.id = sys_roles_permissions.id_role')
                         ->join('cat_sys_permissions', 'cat_sys_permissions.id = sys_roles_permissions.id_permission')
                         ->select('sys_roles_permissions.id, cat_sys_roles.name AS role, cat_sys_permissions.name AS permission, sys_roles_permissions.status_alta')

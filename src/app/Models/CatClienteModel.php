@@ -12,7 +12,7 @@ class CatClienteModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_organizacion', 'nombres', 'apellido_paterno', 'apellido_materno', 'direccion', 'email_primario', 'email_secundario', 'telefono_primario', 'telefono_secundario', 'codigo_postal', 'status_alta'];
+    protected $allowedFields    = ['id_usuario_creacion', 'id_usuario_edicion', 'id_instancia', 'id_empresa', 'nombres', 'apellido_paterno', 'apellido_materno', 'direccion', 'email_primario', 'email_secundario', 'telefono_primario', 'telefono_secundario', 'codigo_postal', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

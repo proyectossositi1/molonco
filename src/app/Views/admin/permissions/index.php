@@ -14,18 +14,6 @@
                 <?= csrf_field() ?>
                 <!--begin::Body-->
                 <div class="card-body">
-                    <? if(role(['super admin'])): ?>
-                    <div class="mb-3">
-                        <label for="id_empresa" class="form-label">EMPRESAS</label>
-                        <select class="form-control selectpicker" name="id_empresa" id="id_empresa"
-                            onchange="onchange_empresa()">
-                            <option value="">SELECCIONE UNA OPCION</option>
-                            <? foreach($list_empresas as $key => $value): ?>
-                            <option value="<?= $value['id']; ?>"><?= $value['nombre'];?></option>
-                            <? endforeach; ?>
-                        </select>
-                    </div>
-                    <? endif; ?>
                     <div class="mb-3">
                         <label for="name" class="form-label">NOMBRE</label>
                         <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" />
@@ -69,7 +57,6 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>EMPRESA</th>
                             <th>NAME</th>
                             <th>DESCRIPCION</th>
                             <th>ACTION</th>
@@ -91,7 +78,6 @@
                         ?>
                         <tr>
                             <td><?= esc($value['id']); ?></td>
-                            <td><?= esc($value['empresa']); ?></td>
                             <td><?= esc($value['name']); ?></td>
                             <td><?= esc($value['description']); ?></td>
                             <td class="text-center">

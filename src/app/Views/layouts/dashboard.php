@@ -142,7 +142,7 @@
 
         <!-- Content Wrapper. Contains page content -->
         <?php 
-            $roleRouteModel = new \App\Models\RoleRouteModel();
+            // $roleRouteModel = new \App\Models\RoleRouteModel();
             $currentRoute = uri_string(); // Obtiene la ruta actual sin dominio 
             
             // Obtener los permisos del usuario y organizarlos por controlador (para submenús)

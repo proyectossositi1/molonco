@@ -114,7 +114,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="moneda" class="form-label">MOENDA</label>
+                                <label for="moneda" class="form-label">MONEDA</label>
                                 <input type="text" class="form-control numeric-integer" id="moneda" name="moneda" />
                             </div>
                         </div>

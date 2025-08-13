@@ -4,7 +4,7 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>ORGANIZACION</th>
+            <th>EMPRESA</th>
             <th>NOMBRE</th>
             <th>APELLIDO PATERNO</th>
             <th>APELLIDO MATERNO</th>
@@ -31,7 +31,7 @@
         ?>
         <tr>
             <td><?= esc($value['id']); ?></td>
-            <td><?= esc($value['organizacion']); ?></td>
+            <td><?= esc($value['empresa']); ?></td>
             <td><?= esc($value['nombres']); ?></td>
             <td><?= esc($value['apellido_paterno']); ?></td>
             <td><?= esc($value['apellido_materno']); ?></td>

@@ -205,15 +205,15 @@ if (!function_exists('process_store')) {
             foreach ($field_check as $field) {
                 if (isset($data->$field)) {
                     if ($first) {
-                        $builder->where($field, $data->$field);
+                        $builder->where(['id_instancia' => session('id_instancia'), $field => $data->$field]);
                         $first = false;
                     } else {
-                        $builder->orWhere($field, $data->$field);
+                        $builder->orWhere(['id_instancia' => session('id_instancia'), $field => $data->$field]);
                     }
                 }
             }
         } else {
-            $builder->where($field_check, $data->$field_check);
+            $builder->where(['id_instancia' => session('id_instancia'), $field_check => $data->$field_check]);
         }
 
         $duplicado = $builder->get()->getFirstRow();
@@ -241,8 +241,9 @@ if (!function_exists('process_store')) {
                 $data = $preSaveCallback($data);
             }
 
-            $data->id_usuario_empresa_creacion = session('id_usuario_empresa');
-            $data->id_usuario_empresa_edicion  = session('id_usuario_empresa');
+            $data->id_usuario_creacion = session('id_usuario');
+            $data->id_usuario_edicion  = session('id_usuario');
+            $data->id_instancia        = session('id_instancia');
 
             // Insertamos los datos
             $model->save((array)$data);
@@ -271,14 +272,14 @@ if (!function_exists('process_store')) {
                             ? ['data' => $view_path['data']()]
                             : (array) $view_path['data'];
                     } else {
-                        $view_data = ['data' => $model->findAll()];
+                        $view_data = ['data' => $model->where(['id_instancia' => session('id_instancia')])->findAll()];
                     }
 
                     $response['view'] = view($view_path['load'], $view_data);
                 } elseif (is_string($view_path)) {
                     // Si viene como string plano
                     $response['view'] = view($view_path, [
-                        'data' => $model->findAll()
+                        'data' => $model->where(['id_instancia' => session('id_instancia')])->findAll()
                     ]);
                 }
             }
@@ -404,7 +405,7 @@ if (!function_exists('process_update')) {
         
         // Validación de duplicados (permite múltiples campos)
         foreach ($normalizedFields as $field => $value) {
-            $encontrado = $model->where($field, $value)->first();
+            $encontrado = $model->where(['id_instancia' => session('id_instancia'), $field => $value])->first();
         
             if ($encontrado && $encontrado['id'] != $id) {
                 $response['response_message'] = [
@@ -420,7 +421,7 @@ if (!function_exists('process_update')) {
             $data = $preUpdateCallback($data);
         }
         
-        $data->id_usuario_empresa_edicion = session('id_usuario_empresa');
+        $data->id_usuario_edicion = session('id_usuario');
         
         if ($model->update($id, (array) $data)) {
             $response['next'] = true;
@@ -441,7 +442,7 @@ if (!function_exists('process_update')) {
                 if (isset($view_path['data']) && is_callable($view_path['data'])) {
                     $view_data = $view_path['data']();
                 } else {
-                    $view_data = $model->findAll();
+                    $view_data = $model->where(['id_instancia' => session('id_instancia')])->findAll();
                 }
         
                 $response['view'] = view($view_path['load'], ['data' => $view_data]);
@@ -518,13 +519,13 @@ if (!function_exists('process_destroy')) {
                             ? ['data' => $view_path['data']()]
                             : (array) $view_path['data'];
                     } else {
-                        $view_data = ['data' => $model->findAll()];
+                        $view_data = ['data' => $model->where(['id_instancia' => session('id_instancia')])->findAll()];
                     }
 
                     $response['view'] = view($view_path['load'], $view_data);
                 } elseif (is_string($view_path)) {
                     $response['view'] = view($view_path, [
-                        'data' => $model->findAll()
+                        'data' => $model->where(['id_instancia' => session('id_instancia')])->findAll()
                     ]);
                 }
             }

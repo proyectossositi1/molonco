@@ -20,6 +20,7 @@ class CatEmpresaController extends BaseController
         $modelFormaPago = new SatFormaPagoModel();
         
         $data['data'] = $model
+        ->where('cat_empresas.id_instancia', $this->id_instancia)
         ->join('sat_regimen_fiscal', 'sat_regimen_fiscal.id = cat_empresas.id_sat_regimen_fiscal', 'left')
         ->join('sat_uso_cfdi', 'sat_uso_cfdi.id = cat_empresas.id_sat_uso_cfdi', 'left')
         ->join('sat_tipo_cfdi', 'sat_tipo_cfdi.id = cat_empresas.id_sat_tipo_cfdi', 'left')

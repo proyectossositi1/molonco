@@ -17,11 +17,11 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="id_organizacion" class="form-label">ORGANIZACION</label>
-                                <select class="form-control selectpicker" name="id_organizacion" id="id_organizacion">
+                                <label for="id_empresa" class="form-label">EMRPESA</label>
+                                <select class="form-control selectpicker" name="id_empresa" id="id_empresa">
                                     <option value="">SELECIONE UNA OPCION</option>
-                                    <? foreach ($list_organizacion as $key => $value): ?>
-                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['razon_social']); ?>
+                                    <? foreach ($list_empresa as $key => $value): ?>
+                                    <option value="<?= $value['id']; ?>"><?= strtoupper($value['nombre']); ?>
                                     </option>
                                     <? endforeach ?>
                                 </select>
@@ -105,7 +105,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>ORGANIZACION</th>
+                            <th>EMPRESA</th>
                             <th>NOMBRE</th>
                             <th>APELLIDO PATERNO</th>
                             <th>APELLIDO MATERNO</th>
@@ -132,7 +132,7 @@
                         ?>
                         <tr>
                             <td><?= esc($value['id']); ?></td>
-                            <td><?= esc($value['organizacion']); ?></td>
+                            <td><?= esc($value['empresa']); ?></td>
                             <td><?= esc($value['nombres']); ?></td>
                             <td><?= esc($value['apellido_paterno']); ?></td>
                             <td><?= esc($value['apellido_materno']); ?></td>

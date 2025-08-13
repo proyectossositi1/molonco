@@ -14,18 +14,6 @@
                 <?= csrf_field() ?>
                 <!--begin::Body-->
                 <div class="card-body">
-                    <? if(role(['super admin'])): ?>
-                    <div class="mb-3">
-                        <label for="id_empresa" class="form-label">EMPRESAS</label>
-                        <select class="form-control selectpicker" name="id_empresa" id="id_empresa"
-                            onchange="onchange_empresa()">
-                            <option value="">SELECCIONE UNA OPCION</option>
-                            <? foreach($list_empresas as $key => $value): ?>
-                            <option value="<?= $value['id']; ?>"><?= $value['nombre'];?></option>
-                            <? endforeach; ?>
-                        </select>
-                    </div>
-                    <? endif; ?>
                     <div class="mb-3">
                         <label for="id_role" class="form-label">ROLES</label>
                         <select id="id_role" name="id_role" class="form-control selectpicker">

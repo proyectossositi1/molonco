@@ -83,12 +83,6 @@ $routes->group('catalogos', ['filter' => 'auth'], function($routes) {
     $routes->post('empresas/update', 'CatEmpresaController::update');
     $routes->post('empresas/edit', 'CatEmpresaController::edit');
     $routes->post('empresas/destroy', 'CatEmpresaController::destroy'); 
-     // ORGANIZACIONES
-    $routes->get('organizaciones/', 'CatOrganizacionController::index');
-    $routes->post('organizaciones/store', 'CatOrganizacionController::store');
-    $routes->post('organizaciones/update', 'CatOrganizacionController::update');
-    $routes->post('organizaciones/edit', 'CatOrganizacionController::edit');
-    $routes->post('organizaciones/destroy', 'CatOrganizacionController::destroy'); 
      // CLIETNES
     $routes->get('clientes/', 'ClienteController::index');
     $routes->post('clientes/store', 'ClienteController::store');

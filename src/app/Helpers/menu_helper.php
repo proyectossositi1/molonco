@@ -25,6 +25,12 @@ if (!function_exists('menu')) {
                         'ruta'   => '/admin/permisos',
                         'icono'  => 'fas fa-lock',
                         'role'   => ['super-admin']
+                    ],
+                    [
+                        'nombre' => 'Menu',
+                        'ruta'   => '/admin/menus',
+                        'icono'  => 'fas fa-lock',
+                        'role'   => ['super-admin']
                     ]
                 ]
             ],  
@@ -34,38 +40,37 @@ if (!function_exists('menu')) {
                 'ruta'   => '#',
                 'submenu'   => [
                     [
+                        'nombre' => 'Empresas',
+                        'ruta'   => '/catalogos/empresas',
+                        'icono'  => 'fas fa-users',
+                        'role'   => ['super-admin', 'admin']
+                    ],
+                    [
                         'nombre' => 'Clientes',
                         'ruta'   => '/catalogos/clientes',
                         'icono'  => 'fas fa-users',
                         'role'   => ['super-admin', 'admin']
                     ],
                     [
-                        'nombre' => 'Productos',
-                        'ruta'   => '/catalogos/servicios-productos',
+                        'nombre' => 'Tipo de Pagos',
+                        'ruta'   => '/catalogos/tipopagos',
                         'icono'  => 'fas fa-users',
                         'role'   => ['super-admin', 'admin']
                     ],
                     [
-                        'nombre' => 'Metodos de Pagos',
-                        'ruta'   => '/catalogos/metodos-de-pagos',
+                        'nombre' => 'Servicios',
+                        'ruta'   => '/catalogos/servicios',
+                        'icono'  => 'fas fa-users',
+                        'role'   => ['super-admin', 'admin']
+                    ],
+                    [
+                        'nombre' => 'Productos',
+                        'ruta'   => '/catalogos/productos',
                         'icono'  => 'fas fa-users',
                         'role'   => ['super-admin', 'admin']
                     ]
                 ]
             ],    
-            'Agenda' => [
-                'role'   => ['super-admin', 'admin'],
-                'icono'  => 'fas fa-calendar',
-                'ruta'   => '#',
-                'submenu'   => [
-                    [
-                        'nombre' => 'Calendario',
-                        'ruta'   => '/agenda',
-                        'icono'  => 'fas fa-calendar-plus',
-                        'role'   => ['super-admin', 'admin']
-                    ]
-                ]
-            ],     
             'configuraciones' => [
                 'role'   => ['super-admin', 'admin'],
                 'icono'  => 'fas fa-cogs',
@@ -73,13 +78,7 @@ if (!function_exists('menu')) {
                 'submenu' => [                
                     [
                         'nombre' => 'Usuarios',
-                        'ruta'   => '/admin/usuarios',
-                        'icono'  => 'fas fa-user',
-                        'role'   => ['super-admin', 'admin']
-                    ],
-                    [
-                        'nombre' => 'Horario',
-                        'ruta'   => '/agenda/horario-laboral',
+                        'ruta'   => '/admin/users',
                         'icono'  => 'fas fa-user',
                         'role'   => ['super-admin', 'admin']
                     ]

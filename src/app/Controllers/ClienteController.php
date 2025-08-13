@@ -5,23 +5,20 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CatClienteModel;
-use App\Models\CatOrganizacionModel;
-use App\Models\SatRegimenFiscalModel;
-use App\Models\SatTipoCfdiModel;
-use App\Models\SatUsoCfdiModel;
-use App\Models\SatFormaPagoModel;
+use App\Models\CatEmpresaModel;
 
 class ClienteController extends BaseController
 {
     public function index(){
         $model = new CatClienteModel();
-        $modelOrganizacion = new CatOrganizacionModel();
+        $modelEmpresa = new CatEmpresaModel();
         
         $data['data'] = $model
-            ->join('cat_organizaciones', 'cat_organizaciones.id = cat_clientes.id_organizacion', 'left')
-            ->select('cat_organizaciones.razon_social AS organizacion, cat_clientes.*')
+            ->where(['cat_clientes.id_instancia' => $this->id_instancia])
+            ->join('cat_empresas', 'cat_empresas.id = cat_clientes.id_empresa', 'left')
+            ->select('cat_empresas.nombre AS empresa, cat_clientes.*')
             ->findAll();
-        $data['list_organizacion'] = $modelOrganizacion->where(['status_alta' => 1])->findAll();
+        $data['list_empresa'] = $modelEmpresa->where(['status_alta' => 1, 'id_instancia' => $this->id_instancia])->findAll();
         
         return renderPage([
             'view'  => 'catalogos/clientes/index',
@@ -42,8 +39,9 @@ class ClienteController extends BaseController
                 'load' => 'catalogos/clientes/ajax/table_data',
                 'data'  => function(){
                     return (new CatClienteModel())
-                        ->join('cat_organizaciones', 'cat_organizaciones.id = cat_clientes.id_organizacion', 'left')
-                        ->select('cat_organizaciones.razon_social AS organizacion, cat_clientes.*')
+                        ->where(['cat_clientes.id_instancia' => $this->id_instancia])
+                        ->join('cat_empresas', 'cat_empresas.id = cat_clientes.id_empresa', 'left')
+                        ->select('cat_empresas.nombre AS empresa, cat_clientes.*')
                         ->findAll();
                 }
             ],
@@ -81,8 +79,9 @@ class ClienteController extends BaseController
                 'load' => 'catalogos/clientes/ajax/table_data',
                 'data'  => function(){
                     return (new CatClienteModel())
-                        ->join('cat_organizaciones', 'cat_organizaciones.id = cat_clientes.id_organizacion', 'left')
-                        ->select('cat_organizaciones.razon_social AS organizacion, cat_clientes.*')
+                        ->where(['cat_clientes.id_instancia' => $this->id_instancia])
+                        ->join('cat_empresas', 'cat_empresas.id = cat_clientes.id_empresa', 'left')
+                        ->select('cat_empresas.nombre AS empresa, cat_clientes.*')
                         ->findAll();
                 }
             ],
@@ -109,8 +108,9 @@ class ClienteController extends BaseController
                 'load' => 'catalogos/clientes/ajax/table_data',
                 'data'  => function(){
                     return (new CatClienteModel())
-                        ->join('cat_organizaciones', 'cat_organizaciones.id = cat_clientes.id_organizacion', 'left')
-                        ->select('cat_organizaciones.razon_social AS organizacion, cat_clientes.*')
+                        ->where(['cat_clientes.id_instancia' => $this->id_instancia])
+                        ->join('cat_empresas', 'cat_empresas.id = cat_clientes.id_empresa', 'left')
+                        ->select('cat_empresas.nombre AS empresa, cat_clientes.*')
                         ->findAll();
                 }
             ]         

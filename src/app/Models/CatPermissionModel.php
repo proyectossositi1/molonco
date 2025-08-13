@@ -12,7 +12,7 @@ class CatPermissionModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_empresa', 'name', 'description', 'status_alta'];
+    protected $allowedFields    = ['id_usuario_creacion', 'id_usuario_edicion', 'id_instancia', 'name', 'description', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

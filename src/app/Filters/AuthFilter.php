@@ -4,7 +4,6 @@ namespace App\Filters;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
-use App\Models\UserRouteModel;
 use App\Models\RoleModel;
 use CodeIgniter\Session\Session;
 
@@ -28,10 +27,10 @@ class AuthFilter implements FilterInterface
             return redirect()->to('/login')->with('error', 'Acceso denegado.');
         }
 
-        $userRoute = new UserRouteModel();
-        $currentController = service('router')->controllerName();
-        $currentController = str_replace('\App\Controllers\\', '', $currentController);
-        $currentMethod = service('router')->methodName();
+        // $userRoute = new UserRouteModel();
+        // $currentController = service('router')->controllerName();
+        // $currentController = str_replace('\App\Controllers\\', '', $currentController);
+        // $currentMethod = service('router')->methodName();
         // CREAMOS UN ARREGLO DE LOS CONTROLADORES DONDE TODOS LOS USUARIOS TENDRAN PERMISOS
         // $array_controller = ['DashboardController', 'RouteController'];
         // if(in_array($currentController, $array_controller)){

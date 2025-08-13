@@ -10,7 +10,7 @@ class CatTipoPagoController extends BaseController
 {
     public function index(){
         $model = new CatTipoPagoModel();
-        $data['data'] = $model->findAll();
+        $data['data'] = $model->where(['id_instancia' => $this->id_instancia])->findAll();
         
         return renderPage([
             'view'  => 'catalogos/tipopagos/index',

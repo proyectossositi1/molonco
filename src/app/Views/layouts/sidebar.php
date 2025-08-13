@@ -1,34 +1,6 @@
-<?php
-$session = session();
-$userRole = $session->get('id_role');
-$roleRouteModel = new \App\Models\RoleRouteModel();
+<script src="<?= base_url('js/layouts/sidebar/index.js?v='.time()); ?>"></script>
 
-// Obtener los permisos del usuario y organizarlos por controlador (para submenús)
-$permisos = [];
-$permisos = $roleRouteModel
-    ->select('cat_sys_routes.controller, cat_sys_routes.method, cat_sys_routes.name, cat_sys_routes.route, cat_sys_routes.icon, cat_sys_menus.name AS menu, cat_sys_menus.icon AS menu_icon')
-    ->join('cat_sys_roles', 'cat_sys_roles.id = sys_role_routes.id_role')
-    ->join('cat_sys_routes', 'cat_sys_routes.id = sys_role_routes.id_route')
-    ->join('cat_sys_menus', 'cat_sys_menus.id = cat_sys_routes.id_menu')
-    ->where('sys_role_routes.id_role', $userRole)
-    ->where('sys_role_routes.status_alta', 1)
-    ->like('cat_sys_routes.method', 'index')
-    ->orderBy('cat_sys_menus.order', 'ASC')
-    ->findAll();
-// Agrupar por controlador para los submenús
-$menu = [];
-foreach ($permisos as $key => $value) {
-    $menu[$value['menu']] = [
-        'name' => $value['menu'],
-        'icon' => $value['menu_icon'],
-        'routes' => []
-    ];    
-}
-// dd($permisos);
-foreach ($permisos as $key => $value) {
-    $menu[$value['menu']]['routes'][] = $value;
-}
-?>
+<?php $menu = menu(); ?>
 
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -47,18 +19,40 @@ foreach ($permisos as $key => $value) {
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?= session()->get('username'); ?></a>
+                <a href="#" class="d-block"><?php if(!empty(session('username'))) echo session('username') ?></a>
             </div>
         </div>
 
         <!-- SidebarSearch Form -->
         <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <select class="form-control selectpicker form-control-sidebar" id="list_menu"
+                    onchange="search_menu(this)">
+                    <option value="">Buscar</option>
+                    <?php
+                        $role = strtolower(session('role')); 
+
+                        foreach ($menu as $key => $value) {
+                            if(in_array($role, $value['role'])){
+                                echo '<optgroup label="'.ucfirst($key).'">';
+                            
+                                if(array_key_exists('submenu', $value)){
+                                    foreach ($value['submenu'] as $key_submenu => $value_submenu) {
+                                        if(in_array($role, $value_submenu['role'])) echo '<option value="'.$value_submenu['ruta'].'">'.$value_submenu['nombre'].'</option>';
+                                    }
+                                }else{
+                                    echo '<option value="'.$value['ruta'].'">'.ucfirst($key).'</option>';
+                                }
+                                
+                                echo '</optgroup>';
+                            }                            
+                        }
+                    ?>
+                </select>
                 <div class="input-group-append">
-                    <button class="btn btn-sidebar">
+                    <div class="btn btn-sidebar">
                         <i class="fas fa-search fa-fw"></i>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,41 +81,53 @@ foreach ($permisos as $key => $value) {
                 </li> -->
 
                 <!-- Menú dinámico -->
-                <?php $currentRoute = uri_string(); // Obtiene la ruta actual sin dominio ?>
-                <?php foreach ($menu as $key => $value): ?>
+                <?php 
+                    $currentRoute = '/'.uri_string(); // Obtiene la ruta actual sin dominio 
+                    $role = strtolower(session('role')); 
+                    
+                    foreach ($menu as $key => $value):
+                        if(in_array($role, $value['role'])):
+                ?>
                 <li
-                    class="nav-item <?= array_search($currentRoute, array_column($value['routes'], 'route')) !== false ? 'menu-open' : ''; ?>">
-                    <a href="#"
-                        class="nav-link <?= array_search($currentRoute, array_column($value['routes'], 'route')) !== false ? 'active' : ''; ?>">
-                        <i class="nav-icon <?= $value['icon']; ?>"></i> <!-- Icono general para módulos -->
+                    class="nav-item <?= (isset($value['submenu']) && array_search($currentRoute, array_column($value['submenu'], 'ruta')) !== false) ? 'menu-open' : ''; ?>">
+                    <?php $url_header = (!array_key_exists('submenu', $value)) ? $value['ruta'] : '#' ; ?>
+                    <a href="<?= $url_header; ?>"
+                        class="nav-link <?= (isset($value['submenu']) && array_search($currentRoute, array_column($value['submenu'], 'ruta')) !== false) ? 'active' : ''; ?>">
+                        <i class="nav-icon <?= $value['icono']; ?>"></i> <!-- Icono general para módulos -->
                         <p>
                             <?= ucfirst($key) ?>
                             <!-- <i class="nav-arrow bi bi-chevron-right"></i> -->
+                            <?php if(array_key_exists('submenu', $value)): ?>
                             <i class="right fas fa-angle-left"></i>
+                            <?php endif; ?>
                         </p>
                     </a>
+                    <?php if(array_key_exists('submenu', $value)): ?>
                     <ul class="nav nav-treeview">
-                        <?php foreach ($value['routes'] as $key_route => $value_route): ?>
-                        <?php $isActive = ($currentRoute == strtolower($value_route['route'])) ? 'active' : ''; ?>
+                        <?php 
+                            foreach ($value['submenu'] as $key_submenu => $value_submenu): 
+                                if(in_array($role, $value_submenu['role'])):
+                        ?>
+                        <?php $isActive = ($currentRoute == strtolower($value_submenu['ruta'])) ? 'active' : ''; ?>
                         <li class="nav-item">
-                            <a href="<?= site_url(strtolower($value_route['route'])); ?>"
+                            <a href="<?= site_url(strtolower($value_submenu['ruta'])); ?>"
                                 class="nav-link <?= $isActive; ?>">
-                                <i class="nav-icon <?= $value_route['icon']; ?>"></i>
-                                <p><?= ucfirst($value_route['name']); ?></p>
+                                <i class="nav-icon <?= $value_submenu['icono']; ?>"></i>
+                                <p><?= ucfirst($value_submenu['nombre']); ?></p>
                             </a>
                         </li>
-                        <?php endforeach; ?>
+                        <?php 
+                                endif;
+                            endforeach; 
+                        ?>
                     </ul>
+                    <?php endif; ?>
                 </li>
-                <?php endforeach; ?>
+                <?php 
+                        endif;
+                    endforeach; 
+                ?>
 
-                <!-- Logout -->
-                <li class="nav-item">
-                    <a href="<?= site_url('/logout'); ?>" class="nav-link">
-                        <i class="nav-icon bi bi-box-arrow-right"></i>
-                        <p>Cerrar sesión</p>
-                    </a>
-                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

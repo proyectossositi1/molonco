@@ -12,7 +12,7 @@ class CatEmpresaModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_sat_regimen_fiscal', 'id_sat_tipo_cfdi', 'id_sat_forma_pago', 'id_sat_uso_cfdi', 'nombre', 'abreviacion', 'codigo_postal', 'rfc', 'razon_social', 'direccion', 'moneda', 'email_primario', 'email_secundario', 'telefono_primario', 'telefono_secundario', 'status_alta'];
+    protected $allowedFields    = ['id_usuario_creacion', 'id_usuario_edicion', 'id_instancia', 'id_sat_regimen_fiscal', 'id_sat_tipo_cfdi', 'id_sat_forma_pago', 'id_sat_uso_cfdi', 'nombre', 'abreviacion', 'codigo_postal', 'rfc', 'razon_social', 'direccion', 'moneda', 'email_primario', 'email_secundario', 'telefono_primario', 'telefono_secundario', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
