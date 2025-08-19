@@ -144,13 +144,13 @@ $routes->group('catalogos', ['filter' => 'auth'], function($routes) {
     // PRODUCTOS - TIPOS - AJAX
     $routes->post('productos/tipos/ajax_refresh_table', 'CatProductoTipoController::ajax_refresh_table');     
      // PRODUCTOS - PRECIOS
-    // $routes->get('productos/precios/', 'CatProductoEmpresaPrecioController::index');
-    $routes->post('productos/precios/store', 'CatProductoEmpresaPrecioController::store');
-    $routes->post('productos/precios/update', 'CatProductoEmpresaPrecioController::update');
-    $routes->post('productos/precios/edit', 'CatProductoEmpresaPrecioController::edit');
-    $routes->post('productos/precios/destroy', 'CatProductoEmpresaPrecioController::destroy'); 
+    // $routes->get('productos/precios/', 'CatProductoPrecioController::index');
+    $routes->post('productos/precios/store', 'CatProductoPrecioController::store');
+    $routes->post('productos/precios/update', 'CatProductoPrecioController::update');
+    $routes->post('productos/precios/edit', 'CatProductoPrecioController::edit');
+    $routes->post('productos/precios/destroy', 'CatProductoPrecioController::destroy'); 
     // PRODUCTOS - PREICOS - AJAX
-    $routes->post('productos/precios/ajax_refresh_table', 'CatProductoEmpresaPrecioController::ajax_refresh_table'); 
+    $routes->post('productos/precios/ajax_refresh_table', 'CatProductoPrecioController::ajax_refresh_table'); 
 });
 
 // Rutas protegidas para Administradores

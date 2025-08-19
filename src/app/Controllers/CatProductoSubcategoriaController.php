@@ -25,16 +25,14 @@ class CatProductoSubcategoriaController extends BaseController
                 'load' => 'catalogos/productos/subcategorias/ajax/table_data',
                 'data'  => function(){
                     return (new CatProductoSubCategoria())
-                        ->where('cat_productos_subcategorias.id_empresa', $this->id_empresa)
-                        ->join('cat_empresas', 'cat_empresas.id = cat_productos_subcategorias.id_empresa', 'left')
+                        ->where('cat_productos_subcategorias.id_instancia', $this->id_instancia)
                         ->join('cat_productos_categorias', 'cat_productos_categorias.id = cat_productos_subcategorias.id_categoria', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_productos_categorias.nombre AS categoria,  cat_productos_subcategorias.*')
+                        ->select('cat_productos_categorias.nombre AS categoria,  cat_productos_subcategorias.*')
                         ->findAll();
                 }
             ],
             'precallback' => function($return) {
                 // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
-                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->nombre = limpiar_cadena_texto($return->nombre);
                 
                 return $return;
@@ -65,16 +63,14 @@ class CatProductoSubcategoriaController extends BaseController
                 'load' => 'catalogos/productos/subcategorias/ajax/table_data',
                 'data'  => function(){
                     return (new CatProductoSubCategoria())
-                        ->where('cat_productos_subcategorias.id_empresa', $this->id_empresa)
-                        ->join('cat_empresas', 'cat_empresas.id = cat_productos_subcategorias.id_empresa', 'left')
+                        ->where('cat_productos_subcategorias.id_instancia', $this->id_instancia)
                         ->join('cat_productos_categorias', 'cat_productos_categorias.id = cat_productos_subcategorias.id_categoria', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_productos_categorias.nombre AS categoria,  cat_productos_subcategorias.*')
+                        ->select('cat_productos_categorias.nombre AS categoria,  cat_productos_subcategorias.*')
                         ->findAll();
                 }
             ],
             'precallback' => function($return) {
                 // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
-                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->nombre = limpiar_cadena_texto($return->nombre);
                 
                 return $return;
@@ -94,10 +90,9 @@ class CatProductoSubcategoriaController extends BaseController
                 'load' => 'catalogos/productos/subcategorias/ajax/table_data',
                 'data'  => function(){
                     return (new CatProductoSubCategoria())
-                        ->where('cat_productos_subcategorias.id_empresa', $this->id_empresa)
-                        ->join('cat_empresas', 'cat_empresas.id = cat_productos_subcategorias.id_empresa', 'left')
+                        ->where('cat_productos_subcategorias.id_instancia', $this->id_instancia)
                         ->join('cat_productos_categorias', 'cat_productos_categorias.id = cat_productos_subcategorias.id_categoria', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_productos_categorias.nombre AS categoria,  cat_productos_subcategorias.*')
+                        ->select('cat_productos_categorias.nombre AS categoria,  cat_productos_subcategorias.*')
                         ->findAll();
                 }
             ]         
@@ -110,10 +105,9 @@ class CatProductoSubcategoriaController extends BaseController
         $model = new CatProductoSubCategoria();
 
         $encontrado['data'] = $model
-            ->where('cat_productos_subcategorias.id_empresa', $this->id_empresa)
-            ->join('cat_empresas', 'cat_empresas.id = cat_productos_subcategorias.id_empresa', 'left')
+            ->where('cat_productos_subcategorias.id_instancia', $this->id_instancia)
             ->join('cat_productos_categorias', 'cat_productos_categorias.id = cat_productos_subcategorias.id_categoria', 'left')
-            ->select('cat_empresas.nombre AS empresa, cat_productos_categorias.nombre AS categoria,  cat_productos_subcategorias.*')
+            ->select('cat_productos_categorias.nombre AS categoria,  cat_productos_subcategorias.*')
             ->findAll();
 
         if(!empty($encontrado)){

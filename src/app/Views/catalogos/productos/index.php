@@ -42,20 +42,6 @@
                             <!--begin::Body-->
                             <div class="card-body">
                                 <div class="row">
-                                    <? if(role(['super admin'])): ?>
-                                    <div class="col-md-3">
-                                        <div class="mb-2">
-                                            <label for="id_empresa" class="form-label">EMPRESAS</label>
-                                            <select class="form-control selectpicker" name="id_empresa" id="id_empresa">
-                                                <option value="">SELECIONE UNA OPCION</option>
-                                                <? foreach ($list_empresas as $key => $value): ?>
-                                                <option value="<?= $value['id']; ?>">
-                                                    <?= strtoupper($value['nombre']); ?></option>
-                                                <? endforeach ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <? endif; ?>
                                     <div class="col-md-5">
                                         <div class="mb-3">
                                             <label for="nombre" class="form-label">NOMBRE</label>
@@ -468,7 +454,6 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>EMPRESA</th>
                             <th>NOMBRE</th>
                             <th>DESCRIPCION</th>
                             <th>ACTION</th>
@@ -490,7 +475,6 @@
                         ?>
                         <tr>
                             <td><?= esc($value['id']); ?></td>
-                            <td><?= esc($value['empresa']); ?></td>
                             <td><?= esc($value['nombre']); ?></td>
                             <td><?= ($value['descripcion']); ?></td>
                             <td class="text-center">

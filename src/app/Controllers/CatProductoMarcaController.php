@@ -25,15 +25,11 @@ class CatProductoMarcaController extends BaseController
                 'load' => 'catalogos/productos/marcas/ajax/table_data',
                 'data'  => function(){
                     return (new CatProductoMarca())
-                        ->where('cat_productos_marcas.id_empresa', $this->id_empresa)
-                        ->join('cat_empresas', 'cat_empresas.id = cat_productos_marcas.id_empresa', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_productos_marcas.*')
-                        ->findAll();
+                        ->where('id_instancia', $this->id_instancia)->findAll();
                 }
             ],
             'precallback' => function($return) {
                 // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
-                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->nombre = limpiar_cadena_texto($return->nombre);
                 
                 return $return;
@@ -64,15 +60,11 @@ class CatProductoMarcaController extends BaseController
                 'load' => 'catalogos/productos/marcas/ajax/table_data',
                 'data'  => function(){
                     return (new CatProductoMarca())
-                        ->where('cat_productos_marcas.id_empresa', $this->id_empresa)
-                        ->join('cat_empresas', 'cat_empresas.id = cat_productos_marcas.id_empresa', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_productos_marcas.*')
-                        ->findAll();
+                        ->where('id_instancia', $this->id_instancia)->findAll();
                 }
             ],
             'precallback' => function($return) {
                 // SETEAMOS CAMPOS ANTES DE AGREGAR O EDITAR
-                if(!array_key_exists('id_empresa', (array)$return)) $return->id_empresa = $this->id_empresa;
                 $return->nombre = limpiar_cadena_texto($return->nombre);
                 
                 return $return;
@@ -92,10 +84,7 @@ class CatProductoMarcaController extends BaseController
                 'load' => 'catalogos/productos/marcas/ajax/table_data',
                 'data'  => function(){
                     return (new CatProductoMarca())
-                        ->where('cat_productos_marcas.id_empresa', $this->id_empresa)
-                        ->join('cat_empresas', 'cat_empresas.id = cat_productos_marcas.id_empresa', 'left')
-                        ->select('cat_empresas.nombre AS empresa, cat_productos_marcas.*')
-                        ->findAll();
+                        ->where('id_instancia', $this->id_instancia)->findAll();
                 }
             ]         
         ]);
@@ -106,11 +95,7 @@ class CatProductoMarcaController extends BaseController
         $response = ['response_message' => ['type' => '', 'message' => ''], 'next' => false, 'csrf_token' => csrf_hash()];
         $model = new CatProductoMarca();
 
-        $encontrado['data'] = $model
-            ->where('cat_productos_marcas.id_empresa', $this->id_empresa)
-            ->join('cat_empresas', 'cat_empresas.id = cat_productos_marcas.id_empresa', 'left')
-            ->select('cat_empresas.nombre AS empresa, cat_productos_marcas.*')
-            ->findAll();
+        $encontrado['data'] = $model->where('id_instancia', $this->id_instancia)->findAll();
 
         if(!empty($encontrado)){
             $response['next'] = true;

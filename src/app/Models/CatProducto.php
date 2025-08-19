@@ -12,7 +12,7 @@ class CatProducto extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_empresa_creacion', 'id_usuario_empresa_edicion', 'id_categoria', 'id_subcategoria', 'id_marca', 'id_tipo_producto', 'nombre', 'codigo_barras', 'descripcion', 'status_alta'];
+    protected $allowedFields    = ['id_instancia', 'id_usuario_creacion', 'id_usuario_edicion', 'id_categoria', 'id_subcategoria', 'id_marca', 'id_tipo_producto', 'nombre', 'codigo_barras', 'sku', 'cantidad', 'descripcion', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

@@ -4,7 +4,6 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>EMPRESA</th>
             <th>RPRODUCTO</th>
             <th>PRECIO COMPRA</th>
             <th>PRECIO VENTA</th>
@@ -29,7 +28,6 @@
         ?>
         <tr>
             <td><?= esc($value['id']); ?></td>
-            <td><?= esc($value['empresa']); ?></td>
             <td><?= esc($value['producto']); ?></td>
             <td>$ <?= number_format(esc($value['precio_compra']), 2); ?></td>
             <td>$ <?= number_format(esc($value['precio_venta']), 2); ?></td>
