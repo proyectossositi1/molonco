@@ -71,6 +71,19 @@ if (!function_exists('menu')) {
                     ]
                 ]
             ],    
+            'punto de ventas' => [
+                'role'   => ['super-admin', 'admin'],
+                'icono'  => 'fas fa-list',
+                'ruta'   => '#',
+                'submenu'   => [
+                    [
+                        'nombre' => 'Ventas',
+                        'ruta'   => '/puntodeventas',
+                        'icono'  => 'fas fa-users',
+                        'role'   => ['super-admin', 'admin']
+                    ]
+                ]
+            ],            
             'configuraciones' => [
                 'role'   => ['super-admin', 'admin'],
                 'icono'  => 'fas fa-cogs',

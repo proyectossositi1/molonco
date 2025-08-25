@@ -488,6 +488,56 @@ const alert_toastr = (_data = { type: 'info', message: '' }) => {
     }
 }
 
+const bootbox_alert = (data = {}) => {
+    // Valores por defecto
+    const defaults = {
+        type: 'alert',
+        title: 'INFORMATIVO',
+        message: '¿Está seguro que desea realizar esta acción?',
+        callback: null
+    };
+
+    // Combinar defaults con lo que recibas
+    const _data = { ...defaults, ...data };
+
+    switch (_data.type) {
+        case 'alert':
+            bootbox.alert({
+                title: _data.title,
+                message: _data.message,
+                callback: function () {
+                    if (typeof _data.callback === 'function') {
+                        _data.callback(true);
+                    }
+                }
+            });
+            break;
+
+        case 'confirm':
+            bootbox.confirm({
+                title: _data.title,
+                message: _data.message,
+                buttons: {
+                    cancel: {
+                        label: 'CANCELAR <i class="fa fa-times"></i>'
+                    },
+                    confirm: {
+                        label: 'ACEPTAR <i class="fa fa-check"></i>'
+                    }
+                },
+                callback: function (result) {
+                    if (typeof _data.callback === 'function') {
+                        _data.callback(result);
+                    } else {
+                        console.log('This was logged in the callback: ' + result);
+                    }
+                }
+            });
+            break;
+    }
+};
+
+
 const ajax_function_object = (data = { server: 'default', route: '', data: {}, method: '', async: true, function: function () { } }) => {
 
     switch (data.server) {
@@ -515,34 +565,40 @@ const ajax_function_object = (data = { server: 'default', route: '', data: {}, m
             let _csrfToken = $("meta[name='X-CSRF-TOKEN']").attr("content");
             let _newData = {};
 
-            if (typeof data.data.form != "undefined") {
-                $.each(data.data.form.serializeArray(), function (_, kv) {
-                    _newData[kv.name] = kv.value;
-                    switch (kv.name) {
-                        case "csrf_test_name":
-                            $("meta[name='X-CSRF-TOKEN']").attr("content", kv.value);
-                            delete _newData[kv.name]; // 🔥 Elimina el campo CSRF del objeto
-                            _csrfToken = kv.value; // ✅ Actualizar el token antes de eliminarlo
-                            break;
-                    }
-                });
+            if (typeof data.data != "undefined") {
+                if (typeof data.data.form != "undefined") {
+                    $.each(data.data.form.serializeArray(), function (_, kv) {
+                        _newData[kv.name] = kv.value;
+                        switch (kv.name) {
+                            case "csrf_test_name":
+                                $("meta[name='X-CSRF-TOKEN']").attr("content", kv.value);
+                                delete _newData[kv.name]; // 🔥 Elimina el campo CSRF del objeto
+                                _csrfToken = kv.value; // ✅ Actualizar el token antes de eliminarlo
+                                break;
+                        }
+                    });
 
-                if (typeof data.data.data != "undefined") _newData['data'] = data.data.data;
-                // if (typeof data.data.image != "undefined") {
-                //     // console.log('data.data.image.item: ', data.data.image.item);
-                //     if (data.data.image.item != undefined) _newData['image'] = enviar_imagen(data.data.image.item, data.data.image.ruta);
-                // }
-                if (typeof data.data.blob != undefined) _newData['blob'] = data.data.blob;
-            } else {
-                // VARIABLE PARA OBTENER EL TOKEN, SIN FORMULARIO
-                _csrfToken = $('input[name="csrf_test_name"]').val();
-                if (_csrfToken != "") {
-                    $("meta[name='X-CSRF-TOKEN']").attr("content", _csrfToken);
-                    data.data.csrf_token = _csrfToken;
+
+                    console.log('csrf_token: ', _csrfToken);
+
+                    if (typeof data.data.data != "undefined") _newData['data'] = data.data.data;
+                    // if (typeof data.data.image != "undefined") {
+                    //     // console.log('data.data.image.item: ', data.data.image.item);
+                    //     if (data.data.image.item != undefined) _newData['image'] = enviar_imagen(data.data.image.item, data.data.image.ruta);
+                    // }
+                    if (typeof data.data.blob != undefined) _newData['blob'] = data.data.blob;
+                } else {
+                    // VARIABLE PARA OBTENER EL TOKEN, SIN FORMULARIO
+                    _csrfToken = $('input[name="csrf_test_name"]').val();
+                    if (_csrfToken != "") {
+                        $("meta[name='X-CSRF-TOKEN']").attr("content", _csrfToken);
+                        data.data.csrf_token = _csrfToken;
+                    }
+                    // OBJETO DE DATA
+                    _newData = data.data;
                 }
-                // OBJETO DE DATA
-                _newData = data.data;
             }
+
 
             $.ajax({
                 cache: false,

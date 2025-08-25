@@ -114,6 +114,9 @@
     <!-- Loading Overlay -->
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
     </script>
+    <!-- Bootbox Alert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.4/bootbox.min.js">
+    </script>
 
 
     <!-- JavaScript Customs -->
