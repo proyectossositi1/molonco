@@ -118,6 +118,39 @@ if (!function_exists('limpiar_cadena_texto')) {
     }
 }
 
+if (! function_exists('to_decimal')) {
+    function to_decimal($value): float {
+        $s = trim((string) $value);
+        // quita moneda y espacios, deja sólo dígitos, coma, punto y signo
+        $s = preg_replace('/[^\d,.\-]/', '', $s);
+
+        $hasComma = strpos($s, ',') !== false;
+        $hasDot   = strpos($s, '.') !== false;
+
+        if ($hasComma && $hasDot) {
+            // El último separador que aparezca lo consideramos decimal
+            $lastComma = strrpos($s, ',');
+            $lastDot   = strrpos($s, '.');
+            $dec = ($lastComma > $lastDot) ? ',' : '.';
+
+            // quita el otro separador (miles)
+            $thousand = ($dec === ',') ? '.' : ',';
+            $s = str_replace($thousand, '', $s);
+
+            // homogeniza a punto decimal
+            if ($dec === ',') $s = str_replace(',', '.', $s);
+        } elseif ($hasComma && ! $hasDot) {
+            // sólo coma -> trátala como decimal
+            $s = str_replace(',', '.', $s);
+        } else {
+            // sólo punto o nada: ya está bien
+        }
+
+        return (float) $s;
+    }
+}
+
+
 if (!function_exists('select_group')) {
     function select_group($data){
         $select = '<option value="">ES NECESARIO SELECCIONAR UNA OPCION.</option>';
@@ -199,8 +232,7 @@ if (!function_exists('process_store')) {
 
         // Validación de duplicado
         $builder = $model->builder()->select('*');
-
-        if (is_array($field_check)) {
+        if (is_array($field_check)) {            
             $first = true;
             foreach ($field_check as $field) {
                 if (isset($data->$field)) {
@@ -208,14 +240,14 @@ if (!function_exists('process_store')) {
                         $builder->where(['id_instancia' => session('id_instancia'), $field => $data->$field]);
                         $first = false;
                     } else {
-                        $builder->orWhere(['id_instancia' => session('id_instancia'), $field => $data->$field]);
+                        $builder->Where([$field => $data->$field]);
                     }
                 }
             }
         } else {
             $builder->where(['id_instancia' => session('id_instancia'), $field_check => $data->$field_check]);
         }
-
+        
         $duplicado = $builder->get()->getFirstRow();
 
         if ($duplicado) {

@@ -7,6 +7,51 @@ $(document).ready(function () {
 
     $('#cantidad').on('input', recalcular);
     $('#pago_cliente').on('input', recalcular_cambio);
+
+    $('#codigo_barras').on('keydown', function (e) {
+        const $sel = $('#id_producto');
+
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+
+        const q = $.trim(this.value).toLowerCase();
+        if (!q) return;
+
+        const $opts = $sel.find('option[value!=""]'); // ignora placeholder
+
+        // 1) match exacto por código de barras -> 2) exacto por SKU -> 3) contiene
+        let $match = $opts.filter((i, el) => (el.dataset.codigo_barras || '').toLowerCase() === q);
+        if (!$match.length) $match = $opts.filter((i, el) => (el.dataset.sku || '').toLowerCase() === q);
+        if (!$match.length) {
+            $match = $opts.filter((i, el) => {
+                const d = el.dataset, txt = (el.textContent || '').toLowerCase();
+                return txt.includes(q) ||
+                    (d.codigo_barras || '').toLowerCase().includes(q) ||
+                    (d.sku || '').toLowerCase().includes(q);
+            });
+        }
+
+        if ($match.length) {
+            const value = $match.first().val();
+            if ($.fn.selectpicker) {
+                $sel.selectpicker('val', value); // dispara changed.bs.select
+            } else {
+                $sel.val(value).trigger('change');
+            }
+            // Por si quieres ser explícito y no depender del evento del plugin:
+            $sel.trigger('producto:update');
+        } else {
+            // limpiar si no hay match
+            if ($.fn.selectpicker) {
+                $sel.selectpicker('val', '');
+            } else {
+                $sel.val('').trigger('change');
+            }
+            $sel.trigger('producto:update');
+            // opcional: mostrar aviso
+            // alert('No se encontró el producto');
+        }
+    });
 });
 
 const onchange_metodopagos = (el) => {
@@ -73,7 +118,7 @@ const recalcular = () => {
 const recalcular_cambio = () => {
     const _efectivo_recibido = $('#pago_cliente').val();
     const _total = $('#total').val()
-    let _cambio = (_efectivo_recibido != "") ? _efectivo_recibido - _total : 0;
+    let _cambio = (_efectivo_recibido != "") ? (parseFloat(_efectivo_recibido) - moneyToNumber(_total)) : 0;
 
     $('#cambio_cliente').val(numeric_format(_cambio));
 }

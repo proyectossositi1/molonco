@@ -73,6 +73,7 @@ chmod -R 775 /var/www/html
 Ir a la siguiente ruta y copiar y pegar el fragmento en el archivo: "quitar \ del \*:80"
 
 nano /etc/apache2/sites-available/000-default.conf
+En caso de no tener instalado el nano, correr este comando apt-get update && apt-get install -y nano
 <VirtualHost \*:80>
 DocumentRoot /var/www/html/public
 

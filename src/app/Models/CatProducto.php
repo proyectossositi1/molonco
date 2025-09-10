@@ -47,7 +47,7 @@ class CatProducto extends Model
 
     function filter_producto($data = ['key' => '', 'value' => '', 'id_instancia' => '']){
         $builder = $this->db->table($this->table . ' p')
-        ->select('p.id, CONCAT_WS("", "SKU: ", p.sku, ", ", p.nombre) AS nombre, p.cantidad, pp.precio_venta AS precio')
+        ->select('p.id, CONCAT_WS("", "SKU: ", p.sku, ", ", p.nombre) AS nombre, p.cantidad, pp.precio_venta AS precio, p.sku, p.codigo_barras')
         ->join('cat_productos_precios pp', 'pp.id_producto = p.id AND pp.anio = YEAR(CURRENT_DATE())')        
         ->where('p.status_alta', 1)
         ->where('p.id_instancia', $data['id_instancia']);

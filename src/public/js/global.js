@@ -670,6 +670,22 @@ const parseAndRound = (value) => {
     return parseFloat(parsedValue.toFixed(2)); // Redondear a 2 decimales y devolver como número
 }
 
+const moneyToNumber = (v) => {
+    let s = String(v).trim().replace(/[^\d.,-]/g, ''); // quita $ y espacios
+    const hasComma = s.includes(','), hasDot = s.includes('.');
+    if (hasComma && hasDot) {
+        const dec = s.lastIndexOf(',') > s.lastIndexOf('.') ? ',' : '.';
+        const thou = dec === ',' ? '.' : ',';
+        s = s.replaceAll(thou, '');
+        if (dec === ',') s = s.replace(',', '.');
+    } else if (hasComma && !hasDot) {
+        s = s.replace(/\./g, '').replace(',', '.'); // “1.234,56” o “1234,56”
+    } else {
+        s = s.replace(/,/g, ''); // “1,234.56”
+    }
+    return Number(s || 0);
+}
+
 const calcularDiferenciaDias = (_data = { fecha_minima: null, fecha_maxima: null }) => {
     // Validar que _data tenga las propiedades requeridas
     if (!_data.fecha_minima && !_data.fecha_maxima) {

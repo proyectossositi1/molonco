@@ -72,7 +72,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-4">
+                            <div class="mb-3">
+                                <label for="id_producto" class="form-label">BUSCADOR DE PRODUCTOS</label>
+                                <input type="text" class="form-control" name="codigo_barras" id="codigo_barras">
+                            </div>
+                        </div>
+                        <div class="col-4">
                             <div class="mb-3">
                                 <label for="id_producto" class="form-label">LISTA DE PRODUCTOS</label>
                                 <select class="form-control selectpicker" name="id_producto" id="id_producto"
@@ -80,7 +86,8 @@
                                     <option value="">SELECCIONE UNA OPCION</option>
                                     <? foreach ($list_productos as $key => $value): ?>
                                     <option value="<?= $value['id']; ?>" data-cantidad="<?= $value['cantidad']; ?>"
-                                        data-precio="<?= $value['precio']; ?>">
+                                        data-precio="<?= $value['precio']; ?>" data-sku="<?= $value['sku']; ?>"
+                                        data-codigo_barras="<?= $value['codigo_barras']; ?>">
                                         <?= $value['nombre']; ?></option>
                                     <? endforeach;?>
                                 </select>

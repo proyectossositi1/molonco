@@ -15,19 +15,6 @@
                 <!--begin::Body-->
                 <div class="card-body">
                     <div class="row">
-                        <? if(role(['super admin'])): ?>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="id_empresa" class="form-label">EMPRESAS</label>
-                                <select class="form-control selectpicker" name="id_empresa" id="id_empresa">
-                                    <option value="">SELECIONE UNA OPCION</option>
-                                    <? foreach($list_empresa as $key => $value): ?>
-                                    <option value="<?= $value['id']; ?>"><?= $value['nombre']; ?></option>
-                                    <? endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-                        <? endif; ?>
                         <div class="col-md-2">
                             <div class="mb-3">
                                 <label for="id_role" class="form-label">ROLES</label>
@@ -98,7 +85,6 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>EMPRESA</th>
                             <th>ROLE</th>
                             <th>USER</th>
                             <th>NOMBRE COMPLETO</th>
@@ -122,7 +108,6 @@
                         ?>
                         <tr>
                             <td><?= esc($value['id']); ?></td>
-                            <td><?= esc($value['empresa']); ?></td>
                             <td><?= esc($value['role']); ?></td>
                             <td><?= esc($value['usr']); ?></td>
                             <td><?= esc($value['nombre']); ?></td>

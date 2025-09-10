@@ -67,7 +67,7 @@ class PuntoVentaController extends BaseController
                 $response['next'] = true;
                 
                 foreach ($encontrado as $key => $value) {
-                    $response['list_productos'] .= '<option value="'.$value['id'].'" data-cantidad="'.$value['cantidad'].'">'.$value['nombre'].'</option>';
+                    $response['list_productos'] .= '<option value="'.$value['id'].'" data-cantidad="'.$value['cantidad'].'" data-precio="'.$value['precio'].'" data-sku="'.$value['sku'].'" data-codigo_barras="'.$value['codigo_barras'].'">'.$value['nombre'].'</option>';
                 }
             }
         }
@@ -97,7 +97,7 @@ class PuntoVentaController extends BaseController
                     'id_producto'           => $data->id_producto,
                     'precio'                => $data->precio,
                     'cantidad'              => $data->cantidad,
-                    'subtotal'              => $data->subtotal
+                    'subtotal'              => to_decimal($data->subtotal)
                 ]);
             }
             if(!empty($last_id_venta_linea)){

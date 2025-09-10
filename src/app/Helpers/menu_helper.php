@@ -25,12 +25,6 @@ if (!function_exists('menu')) {
                         'ruta'   => '/admin/permisos',
                         'icono'  => 'fas fa-lock',
                         'role'   => ['super-admin']
-                    ],
-                    [
-                        'nombre' => 'Menu',
-                        'ruta'   => '/admin/menus',
-                        'icono'  => 'fas fa-lock',
-                        'role'   => ['super-admin']
                     ]
                 ]
             ],  
