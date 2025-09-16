@@ -206,6 +206,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div id="metodopago-efectivo">
                         <div class="row">
                             <div class="col">

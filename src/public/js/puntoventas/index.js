@@ -5,6 +5,7 @@ $(document).ready(function () {
         }
     });
 
+    $('#metodopago-efectivo, #metodopago-tarjeta').css('display', 'none');
     $('#cantidad').on('input', recalcular);
     $('#pago_cliente').on('input', recalcular_cambio);
 
@@ -70,7 +71,7 @@ const onchange_metodopagos = (el) => {
             break;
 
         default:
-            $('#metodopago-efectivo, #metodopago-tarjeta').css('display', 'inline');
+            $('#metodopago-efectivo, #metodopago-tarjeta').css('display', 'none');
             break;
     }
 }
