@@ -6,9 +6,25 @@
         <div class="card card-primary card-outline mb-4">
             <!--begin::Header-->
             <div class="card-header">
-                <div class="card-title">NO. FOLIO <strong><?=$data_caja['id']; ?></strong> CON UN MONTO DE <strong>$
-                        <?= number_format($data_caja['monto_inicial'], 2); ?></strong>, USUARIO
-                    <strong><?= session('username'); ?></strong>
+                <div class="card-title">CAJA NO. <strong><?=$data_caja['id']; ?></strong>
+                    <p>
+                        <small>
+                            MONTO INICAL DE <strong>$
+                                <?= number_format($data_caja['monto_inicial'], 2); ?></strong><br>
+                            MONTO FINAL DE <strong>$
+                                <?= number_format($data_caja['monto_final'], 2); ?></strong>
+                        </small>
+                    </p>
+                </div>
+                <div class="card-title float-right">
+                    USUARIO
+                    <strong><?= strtoupper(session('username')); ?></strong>
+                    <div>
+                        <button type="button" class="btn btn-danger btn-xs float-right"
+                            onclick="realizar_cierre(<?= $data_caja['id']; ?>, <?= $data_caja['monto_final']; ?>)">
+                            REALIZAR CIERRE
+                        </button>
+                    </div>
                 </div>
             </div>
             <!--end::Header-->
@@ -71,6 +87,7 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
                     <div class="row">
                         <div class="col-4">
                             <div class="mb-3">

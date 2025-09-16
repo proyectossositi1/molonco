@@ -167,6 +167,9 @@ const store = () => {
             },
             function: (_response) => {
                 if (_response.next) {
+                    // RECARGAREMOS EL ID DE LA VENTA ABIERTA
+                    $('#id_venta_producto').val(_response.id_venta_producto);
+                    // RECARGAMOS LOS TOTALES
                     $('#total_subtotal').val(numeric_format(_response.data_totales.subtotal));
                     $('#iva').val(numeric_format(_response.data_totales.iva));
                     $('#total').val(numeric_format(_response.data_totales.total));
@@ -279,4 +282,36 @@ const finalizar = () => {
             }
         });
     }
-} 
+}
+
+const realizar_cierre = (_folio_caja, _monto) => {
+    if (_folio_caja != "") {
+        bootbox_alert({
+            type: 'confirm',
+            message: `¿Está seguro que desea <strong>finalizar</strong> la caja no. ${_folio_caja} y con un monto de $ ${numeric_format(_monto)}?`,
+            callback: (_response) => {
+                ajax_function_object({
+                    route: 'puntodeventas/caja/finalizar',
+                    method: 'post',
+                    data: {
+                        id_corte_caja: _folio_caja
+                    },
+                    function: (_response) => {
+                        if (_response.next) {
+                            setTimeout(() => {
+                                window.location.href = '/puntodeventas/';
+                            }, 2000);
+                        }
+
+                        alert_toastr(_response.response_message);
+                    }
+                });
+            }
+        });
+    } else {
+        alert_toastr({
+            type: 'warning',
+            message: 'Es necesario que la caja se encuente abierta y existente.'
+        });
+    }
+}

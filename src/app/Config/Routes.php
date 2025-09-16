@@ -162,6 +162,7 @@ $routes->group('puntodeventas', ['filter' => 'auth'], function($routes) {
     $routes->get('filter_productos/key/(:any)/value/(:any)', 'PuntoVentaController::ajax_filter_listado_productos/$1/$2'); 
     // PUNTO DE VENTAS - CAJA
     $routes->post('caja/store', 'PuntoVentaCajaController::store');
+    $routes->post('caja/finalizar', 'PuntoVentaCajaController::finalizar');
     // PUNTO DE VENTAS LINEAS
     $routes->post('linea/destroy', 'PuntoVentaLineaController::destroy');
 });

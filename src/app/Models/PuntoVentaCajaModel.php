@@ -12,7 +12,7 @@ class PuntoVentaCajaModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_usuario_creacion', 'id_usuario_edicion', 'id_usuario', 'id_instancia', 'monto_inicial', 'fecha_apertura', 'monto_final', 'fecha_cirre', 'status_abierto', 'status_alta'];
+    protected $allowedFields    = ['id_usuario_creacion', 'id_usuario_edicion', 'id_usuario', 'id_instancia', 'monto_inicial', 'fecha_apertura', 'monto_final', 'fecha_cierre', 'status_abierto', 'status_alta'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

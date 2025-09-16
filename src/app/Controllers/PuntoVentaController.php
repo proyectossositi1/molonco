@@ -32,7 +32,7 @@ class PuntoVentaController extends BaseController
     function index(){
         // ANTES DE MOSTRAR EL POS, NECESITAMOS VERIFICAR QUE SE ENCUENTRE UNA CAJA ABIERTA, EN CASO DE QUE NO, MOSTRAMOS LA VISTA DE LA CAJA PARA ABRIRLA
         // CONSULTA PARA SABER SI EXISTE UNA CAJA ABIERTA
-        $data['data_caja'] = $this->modelPuntoVentaCaja->where(['status_abierto' => 1, 'id_instancia' => $this->id_instancia, 'id_usuario' => $this->id_usuario])->first();        
+        $data['data_caja'] = $this->modelPuntoVentaCaja->where(['status_abierto' => 1, 'id_instancia' => $this->id_instancia, 'id_usuario' => $this->id_usuario])->first();  
         // CONSULTAS PARA VISUALIZAR EN EL PUNTO DE VENTA
         $data['list_categorias'] = $this->modelCategoria->where(['status_alta' => 1, 'id_instancia' => $this->id_instancia])->findAll();
         $data['list_subcategorias'] = $this->modelSubCategoria->where(['status_alta' => 1])->findAll();        
@@ -40,8 +40,8 @@ class PuntoVentaController extends BaseController
         $data['list_marcas'] = $this->modelMarca->where(['status_alta' => 1, 'id_instancia' => $this->id_instancia])->findAll();
         $data['list_productos'] = $this->modelProducto->filter_producto(['id_instancia' => $this->id_instancia]);
         $data['list_tipopagos'] = $this->modelTipoPago->where(['id_instancia' => $this->id_instancia, 'status_alta' => 1])->findAll();
-        // CONSUTLA PARA SABER SI EXISTE UNA VENTA ABEIRTA
-        $data['data_venta'] = $this->modelPuntoVenta->where(['id_instancia' => $this->id_instancia, 'id_corte_caja' => $data['data_caja']['id'], 'estado' => 'ABIERTO'])->first();
+        // CONSUTLA PARA SABER SI EXISTE UNA VENTA ABEIRTA        
+        $data['data_venta'] = (!empty($data['data_caja'])) ? $this->modelPuntoVenta->where(['id_instancia' => $this->id_instancia, 'id_corte_caja' => $data['data_caja']['id'], 'estado' => 'ABIERTO'])->first() : []; 
         $data['data'] = (!empty($data['data_venta'])) ? $this->modelPuntoVentaLinea->listado_ventas_lineas(['id_instancia' => $this->id_instancia, 'id_venta_producto' => $data['data_venta']['id']]) : [];     
         $data['data_totales'] = (!empty($data['data_venta'])) ? $this->modelPuntoVentaLinea->total_ventas_lineas(['id_instancia' => $this->id_instancia, 'id_venta_producto' => $data['data_venta']['id']]) : [];
         
@@ -100,8 +100,11 @@ class PuntoVentaController extends BaseController
                     'subtotal'              => to_decimal($data->subtotal)
                 ]);
             }
+
+            // ASIGNAMOS EL ID DE LA VENTA, TENGA REGISTRO EN LA LINEA O NO, ESTO PARA QUE NO SE PIERDA EL FLUJO DE LA VENTA
+            $response['id_venta_producto'] = $last_id_venta;
             if(!empty($last_id_venta_linea)){
-                $response['next'] = true;                
+                $response['next'] = true;                        
                 $response['view'] = view('puntoventas/ajax/table_data', ['data' => $this->modelPuntoVentaLinea->listado_ventas_lineas(['id_instancia' => $this->id_instancia, 'id_venta_producto' => $last_id_venta])]);
                 $response['data_totales'] = $this->modelPuntoVentaLinea->total_ventas_lineas(['id_instancia' => $this->id_instancia, 'id_venta_producto' => $last_id_venta]);
             }
@@ -132,11 +135,31 @@ class PuntoVentaController extends BaseController
             if(!empty($data->cambio_cliente)) $array_venta['cambio_cliente'] = $data->cambio_cliente;
 
             if($this->modelPuntoVenta->update($data->data->id_venta_producto, $array_venta)){
-                $response['next'] = true;
+                $response['next'] = true;                
                 $response['response_message'] = ['type' => 'success', 'message' => 'LA VENTA SE REALIZO CON EXITO.'];
+            }
+
+            // EN ESTE PROCESO LO UTILIZAREMOS PARA ACTUALIZAR EL TOTAL DE LA CAJA ABIERTA
+            if($response['next']){   
+                $this->update_cierre([
+                    'data' => $data->data
+                ]);  
             }
         }
         
         return json_encode($response);
+    }
+
+    function update_cierre($data = ['data' => []]) {
+        $array_data = [];
+        
+        $array_data['monto_final'] = $this->modelPuntoVenta
+            ->select('(SUM(IFNULL(xx_ventas_productos.total, 0)) + SUM(xx_ventas_corte_caja.monto_inicial)) total')
+            ->join('xx_ventas_corte_caja', 'xx_ventas_corte_caja.id = xx_ventas_productos.id_corte_caja')
+            ->join('cat_tipopagos', 'cat_tipopagos.id = xx_ventas_productos.id_metodo_pago')
+            ->where(['xx_ventas_productos.id_corte_caja' => $data['data']->id_corte_caja, 'xx_ventas_productos.estado' => 'VENDIDO', 'LOWER(cat_tipopagos.nombre)' => 'efectivo'])
+            ->first();
+            
+        $this->modelPuntoVentaCaja->update($data['data']->id_corte_caja, $array_data);     
     }
 }
