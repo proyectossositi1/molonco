@@ -9,23 +9,26 @@ use App\Models\CatProducto;
 
 class CatProductoPrecioController extends BaseController
 {
-    function index(){
-        // 
+    
+    function __construct(){
+        $this->modelCatProductoPrecio = new CatProductoPrecio();
+        $this->modelCatProducto = new CatProducto();
     }
+    
+    function index(){}
 
     function store() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoPrecio();
 
         return process_store([
             'data'        => $data,
-            'model'       => $model,
+            'model'       => $this->modelCatProductoPrecio,
             'field_check' => ['id_producto', 'anio'],
             'field_name'  => 'precio',
             'view' => [
                 'load' => 'catalogos/productos/precio/ajax/table_data',
                 'data'  => function(){
-                    return (new CatProductoPrecio())
+                    return ($this->modelCatProductoPrecio)
                         ->where('cat_productos_precios.id_instancia', $this->id_instancia)
                         ->join('cat_productos', 'cat_productos.id = cat_productos_precios.id_producto')
                         ->select('cat_productos.nombre AS producto, cat_productos_precios.*')
@@ -40,24 +43,23 @@ class CatProductoPrecioController extends BaseController
         
         return process_edit([
             'data' => $data,
-            'model' => new CatProductoPrecio(),
+            'model' => $this->modelCatProductoPrecio,
             'field_name' => 'precio'
         ]);
     }
 
     function update() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoPrecio();
 
         return process_update([
             'data'        => $data,
-            'model'       => $model,
+            'model'       => $this->modelCatProductoPrecio,
             'field_check' => ['id_producto', 'anio'],
             'field_name'  => 'precio',
             'view' => [
                 'load' => 'catalogos/productos/precio/ajax/table_data',
                 'data'  => function(){
-                    return (new CatProductoPrecio())
+                    return ($this->modelCatProductoPrecio)
                         ->where('cat_productos_precios.id_instancia', $this->id_instancia)
                         ->join('cat_productos', 'cat_productos.id = cat_productos_precios.id_producto')
                         ->select('cat_productos.nombre AS producto, cat_productos_precios.*')
@@ -69,7 +71,6 @@ class CatProductoPrecioController extends BaseController
 
     function destroy() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoPrecio();
         
         return process_destroy([
             'data'       => $data,
@@ -78,7 +79,7 @@ class CatProductoPrecioController extends BaseController
             'view' => [
                 'load' => 'catalogos/productos/precio/ajax/table_data',
                 'data'  => function(){
-                    return (new CatProductoPrecio())
+                    return ($this->modelCatProductoPrecio)
                         ->where('cat_productos_precios.id_instancia', $this->id_instancia)
                         ->join('cat_productos', 'cat_productos.id = cat_productos_precios.id_producto')
                         ->select('cat_productos.nombre AS producto, cat_productos_precios.*')
@@ -91,9 +92,8 @@ class CatProductoPrecioController extends BaseController
     function ajax_refresh_table() {
         $data = json_decode($this->request->getPost('data'));
         $response = ['response_message' => ['type' => '', 'message' => ''], 'next' => false, 'csrf_token' => csrf_hash()];
-        $model = new CatProductoPrecio();
 
-        $encontrado['data'] = $model
+        $encontrado['data'] = $this->modelCatProductoPrecio
             ->where('cat_productos_precios.id_instancia', $this->id_instancia)
             ->join('cat_productos', 'cat_productos.id = cat_productos_precios.id_producto')
             ->select('cat_productos.nombre AS producto, cat_productos_precios.*')
@@ -102,6 +102,14 @@ class CatProductoPrecioController extends BaseController
         if(!empty($encontrado)){
             $response['next'] = true;
             $response['view'] = view('catalogos/productos/precio/ajax/table_data', $encontrado);
+            $response['list_productos'] = '<option value="">SELECCIONE UNA OPCION.</option>';
+            
+            $productos = $this->modelCatProducto->where(['status_alta' => 1, 'id_instancia' => $this->id_instancia])->select('cat_productos.id, cat_productos.nombre')->findAll();
+            if(!empty($productos)){
+                foreach ($productos as $key => $value) {
+                    $response['list_productos'] .= '<option value="'.$value['id'].'">'.$value['nombre'].'</option>';
+                }
+            }
         }
 
         return json_encode($response);

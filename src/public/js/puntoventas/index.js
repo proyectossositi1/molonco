@@ -9,51 +9,50 @@ $(document).ready(function () {
     $('#cantidad').on('input', recalcular);
     $('#pago_cliente').on('input', recalcular_cambio);
 
-    $('#codigo_barras').on('keydown', function (e) {
-        const $sel = $('#id_producto');
-
+    $('#buscador_productos').on('keydown', function (e) {
         if (e.key !== 'Enter') return;
-        e.preventDefault();
-
-        const q = $.trim(this.value).toLowerCase();
-        if (!q) return;
-
-        const $opts = $sel.find('option[value!=""]'); // ignora placeholder
-
-        // 1) match exacto por código de barras -> 2) exacto por SKU -> 3) contiene
-        let $match = $opts.filter((i, el) => (el.dataset.codigo_barras || '').toLowerCase() === q);
-        if (!$match.length) $match = $opts.filter((i, el) => (el.dataset.sku || '').toLowerCase() === q);
-        if (!$match.length) {
-            $match = $opts.filter((i, el) => {
-                const d = el.dataset, txt = (el.textContent || '').toLowerCase();
-                return txt.includes(q) ||
-                    (d.codigo_barras || '').toLowerCase().includes(q) ||
-                    (d.sku || '').toLowerCase().includes(q);
-            });
-        }
-
-        if ($match.length) {
-            const value = $match.first().val();
-            if ($.fn.selectpicker) {
-                $sel.selectpicker('val', value); // dispara changed.bs.select
-            } else {
-                $sel.val(value).trigger('change');
-            }
-            // Por si quieres ser explícito y no depender del evento del plugin:
-            $sel.trigger('producto:update');
-        } else {
-            // limpiar si no hay match
-            if ($.fn.selectpicker) {
-                $sel.selectpicker('val', '');
-            } else {
-                $sel.val('').trigger('change');
-            }
-            $sel.trigger('producto:update');
-            // opcional: mostrar aviso
-            // alert('No se encontró el producto');
-        }
+        filter_prodcutos(this.value);
     });
 });
+
+const search_producto = () => {
+    filter_prodcutos();
+}
+
+function filter_prodcutos(qRaw) {
+    const $sel = $('#id_producto');
+    if ($.fn.selectpicker) $sel.selectpicker({ liveSearchNormalize: true });
+
+    const q = String(qRaw || $('#buscador_productos').val()).trim().toLowerCase();
+    if (!q) return false;
+
+    const $opts = $sel.find('option[value!=""]'); // ignora placeholder
+
+    // 1) exacto por código de barras -> 2) exacto por SKU -> 3) contiene
+    let $match = $opts.filter((i, el) => (el.dataset.codigo_barras || '').toLowerCase() === q);
+    if (!$match.length) $match = $opts.filter((i, el) => (el.dataset.sku || '').toLowerCase() === q);
+    if (!$match.length) {
+        $match = $opts.filter((i, el) => {
+            const d = el.dataset, txt = (el.textContent || '').toLowerCase();
+            return txt.includes(q) ||
+                (d.codigo_barras || '').toLowerCase().includes(q) ||
+                (d.sku || '').toLowerCase().includes(q);
+        });
+    }
+
+    if ($match.length) {
+        const value = $match.first().val();
+        if ($.fn.selectpicker) $sel.selectpicker('val', value);
+        else $sel.val(value).trigger('change');
+        $sel.trigger('producto:update');
+        return true;
+    } else {
+        if ($.fn.selectpicker) $sel.selectpicker('val', '');
+        else $sel.val('').trigger('change');
+        $sel.trigger('producto:update');
+        return false;
+    }
+}
 
 const onchange_metodopagos = (el) => {
     const $opt = $(el).find('option:selected');
@@ -107,6 +106,7 @@ const onchange_productos = (el) => {
 
     let _value_producto = (_precio == "undefined") ? 0 : _precio;
     $('#precio').val(_value_producto);
+    $('#cantidad').val(1).trigger('input');
 }
 
 const recalcular = () => {

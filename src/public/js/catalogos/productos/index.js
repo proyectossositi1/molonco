@@ -26,6 +26,11 @@ $(document).ready(function () {
                 if (_response.next) {
                     $('#table-title').html(_tab.name.toUpperCase());
                     $('#datatable_refresh').html(_response.view);
+
+                    if (_response.list_categorias) $('#id_categoria, #id_categoria_producto').html(_response.list_categorias);
+                    if (_response.list_tipos) $('#id_tipo_producto').html(_response.list_tipos);
+                    if (_response.list_marcas) $('#id_marca').html(_response.list_marcas);
+                    if (_response.list_productos) $('#id_producto_precio').html(_response.list_productos);
                 }
             }
         });
@@ -101,7 +106,7 @@ const store = (_type) => {
             break;
         case 'productos':
             _fields = [
-                'id_categoria_producto', 'id_subcategoria_producto', 'id_tipo_producto', 'id_marca_producto', 'nombre', 'descripcion'
+                'id_categoria', 'id_subcategoria', 'sku', 'nombre', 'cantidad'
             ];
             break;
         case 'precios':

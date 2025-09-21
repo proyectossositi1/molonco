@@ -578,9 +578,6 @@ const ajax_function_object = (data = { server: 'default', route: '', data: {}, m
                         }
                     });
 
-
-                    console.log('csrf_token: ', _csrfToken);
-
                     if (typeof data.data.data != "undefined") _newData['data'] = data.data.data;
                     // if (typeof data.data.image != "undefined") {
                     //     // console.log('data.data.image.item: ', data.data.image.item);

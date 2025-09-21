@@ -302,6 +302,13 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
+                                            <label for="codigo_barras" class="form-label">CODIGO DE BARRAS</label>
+                                            <input type="text" class="form-control numeric-integer" name="codigo_barras"
+                                                id="codigo_barras">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
                                             <label for="sku" class="form-label">SKU</label>
                                             <input type="text" class="form-control" name="sku" id="sku">
                                         </div>
@@ -310,13 +317,6 @@
                                         <div class="mb-3">
                                             <label for="nombre" class="form-label">NOMBRE</label>
                                             <input type="text" class="form-control" name="nombre" id="nombre">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="codigo_barras" class="form-label">CODIGO DE BARRAS</label>
-                                            <input type="text" class="form-control numeric-integer" name="codigo_barras"
-                                                id="codigo_barras">
                                         </div>
                                     </div>
                                 </div>

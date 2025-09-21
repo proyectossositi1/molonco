@@ -8,17 +8,18 @@ use App\Models\CatProductoMarca;
 
 class CatProductoMarcaController extends BaseController
 {
-    function index(){
-        //
+    function __construct(){
+        $this->modelCatProductoMarca = new CatProductoMarca();
     }
+    
+    function index(){}
 
     function store() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoMarca();
 
         return process_store([
             'data'        => $data,
-            'model'       => $model,
+            'model'       => $this->modelCatProductoMarca,
             'field_check' => ['nombre'],
             'field_name'  => 'categoria',
             'view' => [
@@ -42,18 +43,17 @@ class CatProductoMarcaController extends BaseController
         
         return process_edit([
             'data' => $data,
-            'model' => new CatProductoMarca(),
+            'model' => $this->modelCatProductoMarca,
             'field_name' => 'categoria'
         ]);
     }
 
     function update() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoMarca();
 
         return process_update([
             'data'        => $data,
-            'model'       => $model,
+            'model'       => $this->modelCatProductoMarca,
             'field_check' => ['nombre'],
             'field_name'  => 'categoria',
             'view' => [
@@ -74,16 +74,15 @@ class CatProductoMarcaController extends BaseController
 
     function destroy() {
         $data = json_decode($this->request->getPost('data'));
-        $model = new CatProductoMarca();
         
         return process_destroy([
             'data'       => $data,
-            'model'      => $model,
+            'model'      => $this->modelCatProductoMarca,
             'field_name' => 'categorias',
             'view' => [
                 'load' => 'catalogos/productos/marcas/ajax/table_data',
                 'data'  => function(){
-                    return (new CatProductoMarca())
+                    return ($this->modelCatProductoMarca)
                         ->where('id_instancia', $this->id_instancia)->findAll();
                 }
             ]         
@@ -93,9 +92,8 @@ class CatProductoMarcaController extends BaseController
     function ajax_refresh_table() {
         $data = json_decode($this->request->getPost('data'));
         $response = ['response_message' => ['type' => '', 'message' => ''], 'next' => false, 'csrf_token' => csrf_hash()];
-        $model = new CatProductoMarca();
 
-        $encontrado['data'] = $model->where('id_instancia', $this->id_instancia)->findAll();
+        $encontrado['data'] = $this->modelCatProductoMarca->where('id_instancia', $this->id_instancia)->findAll();
 
         if(!empty($encontrado)){
             $response['next'] = true;

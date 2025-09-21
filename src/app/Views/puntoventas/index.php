@@ -90,9 +90,16 @@
                     <hr>
                     <div class="row">
                         <div class="col-4">
-                            <div class="mb-3">
-                                <label for="id_producto" class="form-label">BUSCADOR DE PRODUCTOS</label>
-                                <input type="text" class="form-control" name="codigo_barras" id="codigo_barras">
+                            <div class="">
+                                <label for="buscador_productos" class="form-label">BUSCADOR DE PRODUCTOS</label>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" name="buscador_productos"
+                                    id="buscador_productos">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="search_producto()">BUSCAR</button>
+                                </div>
                             </div>
                         </div>
                         <div class="col-4">
@@ -191,6 +198,7 @@
             </div>
             <!-- /.card-header -->
             <form id="form-finalizar">
+                <?= csrf_field() ?>
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
