@@ -216,7 +216,14 @@ const form_total_filter = () => {
         switch ($('#id_metodo_pago option:selected').val()) {
             case '1': // EFECTIVO
                 if ($('#pago_cliente').val() != "") {
-                    _next = true;
+                    if (parseFloat($('#pago_cliente').val()) >= parseFloat($('#total').val())) {
+                        _next = true;
+                    } else {
+                        alert_toastr({
+                            type: 'warning',
+                            message: 'NO PUEDE FINALIZAR LA COMPRA SI ESTAN INTENTANDO PAGAR MENOS QUE EL TOTAL A PAGAR.'
+                        });
+                    }
                 } else {
                     alert_toastr({
                         type: 'warning',
@@ -276,7 +283,7 @@ const finalizar = () => {
                 if (_response.next) {
                     setTimeout(() => {
                         window.location.href = '/puntodeventas/';
-                    }, 2000);
+                    }, 5000);
                 }
 
                 alert_toastr(_response.response_message);

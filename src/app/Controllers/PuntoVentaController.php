@@ -118,36 +118,78 @@ class PuntoVentaController extends BaseController
         $response = ['response_message' => ['type' => 'warning', 'message' => 'ES NECESARIO SELECCIONAR TODOS LOS CAMPOS OBLIGATORIOS PARA FINALIZAR LA VENTA.'], 'next' => false, 'csrf_token' => csrf_hash()];
 
         if(!empty($data)){
-            //  ACTUALIZAREMOS LOS TOTALES Y LOS ESTATUS DE LA VENTA
-            $array_venta = [
-                'id_usuario_edicion'    => $this->id_usuario,
-                'id_metodo_pago'        => $data->id_metodo_pago,
-                'subtotal'              => $data->subtotal,
-                'iva'                   => $data->iva,
-                'total'                 => $data->total,
-                'estado'                => 'VENDIDO',
-                'status_alta'           => 2
-            ];
-            if(!empty($data->tipo_tarjeta)) $array_venta['tipo_tarjeta'] = $data->tipo_tarjeta;
-            if(!empty($data->categoria_tarjeta)) $array_venta['categoria_tarjeta'] = $data->categoria_tarjeta;
-            if(!empty($data->cod_referencia)) $array_venta['cod_referencia'] = $data->cod_referencia;
-            if(!empty($data->pago_cliente)) $array_venta['pago_cliente'] = $data->pago_cliente;
-            if(!empty($data->cambio_cliente)) $array_venta['cambio_cliente'] = $data->cambio_cliente;
+            // ANTES DE FINALIZAR LA COMPRA, TENDREMOS QUE VALIDAR SI HAY EN EXISTENCIA POR CADA LINEA DE VENTA
+            $response = $this->validar_inventario($data);
 
-            if($this->modelPuntoVenta->update($data->data->id_venta_producto, $array_venta)){
-                $response['next'] = true;                
-                $response['response_message'] = ['type' => 'success', 'message' => 'LA VENTA SE REALIZO CON EXITO.'];
-            }
+            if($response['next']){
+                // ACTUALIZAREMOS LOS TOTALES Y LOS ESTATUS DE LA VENTA
+                $array_venta = [
+                    'id_usuario_edicion'    => $this->id_usuario,
+                    'id_metodo_pago'        => $data->id_metodo_pago,
+                    'subtotal'              => $data->subtotal,
+                    'iva'                   => $data->iva,
+                    'total'                 => $data->total,
+                    'estado'                => 'VENDIDO',
+                    'status_alta'           => 2
+                ];
+                if(!empty($data->tipo_tarjeta)) $array_venta['tipo_tarjeta'] = $data->tipo_tarjeta;
+                if(!empty($data->categoria_tarjeta)) $array_venta['categoria_tarjeta'] = $data->categoria_tarjeta;
+                if(!empty($data->cod_referencia)) $array_venta['cod_referencia'] = $data->cod_referencia;
+                if(!empty($data->pago_cliente)) $array_venta['pago_cliente'] = $data->pago_cliente;
+                if(!empty($data->cambio_cliente)) $array_venta['cambio_cliente'] = $data->cambio_cliente;
 
-            // EN ESTE PROCESO LO UTILIZAREMOS PARA ACTUALIZAR EL TOTAL DE LA CAJA ABIERTA
-            if($response['next']){   
-                $this->update_cierre([
-                    'data' => $data->data
-                ]);  
-            }
+                if($this->modelPuntoVenta->update($data->data->id_venta_producto, $array_venta)){
+                    $response['next'] = true;                
+                    $response['response_message'] = ['type' => 'success', 'message' => 'LA VENTA SE REALIZO CON EXITO.'];
+                }else{
+                    $response['next'] = false;
+                    $response['response_message'] = ['type' => 'success', 'message' => 'HUBO UN PROBLEMA AL FINALIZAR LA VENTA.'];
+                }
+
+                // EN ESTE PROCESO LO UTILIZAREMOS PARA ACTUALIZAR EL TOTAL DE LA CAJA ABIERTA
+                if($response['next']){   
+                    $this->update_cierre([
+                        'data' => $data->data
+                    ]);  
+                }
+            }            
         }
         
         return json_encode($response);
+    }
+
+    function validar_inventario($data){        
+        $response = ['response_message' => ['type' => 'warning', 'message' => 'NO SE ENCONTRO PRODUCTOS EN INVENTARIOS'], 'next' => false, 'csrf_token' => csrf_hash()];
+        
+        if(!empty($data)){
+            $disponible = $this->modelPuntoVentaLinea->disponibilidad_linea(['id_venta_producto' => $data->data->id_venta_producto]);
+            if(!empty($disponible)){
+                $count_no_disponible = 0;
+                $message = 'NO SE PUEDE FINALIZAR LA VENTA YA QUE LOS SIGUIENTES PRODUCTOS NO SE ENCUENTRAN DISPONIBLES: <ol>';                
+                foreach ($disponible as $key => $value) {
+                    if($value['procesar'] == 0){                        
+                        $message .= "<li>{$value['producto']}, DISPONIBLE DE {$value['disponible']}</li>";
+                        $count_no_disponible++;
+                    }
+                }
+                $response['response_message'] = ['type' => 'danger', 'message' => $message.'</ol>'];
+                
+                if(($count_no_disponible == 0)){
+                    $response['next'] = true;
+                    // SI TODO SALE CON DISPONIBILIDAD, AHORA PROCEGUEREMOS A DESCONTAR EL PRODUCTO                    
+                    foreach ($disponible as $key => $value) {
+                        $this->modelProducto
+                            ->where('id', (int)$value['id_producto'])
+                            ->set('cantidad', 'cantidad - ' . (int)$value['cantidad'], false) // false => aritmética
+                            ->update();
+                    }
+                }else{
+                    $repsonse['next'] = false;
+                }
+            }
+        }
+
+        return $response;
     }
 
     function update_cierre($data = ['data' => []]) {

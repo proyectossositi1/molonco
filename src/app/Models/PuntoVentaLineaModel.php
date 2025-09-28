@@ -71,4 +71,20 @@ class PuntoVentaLineaModel extends Model
 
         return $builder->get()->getRowArray();
     }
+
+    function disponibilidad_linea($data = ['id_venta_producto' => '']){
+        $builder = $this->db->table($this->table . ' vpl')
+            ->select('vpl.id_venta_producto
+                ,vpl.id_producto
+                ,p.nombre producto
+                ,vpl.cantidad
+                ,p.cantidad disponibilidad
+                ,IF(vpl.cantidad < p.cantidad, 1, 0) procesar')
+        ->join('cat_productos p', 'p.id = vpl.id_producto')
+        ->where([
+            'vpl.id_venta_producto' => $data['id_venta_producto']
+        ]);
+        
+        return $builder->get()->getResultArray();
+    }
 }
