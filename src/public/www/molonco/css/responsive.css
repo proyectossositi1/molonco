@@ -1,0 +1,45 @@
+@media only screen and (max-width: 1280px) {
+    .coll-full,.coll-full2,#contentmenu,div#contentmenucategorias{width: calc(100% - 20px);padding: 0 10px;}
+}
+@media only screen and (max-width:1024px) {
+    
+}
+@media only screen and (max-width: 960px) {
+    .txtcat{font-size: 1.5rem;}
+    #menu{width: 100%;margin-left: 0;}
+    #menu li a,#menucategorias li a{font-size: .7rem;}
+    #content_car_user img{width: 30%;margin-left: 5px;}
+}
+@media only screen and (max-width: 640px) {
+    #buscador{width: 60%;margin-left: 20px;}
+    #menu li a{margin-bottom: 20px;}
+    #menu li {
+    width: 100%;
+    display: inline-block;
+    border-bottom: 1px solid #30488e;
+    padding-top:20px;}
+    #menu{width: 100%; margin-left: 0; height: 0px; transition: 1s all; overflow: hidden; }
+    #menu.active{height: 270px;}
+    div#contentmenucategorias{height: 0px;justify-content: left; transition: 1s all; overflow: hidden;}
+    div#contentmenucategorias.active{height: 330px;        transition: 1s all;}
+    #menucategorias li{width: 100%; text-align: left; margin-bottom: 20px;}
+    ul#menucategorias{display: inline-block;}
+    #contentbtnmenu{display: block;background: #ff4339; overflow: auto; padding: 10px 20px;}
+    #btnmenumobil1{float: left;cursor: pointer;}
+    #btnmenumobil2{float: right;cursor: pointer;}
+    #btnmenumobil2 img{transform: rotate(90deg);}
+    .liston .inter-tight-iTighThin{display: inline-block;width: 100%;}
+    .separate1{display: none;}   
+    #registro form {display: block;}
+    #registro .login-container{box-sizing: border-box;width: 100%;}
+}
+@media only screen and (max-width: 480px) {
+    .content_categorias{padding: 0 10px;width: calc(100% - 20px);display: inline-block;}
+    .txtcat{font-size: 2.5rem; }
+    footer .coll-full2{display: inline-block;}
+    .titleFooter{text-align: center;}
+    img[alt="logofooter"]{width: 35%; margin: auto; display: block;}
+    .copyrightrs,.subcontentspan2 li{text-align: center;}
+    footer{padding: 15px 0;}
+    
+}

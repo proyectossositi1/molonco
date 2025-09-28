@@ -7,8 +7,11 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // ✅ Rutas Públicas (sin middleware)
-$routes->group('', ['filter' => 'noauth'], function($routes) {
+$routes->group('', function($routes) {
+    // WEBSITE
     $routes->get('/', 'Home::index');
+    $routes->get('/navegation/(:any)', 'Home::navegation/$1');
+    // LOGIN
     $routes->get('/login', 'AuthController::login');
     $routes->post('/login', 'AuthController::process_login');
     $routes->get('/register', 'AuthController::register');
