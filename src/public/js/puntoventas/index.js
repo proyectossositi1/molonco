@@ -77,26 +77,19 @@ const onchange_metodopagos = (el) => {
 
 const filter = (el) => {
     const key = el.getAttribute('data-filter-key') || el.name; // <-- nombre del elemento
-    const value = el.value?.trim() ?? '';
+    const value = (el.value ?? '').trim() || 'all';
 
-    if (key != "" && value != "") {
-        ajax_function_object({
-            route: `puntodeventas/filter_productos/key/${key}/value/${value}`,
-            method: 'get',
-            function: (_response) => {
-                $('#id_producto').html(_response.list_productos);
+    ajax_function_object({
+        route: `puntodeventas/filter_productos/key/${key}/value/${value}`,
+        method: 'get',
+        function: (_response) => {
+            $('#id_producto').html(_response.list_productos);
 
-                if (!_response.next) {
-                    alert_toastr(_response.response_message);
-                }
+            if (!_response.next) {
+                alert_toastr(_response.response_message);
             }
-        });
-    } else {
-        alert_toastr({
-            type: 'warning',
-            message: 'ES NECESARIO SELECCIONAR AL MENOS UNA CATEGORIA, SUBCATEGORIA, TIPO O MARCA PARA PODER FILTRAR EL LISTADO DE PRODUCTOS.'
-        });
-    }
+        }
+    });
 }
 
 const onchange_productos = (el) => {

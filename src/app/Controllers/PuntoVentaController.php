@@ -60,15 +60,13 @@ class PuntoVentaController extends BaseController
 
     function ajax_filter_listado_productos($key = null, $value = null) {    
         $response = ['response_message' => ['type' => 'warning', 'message' => 'ES NECESARIO SELECCIONAR AL MENOS UN FILTRO PARA MOSTRAR EL LISTADO DE LOS PRODUCTOS.'], 'next' => false, 'list_productos' => '<option value="">SELECCIONE UNA OPCION</option>'];
-
-        if(!empty($key) && !empty($value)){
-            $encontrado = $this->modelProducto->filter_producto(['key' => $key, 'value' => $value, 'id_instancia' => $this->id_instancia]);
-            if(!empty($encontrado)){
-                $response['next'] = true;
-                
-                foreach ($encontrado as $key => $value) {
-                    $response['list_productos'] .= '<option value="'.$value['id'].'" data-cantidad="'.$value['cantidad'].'" data-precio="'.$value['precio'].'" data-sku="'.$value['sku'].'" data-codigo_barras="'.$value['codigo_barras'].'">'.$value['nombre'].'</option>';
-                }
+ 
+        $encontrado = $this->modelProducto->filter_producto(['key' => $key, 'value' => $value, 'id_instancia' => $this->id_instancia]);
+        if(!empty($encontrado)){
+            $response['next'] = true;
+            
+            foreach ($encontrado as $key => $value) {
+                $response['list_productos'] .= '<option value="'.$value['id'].'" data-cantidad="'.$value['cantidad'].'" data-precio="'.$value['precio'].'" data-sku="'.$value['sku'].'" data-codigo_barras="'.$value['codigo_barras'].'">'.$value['nombre'].'</option>';
             }
         }
         

@@ -54,16 +54,16 @@ class CatProducto extends Model
 
         // Filtros dinámicos
         if(array_key_exists('key', $data)){
-            if ($data['key'] === 'categoria' && !empty($data['value'])) {
+            if ($data['key'] === 'categoria' && $data['value'] != 'all') {
                 $builder->where('p.id_categoria', $data['value']);
             }
-            if ($data['key'] === 'subcategoria' && !empty($data['value'])) {
+            if ($data['key'] === 'subcategoria' && $data['value'] != 'all') {
                 $builder->where('p.id_subcategoria', $data['value']);
             }
-            if ($data['key'] === 'marca' && !empty($data['value'])) {
+            if ($data['key'] === 'marca' && $data['value'] != 'all') {
                 $builder->where('p.id_marca', $data['value']);
             }
-            if ($data['key'] === 'tipo' && !empty($data['value'])) {
+            if ($data['key'] === 'tipo' && $data['value'] != 'all') {
                 $builder->where('p.id_tipo_producto', $data['value']);
             }
         }        
